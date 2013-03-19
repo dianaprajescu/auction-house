@@ -32,7 +32,6 @@ public class LoginButton extends JButton implements Command {
         super("Login");
         addActionListener(al);
         med = m;
-        med.registerLogin(this);
     }
  
     /**

@@ -1,13 +1,22 @@
 package GUI;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 
 import GUI.components.LoginButton;
 import GUI.components.LogoutButton;
@@ -34,6 +43,16 @@ public class GUI extends JFrame implements GUI_interface, ActionListener {
 	
 	public GUI ()
 	{
+		super("Auction House");
+		this.setLocationRelativeTo(null);
+		setSize(600, 300);
+		
+		// First display login window.
+        setVisible(false);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        
+        med.registerGUI(this);
+		
 		init();
 		build();
 	}
@@ -60,7 +79,7 @@ public class GUI extends JFrame implements GUI_interface, ActionListener {
 		model = new TableModel(columnNames, data);	
 		
 		table = new JTable(model);
-		table.setPreferredScrollableViewportSize(new Dimension(300, 70));
+		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
         table.setFillsViewportHeight(true);
 	}
 
@@ -68,16 +87,17 @@ public class GUI extends JFrame implements GUI_interface, ActionListener {
 	 * Build GUI.
 	 */
 	public void build() {
-		JPanel p = new JPanel();
-        p.add(new LoginButton(this, med));
-        p.add(new LogoutButton(this, med));
+		
+		new Login(this, med);
+		
+		// Main panel.
+		JPanel mainPanel = new JPanel();  
+		//mainPanel.add(new JLabel("Welcome to Auction House!"), "North");
         
-        p.add(new JScrollPane(table), "South");
+        mainPanel.add(new LogoutButton(this, med));
+        mainPanel.add(new JScrollPane(table), "South");
         
-        getContentPane().add(p);
-        setSize(400, 200);
-        setVisible(true);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        getContentPane().add(BorderLayout.CENTER, mainPanel);
 	}
 
 	public void actionPerformed(ActionEvent e) {

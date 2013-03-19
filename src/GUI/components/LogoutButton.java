@@ -30,10 +30,9 @@ public class LogoutButton extends JButton implements Command {
 	 * @param   GUIMediator_interface  m   The gui mediator.
 	 */
 	public LogoutButton (ActionListener al, GUIMediator_interface m) {
-        super("Login");
+        super("Logout");
         addActionListener(al);
         med = m;
-        med.registerLogout(this);
     }
 
 	/**
