@@ -1,7 +1,7 @@
 /**
  * 
  */
-package GUI;
+package app;
 
 import java.awt.HeadlessException;
 import java.sql.ResultSet;
@@ -12,8 +12,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import app.Database;
 
+import GUI.GUI;
+import GUI.Login;
 import GUI.components.LoginButton;
 import GUI.components.LogoutButton;
 import GUI.components.PasswordField;
@@ -21,12 +22,14 @@ import GUI.components.BuyerType;
 import GUI.components.SellerType;
 import GUI.components.UsernameField;
 import interfaces.GUIMediator_interface;
+import interfaces.NetworkMediator_interface;
+import interfaces.WSClientMediator_interface;
 
 /**
  * @author diana
  *
  */
-public class GUIMediator implements GUIMediator_interface {
+public class Mediator implements GUIMediator_interface, NetworkMediator_interface, WSClientMediator_interface {
 	private GUI gui;
 	private Login login;
 	private UsernameField username;

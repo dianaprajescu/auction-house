@@ -22,6 +22,7 @@ import GUI.components.LoginButton;
 import GUI.components.LogoutButton;
 import GUI.components.TableModel;
 import app.Command;
+import app.Mediator;
 
 import interfaces.GUIMediator_interface;
 import interfaces.GUI_interface;
@@ -39,7 +40,7 @@ public class GUI extends JFrame implements GUI_interface, ActionListener {
 	private TableModel model;
 	private JTable table;
 	private JLabel item;
-	private GUIMediator_interface med = new GUIMediator();
+	private GUIMediator_interface med = new Mediator();
 	
 	public GUI ()
 	{
