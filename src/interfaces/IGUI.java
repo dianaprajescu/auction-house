@@ -4,7 +4,7 @@ package interfaces;
  * @author Stedy
  *
  */
-public interface GUI_interface {
+public interface IGUI {
 	/**
 	 * Initialize model
 	 */

@@ -3,10 +3,12 @@
  */
 package GUI.components;
 
-import interfaces.GUIMediator_interface;
+import interfaces.IGUIMediator;
 
 import javax.swing.JCheckBox;
 import javax.swing.JRadioButton;
+
+import GUI.GUIMediator;
 
 /**
  * @author diana
@@ -18,9 +20,9 @@ public class SellerType extends JRadioButton {
 	 */
 	private static final long serialVersionUID = -2758630814478717141L;
 	
-	private GUIMediator_interface med;
+	private GUIMediator med;
 
-	public SellerType(GUIMediator_interface med) {
+	public SellerType(GUIMediator med) {
 		super("Seller");
 		this.med = med;
 		med.registerSellerType(this);

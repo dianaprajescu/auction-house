@@ -5,8 +5,9 @@ package GUI.components;
 
 import java.awt.event.ActionListener;
 
+import GUI.GUIMediator;
 import app.Command;
-import interfaces.GUIMediator_interface;
+import interfaces.IGUIMediator;
 
 import javax.swing.JButton;
 
@@ -20,15 +21,15 @@ public class LoginButton extends JButton implements Command {
 	 */
 	private static final long serialVersionUID = -2707882266284287580L;
 	
-	GUIMediator_interface med;
+	GUIMediator med;
 	 
 	/**
 	 * Constructor.
 	 * 
 	 * @param   ActionListener         al  The action listener for the button.
-	 * @param   GUIMediator_interface  m   The gui mediator.
+	 * @param   IGUIMediator  m   The gui mediator.
 	 */
-    public LoginButton (ActionListener al, GUIMediator_interface m) {
+    public LoginButton (ActionListener al, GUIMediator m) {
         super("Login");
         addActionListener(al);
         med = m;

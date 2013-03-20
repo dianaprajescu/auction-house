@@ -4,6 +4,6 @@ package interfaces;
  * @author Stedy
  *
  */
-public interface NetworkMediator_interface {
+public interface INetwork {
 
 }

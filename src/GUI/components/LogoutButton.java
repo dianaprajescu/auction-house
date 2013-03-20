@@ -3,12 +3,13 @@
  */
 package GUI.components;
 
-import interfaces.GUIMediator_interface;
+import interfaces.IGUIMediator;
 
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
+import GUI.GUIMediator;
 import app.Command;
 
 /**
@@ -21,15 +22,15 @@ public class LogoutButton extends JButton implements Command {
 	 */
 	private static final long serialVersionUID = 1518422999515655012L;
 	
-	GUIMediator_interface med;
+	GUIMediator med;
 	
 	/**
 	 * Constructor.
 	 * 
 	 * @param   ActionListener         al  The action listener for the button.
-	 * @param   GUIMediator_interface  m   The gui mediator.
+	 * @param   IGUIMediator  m   The gui mediator.
 	 */
-	public LogoutButton (ActionListener al, GUIMediator_interface m) {
+	public LogoutButton (ActionListener al, GUIMediator m) {
         super("Logout");
         addActionListener(al);
         med = m;

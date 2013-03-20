@@ -24,14 +24,14 @@ import GUI.components.TableModel;
 import app.Command;
 import app.Mediator;
 
-import interfaces.GUIMediator_interface;
-import interfaces.GUI_interface;
+import interfaces.IGUIMediator;
+import interfaces.IGUI;
 
 /**
  * @author Stedy
  *
  */
-public class GUI extends JFrame implements GUI_interface, ActionListener {
+public class GUI extends JFrame implements IGUI, ActionListener {
 	/**
 	 * Serializable class.
 	 */
@@ -40,7 +40,7 @@ public class GUI extends JFrame implements GUI_interface, ActionListener {
 	private TableModel model;
 	private JTable table;
 	private JLabel item;
-	private GUIMediator_interface med = new Mediator();
+	private GUIMediator med = new GUIMediator();
 	
 	public GUI ()
 	{

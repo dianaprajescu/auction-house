@@ -21,164 +21,30 @@ import GUI.components.PasswordField;
 import GUI.components.BuyerType;
 import GUI.components.SellerType;
 import GUI.components.UsernameField;
-import interfaces.GUIMediator_interface;
-import interfaces.NetworkMediator_interface;
-import interfaces.WSClientMediator_interface;
+import interfaces.IGUI;
+import interfaces.IGUIMediator;
+import interfaces.INetwork;
+import interfaces.INetworkMediator;
+import interfaces.IWSClient;
+import interfaces.IWSClientMediator;
 
 /**
  * @author diana
  *
  */
-public class Mediator implements GUIMediator_interface, NetworkMediator_interface, WSClientMediator_interface {
-	private GUI gui;
-	private Login login;
-	private UsernameField username;
-	private PasswordField password;
-	private BuyerType buyer;
-	private SellerType seller;
-
-	public void login() {
-		// Connect db.
-		Database db = new Database();
-		
-		// Search if user exists in the DB.
-		ResultSet rs = db.query("SELECT * FROM user WHERE username = '" + username.getText() + "'");
-		
-		try {
-			if (!rs.next())
-			{
-				JOptionPane.showMessageDialog(null, "The username " + username.getText() + " does not exist!",
-						"Invalid Login", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			else
-			{
-				// Check password.
-				if (rs.getString("password").compareTo(password.getText()) != 0)
-				{
-					JOptionPane.showMessageDialog(null, "Password is incorect!",
-							"Invalid Login", JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-			}
+public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediator {
+	private IGUI gui;
+	private INetwork netwrok;
+	private IWSClient client;
 	
-		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(null, "Connection with DB lost!", "Connection lost", JOptionPane.ERROR_MESSAGE);
-			System.exit(0);
-		}
-
-		// Login user and save type.
-		if (buyer.isSelected())
-		{
-			rs = db.query("UPDATE user SET logged = '2', type = '1' WHERE username = '" + username.getText() + "'");
-		}
-		else if (seller.isSelected())
-		{
-			rs = db.query("UPDATE user SET logged = '2', type = '2' WHERE username = '" + username.getText() + "'");
-		}
-		else
-		{
-			JOptionPane.showMessageDialog(null, "Please select Buyer or Seller profile!",
-					"Invalid Login", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-		
-		// Close login frame.
-		login.setVisible(false);
-		
-		// Add username label in main frame.
-		JPanel mainPanel = (JPanel) gui.getContentPane().getComponent(0);
-		mainPanel.add(new JLabel("Welcome to Auction House, " + username.getText() + "!"), "North", 0);
-		
-		// Set gui frame visible.
-		gui.setVisible(true);
-	}
-
-	public void logout() {
-		// Get current logged username.
-		JPanel mainPanel = (JPanel) gui.getContentPane().getComponent(0);
-		JLabel label = (JLabel) mainPanel.getComponent(0);
-		String welcomeMessage = label.getText();
-		String[] result = welcomeMessage.split("Welcome to Auction House, ");
-		String username = result[1].split("!")[0];
-		int type = 0;
-		int id = 0;
-		
-		// Get user type.
-		Database db = new Database();
-		ResultSet rs = db.query("SELECT * FROM user WHERE username = '" + username + "'");
-		try
-		{
-			if (rs.next())
-			{
-				type = rs.getInt("type");
-				id = rs.getInt("id");
-			}
-			else
-			{
-				//  TODO remove all data related to this user.
-				JOptionPane.showMessageDialog(null, "Unexpected error!", "Logout problem", JOptionPane.ERROR_MESSAGE);
-				System.exit(0);
-			}
-		} catch (Exception e) {
-			//  TODO remove all data related to this user.
-			JOptionPane.showMessageDialog(null, "Unexpected error!" + e.getMessage(), "Logout problem", JOptionPane.ERROR_MESSAGE);
-			System.exit(0);
-		}
-		
-		// Seller can logout only if he is not taking part into any auctions or if his offers are passed.
-		if (type == 2)
-		{
-			rs = db.query("SELECT * FROM offer WHERE seller_id = '" + id + "'");
-			try {
-				// The seller is taking part in some auctions.
-				if (rs.next())
-				{
-					// TODO Are the seller's offers passed?
-					
-				}
-
-			} catch (SQLException e) {
-				//  TODO remove all data related to this user.
-				JOptionPane.showMessageDialog(null, "Unexpected error! " + e.getMessage(), "Logout problem", JOptionPane.ERROR_MESSAGE);
-				System.exit(0);
-			}
-		}
-		
-		// When buyer loogs out he leaves all active auctions, declining all offers.
-		// If there is no offer, his request is canceled.
-		
-		// Logging out during service transfer will cause the transfer to fail and it'll be marked accordingly.
-		
-		// Logout.
-		rs = db.query("UPDATE user SET logged = '1' WHERE username = '" + username + "'");
-		gui.dispose();
-		
-		JOptionPane.showMessageDialog(null, "Logged out successfully!", "Good bye!", JOptionPane.INFORMATION_MESSAGE);
-		login.setVisible(true);
-	}
-	
-	public void registerGUI(GUI gui) {
+	public void registerGUI(IGUI gui) {
 		this.gui = gui;
 	}
-	
-	public void registerLogin(Login login) {
-		this.login = login;
+	public void registerNetwork(INetwork network) {
+		this.netwrok = network;
 	}
-	
-	public void registerUsername(UsernameField username) {
-		this.username = username;
+	public void registerWSClient(IWSClient client) {
+		this.client = client;
 	}
-	
-	public void registerPassword(PasswordField password) {
-		this.password = password;
-	}
-	
-	public void registerBuyerType(BuyerType buyer) {
-		this.buyer = buyer;
-	}
-	
-	public void registerSellerType(SellerType seller) {
-		this.seller = seller;
-	}
+
 }

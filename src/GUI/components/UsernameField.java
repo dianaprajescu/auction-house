@@ -3,18 +3,20 @@
  */
 package GUI.components;
 
-import interfaces.GUIMediator_interface;
+import interfaces.IGUIMediator;
 
 import javax.swing.JTextField;
+
+import GUI.GUIMediator;
 
 /**
  * @author diana
  *
  */
 public class UsernameField extends JTextField {
-	private GUIMediator_interface med;
+	private GUIMediator med;
 
-	public UsernameField(GUIMediator_interface med) {
+	public UsernameField(GUIMediator med) {
 		this.med = med;
 		med.registerUsername(this);
 	}

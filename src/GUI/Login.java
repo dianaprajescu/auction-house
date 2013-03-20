@@ -8,7 +8,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 
-import interfaces.GUIMediator_interface;
+import interfaces.IGUIMediator;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
@@ -29,10 +29,10 @@ import GUI.components.UsernameField;
  *
  */
 public class Login extends JFrame {
-	private GUIMediator_interface med;
+	private GUIMediator med;
 	private ActionListener al;
 	
-	public Login (ActionListener al, GUIMediator_interface med)
+	public Login (ActionListener al, GUIMediator med)
 	{
 		super("Login");
 		this.setLocationRelativeTo(null);
