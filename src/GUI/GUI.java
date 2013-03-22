@@ -10,6 +10,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -17,9 +18,13 @@ import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
 
+import GUI.components.ComboBoxCell;
 import GUI.components.LoginButton;
 import GUI.components.LogoutButton;
+import GUI.components.Table;
 import GUI.components.TableModel;
 import app.Command;
 import app.Mediator;
@@ -38,7 +43,7 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	private static final long serialVersionUID = 5803021471507830897L;
 	
 	private TableModel model;
-	private JTable table;
+	private Table table;
 	private JLabel item;
 	private GUIMediator med = new GUIMediator();
 	
@@ -67,20 +72,23 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	            "Type",
 	            "Service"};
 		
+		String[] test = {"1", "2"};
+		
 		Object[][] data = {
-		        {"Kathy", "Buyer", "sports"},
-		        {"John", "Seller", "sports"},
-		        {"Sue", "Seller", "programming"},
-		        {"Sue", "Seller", "programming"},
-		        {"Sue", "Seller", "programming"},
-		        {"Jane", "Buyer", "application"}
+		        {"Kathy", "Buyer", new JComboBox(test)},
+		        {"John", "Seller", new JComboBox(test)},
+		        {"Sue", "Seller", new JComboBox(test)},
+		        {"Sue", "Seller", new JComboBox(test)},
+		        {"Sue", "Seller", new JComboBox(test)},
+		        {"Jane", "Buyer", new JComboBox(test)}
 		        };
 		
 		// Initialize model.
 		model = new TableModel(columnNames, data);	
 		
-		table = new JTable(model);
-		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
+		table = new Table(model);
+        
+		table.setPreferredScrollableViewportSize(new Dimension(500, 250));
         table.setFillsViewportHeight(true);
 	}
 

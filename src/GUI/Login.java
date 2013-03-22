@@ -36,8 +36,7 @@ public class Login extends JFrame {
 	{
 		super("Login");
 		this.setLocationRelativeTo(null);
-		setSize(400, 200);
-        setVisible(true);
+		setSize(400, 200); 
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         med.registerLogin(this);
 		
@@ -45,6 +44,8 @@ public class Login extends JFrame {
 		this.al = al;
 		
 		init();
+		
+		setVisible(true);
 	}
 	
 	/**

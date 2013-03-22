@@ -37,8 +37,6 @@ public class Database {
 			
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Error connecting to DB!", "DB error", JOptionPane.ERROR_MESSAGE);
-			System.exit(0);
-			
 		}
 	}
 	

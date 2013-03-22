@@ -56,6 +56,10 @@ public class TableModel extends AbstractTableModel {
 	 */
 	public boolean isCellEditable(int row, int column)
 	{
+		if (column % 3 == 2)
+		{
+			return true;
+		}
 		return false;
 	}
 }
