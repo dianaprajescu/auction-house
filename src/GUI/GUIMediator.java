@@ -4,12 +4,16 @@
 package GUI;
 
 import java.awt.HeadlessException;
+import java.awt.Point;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 
 import app.Database;
@@ -21,6 +25,7 @@ import GUI.components.LoginButton;
 import GUI.components.LogoutButton;
 import GUI.components.PasswordField;
 import GUI.components.BuyerType;
+import GUI.components.PopupMenuItem;
 import GUI.components.SellerType;
 import GUI.components.UsernameField;
 import interfaces.IGUIMediator;
@@ -38,6 +43,7 @@ public class GUIMediator {
 	private PasswordField password;
 	private BuyerType buyer;
 	private SellerType seller;
+	private JList list;
 
 	public void login() {
 		// Connect db.
@@ -160,6 +166,27 @@ public class GUIMediator {
 		login.setVisible(true);
 	}
 	
+	public void showListPopup(JList list, int x, int y)
+	{
+		String username = (String) list.getSelectedValue();
+		
+		JPopupMenu popup = new JPopupMenu();
+		
+		//TODO ia din baza de date optiunile disponibile pentru username selectat.
+		
+        popup.add(new PopupMenuItem("option1", this, this.gui));
+        popup.add(new PopupMenuItem("option2", this, this.gui));
+        
+        popup.show(list, x, y); //and show the menu
+	}
+	
+	public void userAction(String command)
+	{
+		//TODO do sth based on command.
+		System.out.println(command);
+		System.out.println(this.gui.getTable().getModel().getValueAt(this.gui.getTable().getSelectedRow(), 1));
+	}
+	
 	public void registerGUI(GUI gui) {
 		this.gui = gui;
 	}
@@ -182,5 +209,9 @@ public class GUIMediator {
 	
 	public void registerSellerType(SellerType seller) {
 		this.seller = seller;
+	}
+	
+	public void registerList(JList list){
+		this.list = list;
 	}
 }

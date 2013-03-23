@@ -3,29 +3,36 @@ package GUI.components;
 import java.awt.Component;
 
 import javax.swing.DefaultCellEditor;
+import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
+import GUI.GUIMediator;
+
 public class Table extends JTable
 {
-	public Table(TableModel model)
+	GUIMediator gui;
+	
+	public Table(TableModel model, GUIMediator gui)
 	{
 		super(model);
+		this.gui = gui;
 	}
 	
 	public TableCellEditor getCellEditor(int row, int column)
     {		
 		if (column % 3 == 2)
 		{
-			JComboBox data = (JComboBox)((TableModel)this.getModel()).getValueAt(row, column);
+			DefaultListModel data = (DefaultListModel)((TableModel)this.getModel()).getValueAt(row, column);
 		
-			DefaultCellEditor ce = new DefaultCellEditor(data);
+			ListCellEditor listCellEditor = new ListCellEditor(data, gui);
 			
-			return ce;
+			return listCellEditor;
 		}
 		else
 		{
@@ -37,12 +44,7 @@ public class Table extends JTable
 	{
 		if (column % 3 == 2)
 		{
-			JComboBox data = (JComboBox)((TableModel)this.getModel()).getValueAt(row, column);
-			
-			
-			MTableCellRenderer renderer = new MTableCellRenderer();
-			
-			return renderer;
+			return new ListCellRenderer();
 		}
 		else
 		{

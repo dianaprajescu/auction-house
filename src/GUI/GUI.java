@@ -1,6 +1,7 @@
 package GUI;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -9,6 +10,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -21,7 +23,6 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import GUI.components.ComboBoxCell;
 import GUI.components.LoginButton;
 import GUI.components.LogoutButton;
 import GUI.components.Table;
@@ -74,22 +75,44 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 		
 		String[] test = {"1", "2"};
 		
+		DefaultListModel lmodel = new DefaultListModel();
+		lmodel.addElement("user1");
+		lmodel.addElement("user2");
+		
 		Object[][] data = {
-		        {"Kathy", "Buyer", new JComboBox(test)},
-		        {"John", "Seller", new JComboBox(test)},
-		        {"Sue", "Seller", new JComboBox(test)},
-		        {"Sue", "Seller", new JComboBox(test)},
-		        {"Sue", "Seller", new JComboBox(test)},
-		        {"Jane", "Buyer", new JComboBox(test)}
+		        {"Kathy", "Buyer", lmodel},
+		        {"John", "Seller", lmodel},
+		        {"Sue", "Seller", lmodel},
+		        {"Sue", "Seller", lmodel},
+		        {"Sue", "Seller", lmodel},
+		        {"Jane", "Buyer", lmodel}
 		        };
 		
 		// Initialize model.
 		model = new TableModel(columnNames, data);	
 		
-		table = new Table(model);
+		table = new Table(model, med);
+		
+		try {
+		    for (int row=0; row<table.getRowCount(); row++) {
+		        int rowHeight = table.getRowHeight();
+		 
+		        for (int column=0; column<table.getColumnCount(); column++) {
+		            Component comp = table.prepareRenderer(table.getCellRenderer(row, column), row, column);
+		            rowHeight = Math.max(rowHeight, comp.getPreferredSize().height);
+		        }
+		 
+		        table.setRowHeight(row, rowHeight);
+		    }
+		} catch(ClassCastException e) { }
         
 		table.setPreferredScrollableViewportSize(new Dimension(500, 250));
         table.setFillsViewportHeight(true);
+	}
+	
+	public JTable getTable()
+	{
+		return this.table;
 	}
 
 	/**
@@ -111,7 +134,7 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 		Command comd = (Command) e.getSource();
-        comd.execute();
+        comd.execute(e.getActionCommand());
 	}
 
 }

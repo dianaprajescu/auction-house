@@ -38,7 +38,7 @@ public class LoginButton extends JButton implements Command {
     /**
      * Execute the command.
      */
-    public void execute() {
+    public void execute(String command) {
         med.login();
     }
 

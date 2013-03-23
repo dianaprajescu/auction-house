@@ -39,7 +39,7 @@ public class LogoutButton extends JButton implements Command {
 	/**
 	 * Execute command.
 	 */
-	public void execute() {
+	public void execute(String command) {
 		med.logout();
 	}
 

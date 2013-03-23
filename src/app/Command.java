@@ -10,5 +10,5 @@ public interface Command {
 	/**
 	 * Execute command.
 	 */
-	void execute ();
+	void execute (String command);
 }
