@@ -1,37 +1,23 @@
 package GUI;
+import interfaces.IGUI;
+
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
 import javax.swing.DefaultListModel;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableColumn;
 
-import GUI.components.LoginButton;
 import GUI.components.LogoutButton;
 import GUI.components.Table;
 import GUI.components.TableModel;
 import app.Command;
-import app.Mediator;
-
-import interfaces.IGUIMediator;
-import interfaces.IGUI;
 
 /**
  * @author Stedy

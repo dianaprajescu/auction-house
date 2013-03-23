@@ -21,12 +21,10 @@ public class ListCellEditor extends AbstractCellEditor implements TableCellEdito
 		this.gui = gui;
 	}
 
-	@Override
 	public Object getCellEditorValue() {
 		return model;
 	}
 
-	@Override
 	public Component getTableCellEditorComponent(JTable arg0, Object arg1,
 			boolean arg2, int arg3, int arg4) {
 		JList list = new JList(model);
