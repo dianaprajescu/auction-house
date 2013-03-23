@@ -10,6 +10,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -69,9 +70,9 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	 */
 	public void init() {		
 		// Populate model.
-		String[] columnNames = {"Name",
-	            "Type",
-	            "Service"};
+		String[] columnNames = {"Service",
+	            "User List",
+	            "Status"};
 		
 		String[] test = {"1", "2"};
 		
@@ -79,13 +80,17 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 		lmodel.addElement("user1");
 		lmodel.addElement("user2");
 		
+		DefaultComboBoxModel cmodel = new DefaultComboBoxModel();
+		cmodel.addElement("user1");
+		cmodel.addElement("user2");
+		
 		Object[][] data = {
-		        {"Kathy", "Buyer", lmodel},
-		        {"John", "Seller", lmodel},
-		        {"Sue", "Seller", lmodel},
-		        {"Sue", "Seller", lmodel},
-		        {"Sue", "Seller", lmodel},
-		        {"Jane", "Buyer", lmodel}
+		        {"Kathy",  lmodel, cmodel},
+		        {"John", lmodel, cmodel},
+		        {"Sue", lmodel, cmodel},
+		        {"Sue", lmodel, cmodel},
+		        {"Sue", lmodel, cmodel},
+		        {"Jane", lmodel, cmodel}
 		        };
 		
 		// Initialize model.

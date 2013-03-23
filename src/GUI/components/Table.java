@@ -3,6 +3,7 @@ package GUI.components;
 import java.awt.Component;
 
 import javax.swing.DefaultCellEditor;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -28,6 +29,14 @@ public class Table extends JTable
     {		
 		if (column % 3 == 2)
 		{
+			DefaultComboBoxModel data = (DefaultComboBoxModel)((TableModel)this.getModel()).getValueAt(row, column);
+			
+			ComboCellEditor comboCellEditor = new ComboCellEditor(data, gui);
+			
+			return comboCellEditor;
+		}
+		if (column % 3 == 1)
+		{
 			DefaultListModel data = (DefaultListModel)((TableModel)this.getModel()).getValueAt(row, column);
 		
 			ListCellEditor listCellEditor = new ListCellEditor(data, gui);
@@ -43,6 +52,10 @@ public class Table extends JTable
 	public TableCellRenderer getCellRenderer(int row, int column)
 	{
 		if (column % 3 == 2)
+		{
+			return new ComboCellRenderer();
+		}
+		else if (column % 3 == 1)
 		{
 			return new ListCellRenderer();
 		}
