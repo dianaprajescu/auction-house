@@ -3,6 +3,7 @@
  */
 package GUI;
 
+import java.awt.Component;
 import java.awt.HeadlessException;
 import java.awt.Point;
 import java.sql.ResultSet;
@@ -184,7 +185,7 @@ public class GUIMediator {
 	{
 		//TODO do sth based on command.
 		System.out.println(command);
-		System.out.println(this.gui.getTable().getModel().getValueAt(this.gui.getTable().getSelectedRow(), 1));
+		System.out.println(this.gui.getTable().getModel().getValueAt(this.gui.getTable().getSelectedRow(), 0));
 	}
 	
 	public void registerGUI(GUI gui) {

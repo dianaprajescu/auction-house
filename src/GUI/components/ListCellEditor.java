@@ -24,6 +24,15 @@ public class ListCellEditor extends AbstractCellEditor implements TableCellEdito
 	public Object getCellEditorValue() {
 		return model;
 	}
+	
+	public Component getComponent()
+	{
+		JList list = new JList(model);
+		
+		list.addMouseListener(new ListMouseListener(list, gui));
+		
+		return list;
+	}
 
 	public Component getTableCellEditorComponent(JTable arg0, Object arg1,
 			boolean arg2, int arg3, int arg4) {
