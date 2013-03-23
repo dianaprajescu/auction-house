@@ -18,7 +18,6 @@ public class PopupMenuItem extends JMenuItem implements Command{
 		this.med = med;
 	}
 	
-	@Override
 	public void execute(String command) {
 		// TODO Auto-generated method stub
 		this.med.userAction(command);
