@@ -18,6 +18,7 @@ import javax.swing.JTable;
 import GUI.components.LogoutButton;
 import GUI.components.Table;
 import GUI.components.TableModel;
+import GUI.components.TableMouseListener;
 import app.Command;
 
 /**
@@ -81,6 +82,7 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 		model = new TableModel(columnNames, data);	
 		
 		table = new Table(model, med);
+		table.addMouseListener(new TableMouseListener(med));
 		
 		try {
 		    for (int row=0; row<table.getRowCount(); row++) {

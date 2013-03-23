@@ -244,7 +244,7 @@ public class GUIMediator {
 	{
 		//TODO do sth based on command.
 		System.out.println(command);
-		System.out.println(this.gui.getTable().getModel().getValueAt(this.gui.getTable().getSelectedRow(), 1));
+		System.out.println(this.gui.getTable().getModel().getValueAt(this.gui.getTable().getSelectedRow(), 0));
 	}
 	
 	/**
