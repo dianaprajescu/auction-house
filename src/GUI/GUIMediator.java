@@ -17,6 +17,7 @@ import GUI.components.BuyerType;
 import GUI.components.PasswordField;
 import GUI.components.PopupMenuItem;
 import GUI.components.SellerType;
+import GUI.components.Table;
 import GUI.components.UsernameField;
 import app.Database;
 
@@ -152,9 +153,10 @@ public class GUIMediator {
 		login.setVisible(true);
 	}
 	
-	public void showServicePopup(JList list, int x, int y)
-	{
-		String status = (String) list.getSelectedValue();
+	public void showServicePopup(Table table, int x, int y)
+	{				
+		String status = (String) this.gui.getTable().getModel().getValueAt(this.gui.getTable().getSelectedRow(), 2);
+		System.out.println(status);
 		int intStatus = this.getIntStatus(status);
 		
 		JPopupMenu popup = new JPopupMenu();
@@ -164,7 +166,7 @@ public class GUIMediator {
 		// Get user type from db.
 		int type = 0;
 		Database db = new Database();
-		ResultSet rs = db.query("SELECT * FROM user WHERE username = '" + username + "'");
+		ResultSet rs = db.query("SELECT * FROM user WHERE username = '" + username.getText() + "'");
 		try
 		{
 			rs.next();
@@ -191,19 +193,15 @@ public class GUIMediator {
 	        popup.add(new PopupMenuItem("option2", this, this.gui));
 		}
         
-        popup.show(list, x, y); //and show the menu
+        popup.show(table, x, y); //and show the menu
 	}
 	
 	public void showListPopup(JList list, int x, int y)
 	{
 		String user = (String) list.getSelectedValue();
 		
-		// Get current logged user.
-		String welcomeMessage = ((JLabel) ((JPanel) gui.getContentPane().getComponent(0)).getComponent(0)).getText();
-		String[] result = welcomeMessage.split("Welcome to Auction House, ");
-		String username = result[1].split("!")[0];
-		
-		//String status = (String) this.gui.getTable().getModel().getValueAt(this.gui.getTable().getSelectedRow(), 2);
+		String status = (String) this.gui.getTable().getModel().getValueAt(this.gui.getTable().getSelectedRow(), 2);
+		int intStatus = this.getIntStatus(status);
 		
 		JPopupMenu popup = new JPopupMenu();
 		
@@ -212,7 +210,7 @@ public class GUIMediator {
 		// Get user type from db.
 		int type = 0;
 		Database db = new Database();
-		ResultSet rs = db.query("SELECT * FROM user WHERE username = '" + username + "'");
+		ResultSet rs = db.query("SELECT * FROM user WHERE username = '" + username.getText() + "'");
 
 		try
 		{
@@ -234,7 +232,10 @@ public class GUIMediator {
 		{
 			popup.add(new PopupMenuItem("Make Offer", this, this.gui));
 			
-	        popup.add(new PopupMenuItem("Drop auction", this, this.gui));
+			if (intStatus == 4)
+			{
+				popup.add(new PopupMenuItem("Drop auction", this, this.gui));
+			}
 		}
         
         popup.show(list, x, y); //and show the menu

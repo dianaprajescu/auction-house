@@ -4,9 +4,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JList;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.JTable;
 
 import GUI.GUIMediator;
 
@@ -24,19 +21,16 @@ public class TableMouseListener extends MouseAdapter{
 	
     private void check(MouseEvent e) {
     	if (e.isPopupTrigger()) { //if the event shows the menu
-    		JTable source = (JTable)e.getSource();
+    		Table source = (Table) e.getSource();
             int row = source.rowAtPoint( e.getPoint() );
             int column = source.columnAtPoint( e.getPoint() );
             
             if (column == 0)
             {
-	            JPopupMenu p = new JPopupMenu();
-	            p.add((String) source.getValueAt(row, column));
-	
-	            source.changeSelection(row, column, false, false);
+            	source.changeSelection(row, column, false, false);
 	            source.editCellAt(row, column);
-	
-	            p.show(e.getComponent(), e.getX(), e.getY());
+	            
+	            gui.showServicePopup(source, e.getX(), e.getY());
             }
             if (column == 1)
             {

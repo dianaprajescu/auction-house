@@ -70,12 +70,12 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 		cmodel.addElement("user2");
 		
 		Object[][] data = {
-		        {"Kathy",  lmodel, cmodel},
-		        {"John", lmodel, cmodel},
-		        {"Sue", lmodel, cmodel},
-		        {"Sue", lmodel, cmodel},
-		        {"Sue", lmodel, cmodel},
-		        {"Jane", lmodel, cmodel}
+		        {"Kathy",  lmodel, "inactive"},
+		        {"John", lmodel, "inactive"},
+		        {"Sue", lmodel, "inactive"},
+		        {"Sue", lmodel, "inactive"},
+		        {"Sue", lmodel, "inactive"},
+		        {"Jane", lmodel, "inactive"}
 		        };
 		
 		// Initialize model.

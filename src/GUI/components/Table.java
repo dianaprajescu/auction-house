@@ -1,15 +1,7 @@
 package GUI.components;
 
-import java.awt.Component;
-
-import javax.swing.DefaultCellEditor;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
@@ -27,14 +19,6 @@ public class Table extends JTable
 	
 	public TableCellEditor getCellEditor(int row, int column)
     {		
-		if (column % 3 == 2)
-		{
-			DefaultComboBoxModel data = (DefaultComboBoxModel)((TableModel)this.getModel()).getValueAt(row, column);
-			
-			ComboCellEditor comboCellEditor = new ComboCellEditor(data, gui);
-			
-			return comboCellEditor;
-		}
 		if (column % 3 == 1)
 		{
 			DefaultListModel data = (DefaultListModel)((TableModel)this.getModel()).getValueAt(row, column);
@@ -51,11 +35,7 @@ public class Table extends JTable
 	
 	public TableCellRenderer getCellRenderer(int row, int column)
 	{
-		if (column % 3 == 2)
-		{
-			return new ComboCellRenderer();
-		}
-		else if (column % 3 == 1)
+		if (column % 3 == 1)
 		{
 			return new ListCellRenderer();
 		}

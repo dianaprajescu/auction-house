@@ -1,6 +1,5 @@
 package GUI.components;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableModel;
 
 /**
  * @author Stedy
@@ -56,7 +55,7 @@ public class TableModel extends AbstractTableModel {
 	 */
 	public boolean isCellEditable(int row, int column)
 	{
-		if (column % 3 == 2 || column % 3 == 1)
+		if (column % 3 == 1)
 		{
 			return true;
 		}
