@@ -60,8 +60,6 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	            "User List",
 	            "Status"};
 		
-		String[] test = {"1", "2"};
-		
 		DefaultListModel lmodel = new DefaultListModel();
 		lmodel.addElement("user1");
 		lmodel.addElement("user2");
