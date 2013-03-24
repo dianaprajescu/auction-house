@@ -144,7 +144,8 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 		mainPanel.add(welcome);
 
 		LogoutButton logout = new LogoutButton(this, GUImed);
-		logout.setBounds(800, 7, 84, 18);
+		logout.setFocusable(false);
+		logout.setBounds(800, 7, 84, 20);
         mainPanel.add(logout);
         
         JScrollPane scroll = new JScrollPane(table);
