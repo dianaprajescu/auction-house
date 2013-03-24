@@ -39,6 +39,12 @@ public class MainTableModel extends AbstractTableModel {
 		return data[row][col];
 	}
 
+	@Override
+	public void setValueAt(Object obj, int row, int column)
+	{
+		data[row][column] = obj;
+	}
+
 	public Integer getIdAt(int row)
 	{
 		return entryIds[row];
@@ -124,7 +130,7 @@ public class MainTableModel extends AbstractTableModel {
 		}
 		return false;
 	}
-	
+
 	public int findRowByServiceId(int serviceId)
 	{
 		for (int i = 0; i < entryIds.length; i++)
@@ -134,7 +140,7 @@ public class MainTableModel extends AbstractTableModel {
 				return i;
 			}
 		}
-		
+
 		return -1;
 	}
 }

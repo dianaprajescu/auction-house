@@ -18,19 +18,21 @@ public class PopupMenuItem extends JMenuItem implements Command{
 	/**
 	 * The selected row in table.
 	 */
-	private int row;
+	private int mainRow;
+	private int cellRow;
 
-	public PopupMenuItem(String option, GUIMediator med, ActionListener al, int row)
+	public PopupMenuItem(String option, GUIMediator med, ActionListener al, int mainRow, int cellRow)
 	{
 		super(option);
 		this.addActionListener(al);
 		this.med = med;
-		this.row = row;
+		this.mainRow = mainRow;
+		this.cellRow = cellRow;
 	}
 
 	@Override
 	public void execute(String command) {
-		this.med.userAction(command, row);
+		this.med.userAction(command, mainRow, cellRow);
 	}
 
 }
