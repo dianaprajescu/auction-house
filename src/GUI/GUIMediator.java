@@ -315,7 +315,13 @@ public class GUIMediator {
 				{
 					if (i != cellRow)
 					{
-						ctm.setValueAt("Offer Refused", i, 1);
+						String status = ctm.getStatusAt(i);
+						int intStatus = this.getIntStatus(status);
+
+						if (intStatus == 2)
+						{
+							ctm.setValueAt("Offer Refused", i, 1);
+						}
 					}
 					else
 					{
