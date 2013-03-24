@@ -73,7 +73,10 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 		try {
 			while (rs.next())
 			{
-				Object[] row = {rs.getInt("id"), rs.getString("name"),  new CellTableModel(), "Inactive"};
+				CellTableModel x = new CellTableModel();
+				Object[] rowx = {1, "user", "no offer", 0};
+				x.addRow(rowx);
+				Object[] row = {rs.getInt("id"), rs.getString("name"), x , "Inactive"};
 				model.addRow(row);
 			}
 		} catch (SQLException e1) {
@@ -121,6 +124,11 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Command comd = (Command) e.getSource();
         comd.execute(e.getActionCommand());
+	}
+	
+	public void startTransfer(int serviceId, int userId)
+	{
+		this.med.startTransfer(serviceId, userId);
 	}
 
 }

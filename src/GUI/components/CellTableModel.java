@@ -125,4 +125,17 @@ public class CellTableModel extends AbstractTableModel{
 	{
 		return false;
 	}
+	
+	public int findRowByUserId(int userId)
+	{
+		for (int i = 0; i < entryIds.length; i++)
+		{
+			if (userId == entryIds[i])
+			{
+				return i;
+			}
+		}
+		
+		return -1;
+	}
 }

@@ -124,4 +124,17 @@ public class MainTableModel extends AbstractTableModel {
 		}
 		return false;
 	}
+	
+	public int findRowByServiceId(int serviceId)
+	{
+		for (int i = 0; i < entryIds.length; i++)
+		{
+			if (serviceId == entryIds[i])
+			{
+				return i;
+			}
+		}
+		
+		return -1;
+	}
 }

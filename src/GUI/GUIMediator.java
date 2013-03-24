@@ -209,6 +209,9 @@ public class GUIMediator {
 	{
 		System.out.println(this.gui.getTable().getSelectedUserId());
 		System.out.println(this.gui.getTable().getSelectedUserStatus());
+		
+		// TODO start transfer when win
+		// this.gui.startTransfer(this.gui.getTable().getSelectedId(), this.gui.getTable().getSelectedUserId());
 
 		String status = gui.getTable().getSelectedUserStatus();
 		int intStatus = this.getIntStatus(status);

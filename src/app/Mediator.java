@@ -16,6 +16,7 @@ import GUI.GUI;
 import GUI.components.CellTableModel;
 import GUI.components.MainTable;
 import GUI.components.MainTableModel;
+import Network.MockupNetwork;
 
 /**
  * @author diana
@@ -23,7 +24,7 @@ import GUI.components.MainTableModel;
  */
 public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediator {
 	private IGUI gui;
-	private INetwork netwrok;
+	private INetwork network;
 	private IWSClient client;
 
 	public void newOnlineSeller(String seller, int buyer_id, int service_id)
@@ -56,12 +57,35 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 		*/
 		//System.out.println("sdfsdf " + status);
 	}
+	
+	public void updateTransfer(int serviceId, int userId, int progress)
+	{
+		MainTable table = ((GUI)this.gui).getTable();
+		MainTableModel mtm = (MainTableModel) table.getModel();
+		
+		int serviceRow = mtm.findRowByServiceId(serviceId);
+		if (serviceRow >= 0)
+		{
+			CellTableModel ctm = (CellTableModel) table.getValueAt(serviceRow, 1);
+			int userRow = ctm.findRowByUserId(userId);
+			
+			ctm.setValueAt(progress, userRow, 2);
+			
+			ctm.fireTableDataChanged();
+			table.rebuildTable();
+		}
+	}
+	
+	public void startTransfer(int serviceId, int userId)
+	{
+		((MockupNetwork)this.network).initTransfer(serviceId, userId);
+	}
 
 	public void registerGUI(IGUI gui) {
 		this.gui = gui;
 	}
 	public void registerNetwork(INetwork network) {
-		this.netwrok = network;
+		this.network = network;
 	}
 	public void registerWSClient(IWSClient client) {
 		this.client = client;
