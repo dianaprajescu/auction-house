@@ -5,14 +5,17 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JTable;
 
+import GUI.GUI;
 import GUI.GUIMediator;
 
 public class MainTableMouseListener extends MouseAdapter{
 
-	private GUIMediator gui;
+	private GUIMediator med;
+	private GUI gui;
 
-	public MainTableMouseListener(GUIMediator gui)
+	public MainTableMouseListener(GUIMediator med, GUI gui)
 	{
+		this.med = med;
 		this.gui = gui;
 	}
 
@@ -33,14 +36,14 @@ public class MainTableMouseListener extends MouseAdapter{
 	            	source.changeSelection(row, column, false, false);
 		            source.editCellAt(row, column);
 
-		            gui.showServicePopup(source, e.getX(), e.getY());
+		            med.showServicePopup(source, e.getX(), e.getY());
 	            }
 	            if (column == 1)
 	            {
 	            	source.changeSelection(row, column, false, false);
 	            	source.editCellAt(row, column);
 
-	            	e.translatePoint(source.getLocation().x - source.getEditorComponent().getLocation().x, source.getLocation().y - source.getEditorComponent().getLocation().y);
+	            	e.translatePoint(gui.getMainPanel().getLocation().x - source.getEditorComponent().getLocation().x, gui.getMainPanel().getLocation().y - source.getEditorComponent().getLocation().y);
 	            	e.setSource(source.getEditorComponent());
 
 	            	((JTable)e.getSource()).dispatchEvent(e);

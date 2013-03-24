@@ -37,6 +37,8 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	private GUIMediator GUImed = new GUIMediator();
 	private Mediator med;
 
+	private JPanel mainPanel;
+
 	public GUI (Mediator med)
 	{
 		super("Auction House");
@@ -93,7 +95,7 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 		}
 
 		table = new MainTable(model, GUImed);
-		table.addMouseListener(new MainTableMouseListener(GUImed));
+		table.addMouseListener(new MainTableMouseListener(GUImed, this));
 		table.rebuildTable();
 
 		table.setPreferredScrollableViewportSize(new Dimension(800, 400));
@@ -110,6 +112,11 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 		return this.table;
 	}
 
+	public JPanel getMainPanel()
+	{
+		return this.mainPanel;
+	}
+
 	/**
 	 * Build GUI.
 	 */
@@ -119,7 +126,7 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 		new Login(this, GUImed);
 
 		// Main panel.
-		JPanel mainPanel = new JPanel();
+		mainPanel = new JPanel();
 		//mainPanel.add(new JLabel("Welcome to Auction House!"), "North");
 
         mainPanel.add(new LogoutButton(this, GUImed));
