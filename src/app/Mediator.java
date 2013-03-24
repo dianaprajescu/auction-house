@@ -67,6 +67,29 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 
 		((MockupNetwork) this.network).newOnlineUser(service, username);
 	}
+	
+	public void updateTransfer(int serviceId, int userId, int progress)
+	{
+		MainTable table = ((GUI)this.gui).getTable();
+		MainTableModel mtm = (MainTableModel) table.getModel();
+		
+		int serviceRow = mtm.findRowByServiceId(serviceId);
+		if (serviceRow >= 0)
+		{
+			CellTableModel ctm = (CellTableModel) table.getValueAt(serviceRow, 1);
+			int userRow = ctm.findRowByUserId(userId);
+			
+			ctm.setValueAt(progress, userRow, 2);
+			
+			ctm.fireTableDataChanged();
+			table.rebuildTable();
+		}
+	}
+	
+	public void startTransfer(int serviceId, int userId)
+	{
+		((MockupNetwork)this.network).initTransfer(serviceId, userId);
+	}
 
 	public void newOnlineUser(String service, String user)
 	{

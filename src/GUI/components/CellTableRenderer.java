@@ -2,6 +2,8 @@ package GUI.components;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
@@ -19,8 +21,13 @@ public class CellTableRenderer extends DefaultTableCellRenderer{
 		if (column == 2)
 		{
 			JProgressBar progress = new JProgressBar(0, 100);
-			progress.setValue(50);	
-			progress.setStringPainted(true);
+			
+			progress.setValue((int) value);
+			
+			if ((int) value > 0)
+			{
+				progress.setStringPainted(true);
+			}
 			
 			return progress;
 		}
