@@ -14,6 +14,7 @@ import java.util.Random;
 
 import GUI.GUI;
 import GUI.components.CellTableModel;
+import GUI.components.MainTable;
 import GUI.components.MainTableModel;
 import Network.MockupNetwork;
 
@@ -32,60 +33,57 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	 * @param   int  userType  1 for buyer and 2 for seller.
 	 * @param
 	 */
-	public void activateService(String service, String username)
+	public void activateService(int serviceId, int userId)
+	{
+		((MockupNetwork) this.network).activateService(serviceId, userId);
+	}
+
+	public void loadUserList(int serviceId)
 	{
 		// Populate model with a random number of sellers.
 		int noSellers = new Random().nextInt(6) + 1;
 
-		// Find out which row to update in the main table.
-		int row = 0;
-		int j;
-		for (j = 0; j < ((GUI)this.gui).getTable().getRowCount(); j++)
+		MainTableModel mtm = (MainTableModel) ((GUI)this.gui).getTable().getModel();
+		int row = mtm.findRowByServiceId(serviceId);
+
+		if (row >= 0)
 		{
-			if (((String)((GUI)this.gui).getTable().getValueAt(j, 0)).compareTo(service) == 0)
+			// Get cell to update model.
+			CellTableModel ct = (CellTableModel)((GUI)this.gui).getTable().getValueAt(row, 1);
+
+			int i;
+			for (i = 0; i < noSellers; i++)
 			{
-				row = j;
-				break;
+				// Create sellers.
+				int sellerId = new Random().nextInt(10) * i;
+				Object[] rowx = {sellerId, "seller_name" + sellerId, "No Offer", 0};
+				ct.addRow(rowx);
 			}
+
+
+			ct.fireTableDataChanged();
+			((GUI)this.gui).getTable().rebuildTable();
 		}
-
-		// Get cell to update model.
-		CellTableModel ct = (CellTableModel)((GUI)this.gui).getTable().getValueAt(row, 1);
-
-		int i;
-		for (i = 0; i < noSellers; i++)
-		{
-			// Create sellers.
-			int sellerId = new Random().nextInt(10) * i;
-			Object[] rowx = {sellerId, "seller_name" + sellerId, "No Offer", ""};
-			ct.addRow(rowx);
-		}
-
-
-		ct.fireTableDataChanged();
-		((GUI)this.gui).getTable().rebuildTable();
-
-		((MockupNetwork) this.network).newOnlineUser(service, username);
 	}
-	
+
 	public void updateTransfer(int serviceId, int userId, int progress)
 	{
 		MainTable table = ((GUI)this.gui).getTable();
 		MainTableModel mtm = (MainTableModel) table.getModel();
-		
+
 		int serviceRow = mtm.findRowByServiceId(serviceId);
 		if (serviceRow >= 0)
 		{
 			CellTableModel ctm = (CellTableModel) table.getValueAt(serviceRow, 1);
 			int userRow = ctm.findRowByUserId(userId);
-			
+
 			ctm.setValueAt(progress, userRow, 2);
-			
+
 			ctm.fireTableDataChanged();
 			table.rebuildTable();
 		}
 	}
-	
+
 	public void startTransfer(int serviceId, int userId)
 	{
 		((MockupNetwork)this.network).initTransfer(serviceId, userId);

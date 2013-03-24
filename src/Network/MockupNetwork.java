@@ -3,11 +3,12 @@
  */
 package Network;
 
+import interfaces.INetwork;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Random;
 
-import interfaces.INetwork;
 import app.Mediator;
 
 /**
@@ -42,11 +43,11 @@ public class MockupNetwork implements INetwork {
 	 * @param   int  buyer_id    The buyer that activated the service.
 	 * @param   int  service_id  The active service.
 	 */
-	public void newActiveService(int serviceId, int userId)
+	public void activateService(int serviceId, int userId)
 	{
-		med.newOnlineUser(serviceId, userId);
+		med.loadUserList(serviceId);
 	}
-	
+
 	public void initTransfer(final int serviceId, final int userId)
 	{
 		TransferTask tt = new TransferTask((new Random()).nextInt(101));

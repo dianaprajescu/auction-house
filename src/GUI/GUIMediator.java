@@ -209,7 +209,7 @@ public class GUIMediator {
 	{
 		System.out.println(this.gui.getTable().getSelectedUserId());
 		System.out.println(this.gui.getTable().getSelectedUserStatus());
-		
+
 		// TODO start transfer when win
 		// this.gui.startTransfer(this.gui.getTable().getSelectedId(), this.gui.getTable().getSelectedUserId());
 
@@ -285,7 +285,7 @@ public class GUIMediator {
 				gui.getTable().rebuildTable();
 
 				// TODO Launch offer request in the sistem. (Notify Network?)
-				gui.getMediator().activateService((String) gui.getTable().getValueAt(row, 0), username.getText());
+				gui.getMediator().activateService(((MainTableModel)gui.getTable().getModel()).getIdAt(row), this.username.getId());
 
 				break;
 
