@@ -6,6 +6,7 @@ package GUI;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 
 import interfaces.IGUIMediator;
@@ -23,6 +24,12 @@ import GUI.components.PasswordField;
 import GUI.components.BuyerType;
 import GUI.components.SellerType;
 import GUI.components.UsernameField;
+import java.awt.FlowLayout;
+import javax.swing.SwingConstants;
+import java.awt.Component;
+import javax.swing.Box;
+import java.awt.Color;
+import javax.swing.JSeparator;
 
 /**
  * @author Stedy
@@ -35,8 +42,17 @@ public class Login extends JFrame {
 	public Login (ActionListener al, GUIMediator med)
 	{
 		super("Login");
-		this.setLocationRelativeTo(null);
+		setResizable(false);
 		setSize(400, 200); 
+		
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	    int height = screenSize.height/2;
+	    int width = screenSize.width/2;
+	    int fHeight = this.getHeight()/2;
+	    int fWidth = this.getWidth()/2;
+	    
+	    this.setLocation(width-fWidth, height-fHeight);
+		
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         med.registerLogin(this);
 		
@@ -55,38 +71,59 @@ public class Login extends JFrame {
 	{
 		// Login panel
 		JPanel loginPanel = new JPanel();
-		loginPanel.add(new JLabel("Welcome to Auction House!"), "North");
+		loginPanel.setLayout(null);
+		
+		JLabel welcome = new JLabel("Welcome to Auction House!");
+		welcome.setHorizontalAlignment(SwingConstants.CENTER);
+		welcome.setBounds(0, 8, 387, 14);
+		
+		loginPanel.add(welcome);
 		
 		// Add label for username.
-		loginPanel.add(new JLabel("username:"));
+		JLabel lblUsername = new JLabel("Username:");
+		lblUsername.setBounds(82, 47, 78, 14);
+		loginPanel.add(lblUsername);
 		UsernameField username = new UsernameField(med);
 		username.setPreferredSize(new Dimension(100, 20));
+		username.setBounds(170,44,130,20);
 		loginPanel.add(username);
 		
+		
 		// Add label for password.
-		loginPanel.add(new JLabel("password"));
+		JLabel lblPassword = new JLabel("Password:");
+		lblPassword.setBounds(82, 73, 73, 14);
+		loginPanel.add(lblPassword);
 		PasswordField password = new PasswordField(med);
 		password.setPreferredSize(new Dimension(100, 20));
+		password.setBounds(170,70,130,20);
 		loginPanel.add(password);
 		
 		// Select user type.
-		loginPanel.add(new JLabel("Select user type"));
-		BuyerType buyercb = new BuyerType(med);
+		JLabel lblUserType = new JLabel("User type:");
+		lblUserType.setBounds(82, 99, 78, 14);
+		loginPanel.add(lblUserType);
 		SellerType sellercb = new SellerType(med);
+		sellercb.setBounds(170,96,64,20);
 		
 		// Group radio buttons.
 		ButtonGroup group = new ButtonGroup();
+		BuyerType buyercb = new BuyerType(med);
+		buyercb.setBounds(236,96,64,20);
+		loginPanel.add(buyercb);
+		loginPanel.add(sellercb);
 		group.add(buyercb);
 		group.add(sellercb);
 		
-		JPanel checkPanel = new JPanel(new GridLayout(0, 1));
-        checkPanel.add(buyercb);
-        checkPanel.add(sellercb);
-        loginPanel.add(checkPanel);
-		
+        
         // Add login button.
-        loginPanel.add(new LoginButton(al, med));
+        LoginButton login = new LoginButton(al, med);
+        login.setBounds(155,138,78,23);
+        loginPanel.add(login);
         
         getContentPane().add(BorderLayout.CENTER, loginPanel);
+        
+        JSeparator separator = new JSeparator();
+        separator.setBounds(20, 25, 355, 2);
+        loginPanel.add(separator);
 	}
 }
