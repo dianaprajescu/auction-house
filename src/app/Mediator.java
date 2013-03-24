@@ -89,29 +89,22 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 		((MockupNetwork)this.network).initTransfer(serviceId, userId);
 	}
 
-	public void newOnlineUser(String service, String user)
+	public void newOnlineUser(int serviceId, int userId)
 	{
 		// Find out which row to update in the main table.
-		int row = 0;
-		int j;
-		for (j = 0; j < ((GUI)this.gui).getTable().getRowCount(); j++)
-		{
-			if (((String)((GUI)this.gui).getTable().getValueAt(j, 0)).compareTo(service) == 0)
-			{
-				row = j;
-				break;
-			}
-		}
+		MainTableModel mtm = (MainTableModel) ((GUI)this.gui).getTable().getModel();
+		int row = mtm.findRowByServiceId(serviceId);
+
 
 		// Get cell to update model.
 		CellTableModel ct = (CellTableModel)((GUI)this.gui).getTable().getValueAt(row, 1);
 
 		// Add buyer.
 		int buyerId = new Random().nextInt(100);
-		Object[] rowx = {buyerId, "buyer_name" + buyerId, "No Offer", ""};
+		Object[] rowx = {buyerId, "buyer_name" + buyerId, "No Offer", 0};
 		ct.addRow(rowx);
 
-		((MainTableModel)((GUI)this.gui).getTable().getModel()).fireTableDataChanged();
+		ct.fireTableDataChanged();
 		((GUI)this.gui).getTable().rebuildTable();
 	}
 
