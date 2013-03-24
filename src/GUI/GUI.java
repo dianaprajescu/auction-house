@@ -18,6 +18,7 @@ import GUI.components.MainTable;
 import GUI.components.MainTableModel;
 import GUI.components.MainTableMouseListener;
 import app.Command;
+import app.Mediator;
 
 /**
  * @author Stedy
@@ -33,9 +34,10 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	private MainTable table;
 
 	private JLabel item;
-	private final GUIMediator med = new GUIMediator();
+	private GUIMediator med = new GUIMediator();
+	private Mediator mmed;
 
-	public GUI ()
+	public GUI (Mediator mmed)
 	{
 		super("Auction House");
 		this.setLocationRelativeTo(null);
@@ -46,6 +48,9 @@ public class GUI extends JFrame implements IGUI, ActionListener {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         med.registerGUI(this);
+
+        this.mmed = mmed;
+        mmed.registerGUI(this);
 
 		init();
 		build();
@@ -63,8 +68,8 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 		CellTableModel lmodel = new CellTableModel();
 		String[] columns = {"User", "Status", "Progress"};
 		lmodel.setColumnNames(columns);
-		String[] rowData1 = {"user1", "status1", ""};
-		String[] rowData2 = {"user2", "status2", ""};
+		Object[] rowData1 = {0, "user1", "status1", ""};
+		Object[] rowData2 = {1, "user2", "status2", ""};
 		lmodel.addRow(rowData1);
 		lmodel.addRow(rowData2);
 		lmodel.addRow(rowData2);

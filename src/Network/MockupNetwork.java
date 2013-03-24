@@ -11,13 +11,14 @@ import app.Mediator;
  *
  */
 public class MockupNetwork implements INetwork {
-	private final Mediator med = new Mediator();
+	private Mediator med;
 
 	/**
 	 * Constructor.
 	 */
-	public MockupNetwork()
+	public MockupNetwork(Mediator med)
 	{
+		this.med = med;
 		med.registerNetwork(this);
 	}
 

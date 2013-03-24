@@ -7,16 +7,21 @@ import java.util.List;
 
 import javax.swing.SwingWorker;
 
+import Network.MockupNetwork;
+import app.Mediator;
+
 /**
  * @author Stedy
  *
  */
 public class Simulator extends SwingWorker<Integer, Integer> {
 
-	private final GUI gui;
+	private GUI gui;
+	private Mediator med;
 
-	public Simulator (GUI gui)
+	public Simulator (Mediator med, GUI gui)
 	{
+		this.med = med;
 		this.gui = gui;
 	}
 
@@ -54,8 +59,8 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 	@Override
 	protected void process(List<Integer> chunks) {
 		// TODO 3.3 - print values received
-		//MockupNetwork mock = new MockupNetwork();
-		//mock.newOnlineSeller();
+		MockupNetwork mock = new MockupNetwork(med);
+		mock.newOnlineSeller();
 		//System.out.println(chunks);
 	}
 

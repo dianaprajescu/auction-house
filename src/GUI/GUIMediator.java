@@ -16,11 +16,10 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 
 import GUI.components.BuyerType;
-import GUI.components.MainTableModel;
+import GUI.components.MainTable;
 import GUI.components.PasswordField;
 import GUI.components.PopupMenuItem;
 import GUI.components.SellerType;
-import GUI.components.MainTable;
 import GUI.components.UsernameField;
 import app.Database;
 
@@ -155,12 +154,10 @@ public class GUIMediator {
 	{
 		System.out.println(this.gui.getTable().getSelectedStatus());
 		System.out.println(this.gui.getTable().getSelectedId());
-		
+
 		// Get service status.
 		String status = (String) this.gui.getTable().getModel().getValueAt(this.gui.getTable().getSelectedRow(), 2);
 		int intStatus = this.getIntStatus(status);
-
-		//TODO ia din baza de date optiunile disponibile pentru serviciul selectat.
 
 		// If user is a buyer.
 		if (username.getType() == 1)
@@ -172,9 +169,10 @@ public class GUIMediator {
 			{
 				popup.add(new PopupMenuItem("Launch Offer Request", this, this.gui));
 			}
-			else if (intStatus < 5)
+			else if (intStatus == 2)
 			{
 				// TODO only if no offer made.
+
 				popup.add(new PopupMenuItem("Drop Offer Request", this, this.gui));
 			}
 
@@ -189,10 +187,10 @@ public class GUIMediator {
 		popup.add(new JMenuItem("test"));
 		popup.add(new JMenuItem("test1"));
 		popup.show(table, x, y);
-		
+
 		System.out.println(this.gui.getTable().getSelectedUserId());
 		System.out.println(this.gui.getTable().getSelectedUserStatus());
-		
+
 		/*
 		String user = (String) list.getSelectedValue();
 

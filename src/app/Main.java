@@ -17,9 +17,10 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		GUI gui = new GUI();
+		Mediator med = new Mediator();
+		GUI gui = new GUI(med);
 
-		Simulator s = new Simulator(gui);
+		Simulator s = new Simulator(med, gui);
 		s.execute();
 	}
 
