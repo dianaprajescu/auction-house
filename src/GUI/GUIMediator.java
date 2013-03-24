@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -17,6 +16,7 @@ import GUI.components.BuyerType;
 import GUI.components.CellTable;
 import GUI.components.CellTableModel;
 import GUI.components.MainTable;
+import GUI.components.MainTableModel;
 import GUI.components.PasswordField;
 import GUI.components.PopupMenuItem;
 import GUI.components.SellerType;
@@ -34,7 +34,6 @@ public class GUIMediator {
 	private PasswordField password;
 	private BuyerType buyer;
 	private SellerType seller;
-	private JList list;
 
 	/**
 	 * Login.
@@ -167,7 +166,7 @@ public class GUIMediator {
 			// Service inactive.
 			if (status.compareToIgnoreCase("inactive") == 0)
 			{
-				popup.add(new PopupMenuItem("Launch Offer Request", this, this.gui));
+				popup.add(new PopupMenuItem("Launch Offer Request", this, this.gui, gui.getTable().getSelectedRow()));
 			}
 
 			// Service active.
@@ -190,7 +189,7 @@ public class GUIMediator {
 
 				if (accepted == false)
 				{
-					popup.add(new PopupMenuItem("Drop Offer Request", this, this.gui));
+					popup.add(new PopupMenuItem("Drop Offer Request", this, this.gui, gui.getTable().getSelectedRow()));
 				}
 			}
 
@@ -239,31 +238,65 @@ public class GUIMediator {
 
 				if (accepted == false)
 				{
-					popup.add(new PopupMenuItem("Accept Offer", this, this.gui));
+					popup.add(new PopupMenuItem("Accept Offer", this, this.gui, gui.getTable().getSelectedRow()));
 				}
 
 				// Refuse offer.
-		        popup.add(new PopupMenuItem("Refuse Offer", this, this.gui));
+		        popup.add(new PopupMenuItem("Refuse Offer", this, this.gui, gui.getTable().getSelectedRow()));
 			}
 		}
 		else
 		{
-			popup.add(new PopupMenuItem("Make Offer", this, this.gui));
+			popup.add(new PopupMenuItem("Make Offer", this, this.gui, gui.getTable().getSelectedRow()));
 
 			if (intStatus == 3)
 			{
-				popup.add(new PopupMenuItem("Drop auction", this, this.gui));
+				popup.add(new PopupMenuItem("Drop auction", this, this.gui, gui.getTable().getSelectedRow()));
 			}
 		}
 
         popup.show(table, x, y); //and show the menu
 	}
 
-	public void userAction(String command)
+	/**
+	 * Execute selected action from popup.
+	 *
+	 * @param   String  command  The requested command.
+	 * @param   int     row      The selected row in table.
+	 */
+	public void userAction(String command, int row)
 	{
 		//TODO do sth based on command.
 		System.out.println(command);
-		System.out.println(this.gui.getTable().getModel().getValueAt(this.gui.getTable().getSelectedRow(), 0));
+		System.out.println(this.gui.getTable().getSelectedService());
+
+		switch (command.toLowerCase())
+		{
+			case "launch offer request":
+				// Activate service.
+				MainTableModel mtm = (MainTableModel) gui.getTable().getModel();
+				mtm.setStatusAt("Active", row);
+				System.out.println("----" + mtm.getStatusAt(row));
+
+				((MainTableModel)gui.getTable().getModel()).fireTableDataChanged();
+				gui.getTable().rebuildTable();
+
+
+				// TODO Launch offer request in the sistem. (Notify Network?)
+
+				break;
+
+			case "drop offer request":
+				break;
+			case "accept offer":
+				break;
+			case "refuse offer":
+				break;
+			case "make offer":
+				break;
+			case "drop auction":
+				break;
+		}
 	}
 
 	/**
@@ -312,9 +345,5 @@ public class GUIMediator {
 
 	public void registerSellerType(SellerType seller) {
 		this.seller = seller;
-	}
-
-	public void registerList(JList list){
-		this.list = list;
 	}
 }

@@ -8,19 +8,29 @@ import GUI.GUIMediator;
 import app.Command;
 
 public class PopupMenuItem extends JMenuItem implements Command{
+	/**
+	 * Serializable.
+	 */
+	private static final long serialVersionUID = -8507498325595636424L;
 
 	private GUIMediator med;
 
-	public PopupMenuItem(String option, GUIMediator med, ActionListener al)
+	/**
+	 * The selected row in table.
+	 */
+	private int row;
+
+	public PopupMenuItem(String option, GUIMediator med, ActionListener al, int row)
 	{
 		super(option);
 		this.addActionListener(al);
 		this.med = med;
+		this.row = row;
 	}
-	
+
+	@Override
 	public void execute(String command) {
-		// TODO Auto-generated method stub
-		this.med.userAction(command);
+		this.med.userAction(command, row);
 	}
-	
+
 }

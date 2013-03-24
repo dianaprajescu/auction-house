@@ -33,6 +33,7 @@ public class MainTableModel extends AbstractTableModel {
 		return columnNames[col];
 	}
 
+	@Override
 	public Object getValueAt(int row, int col)
 	{
 		return data[row][col];
@@ -48,6 +49,17 @@ public class MainTableModel extends AbstractTableModel {
 		return (String) data[row][2];
 	}
 
+	public void setStatusAt(String status, int row)
+	{
+		data[row][2] = status;
+	}
+
+	public String getServiceAt(int row)
+	{
+		return (String) data[row][0];
+	}
+
+	@Override
 	public int getColumnCount()
 	{
 		if (this.columnNames != null)
@@ -57,6 +69,7 @@ public class MainTableModel extends AbstractTableModel {
 		return 0;
 	}
 
+	@Override
 	public int getRowCount()
 	{
 		if (this.data != null)

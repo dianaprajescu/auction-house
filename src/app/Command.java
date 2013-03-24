@@ -2,7 +2,7 @@ package app;
 
 /**
  * The command interface.
- * 
+ *
  * @author Stedy
  *
  */

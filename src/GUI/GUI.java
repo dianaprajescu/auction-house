@@ -2,7 +2,6 @@ package GUI;
 import interfaces.IGUI;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -62,6 +61,7 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	/**
 	 * Initialize model.
 	 */
+	@Override
 	public void init() {
 		// Populate model.
 		model = new MainTableModel();
@@ -83,19 +83,7 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 
 		table = new MainTable(model, GUImed);
 		table.addMouseListener(new MainTableMouseListener(GUImed));
-
-		try {
-		    for (int row=0; row<table.getRowCount(); row++) {
-		        int rowHeight = table.getRowHeight();
-
-		        for (int column=0; column<table.getColumnCount(); column++) {
-		            Component comp = table.prepareRenderer(table.getCellRenderer(row, column), row, column);
-		            rowHeight = Math.max(rowHeight, comp.getPreferredSize().height);
-		        }
-
-		        table.setRowHeight(row, rowHeight);
-		    }
-		} catch(ClassCastException e) { }
+		table.rebuildTable();
 
 		table.setPreferredScrollableViewportSize(new Dimension(500, 250));
         table.setFillsViewportHeight(true);
@@ -114,6 +102,7 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	/**
 	 * Build GUI.
 	 */
+	@Override
 	public void build() {
 
 		new Login(this, GUImed);
@@ -128,6 +117,7 @@ public class GUI extends JFrame implements IGUI, ActionListener {
         getContentPane().add(BorderLayout.CENTER, mainPanel);
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		Command comd = (Command) e.getSource();
         comd.execute(e.getActionCommand());
