@@ -6,20 +6,23 @@ import java.awt.Component;
 import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JProgressBar;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 
-public class MainTableCellRenderer extends DefaultTableCellRenderer{
+public class CellTableRenderer extends DefaultTableCellRenderer{
 	
 	public Component getTableCellRendererComponent(JTable table, Object value,
     		boolean isSelected, boolean hasFocus, int row, int column) {
 		
-		if (column == 1)
+		if (column == 2)
 		{
-			CellTable tableX = new CellTable((CellTableModel) value);
+			JProgressBar progress = new JProgressBar(0, 100);
+			progress.setValue(50);	
+			progress.setStringPainted(true);
 			
-			return tableX;
+			return progress;
 		}
 		else
 		{

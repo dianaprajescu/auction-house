@@ -25,8 +25,6 @@ public class MainTableCellEditor extends AbstractCellEditor implements TableCell
 
 	public Component getTableCellEditorComponent(JTable table, Object value,
 			boolean isSelected, int row, int column) {
-		// TODO Auto-generated method stub
-
 		if (column == 1)
 		{
 			CellTable tableX = new CellTable((CellTableModel) model);

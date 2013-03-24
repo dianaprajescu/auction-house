@@ -28,6 +28,7 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 
 	public void newOnlineSeller(String seller, int buyer_id, int service_id)
 	{
+		/*
 		// TODO add this seller to the list in gui.
 		CellTableModel ct = (CellTableModel)((GUI)this.gui).getTable().getValueAt(1, 1);
 		Object[] rowx = {10, seller, "No Offer", ""};
@@ -52,7 +53,7 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 		    }
 		} catch(ClassCastException e) { }
 
-
+		*/
 		//System.out.println("sdfsdf " + status);
 	}
 

@@ -1,6 +1,7 @@
 package GUI.components;
 
 import javax.swing.JTable;
+import javax.swing.table.TableCellRenderer;
 
 public class CellTable extends JTable{
 	
@@ -16,5 +17,10 @@ public class CellTable extends JTable{
 	public Integer getSelectedId()
 	{
 		return ((CellTableModel)this.getModel()).getIdAt(this.getSelectedRow());
+	}
+	
+	public TableCellRenderer getCellRenderer(int row, int column)
+	{
+		return new CellTableRenderer();
 	}
 }
