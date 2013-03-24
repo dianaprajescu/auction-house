@@ -60,7 +60,7 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 	protected void process(List<Integer> chunks) {
 		// TODO 3.3 - print values received
 		MockupNetwork mock = new MockupNetwork(med);
-		mock.newOnlineSeller();
+		mock.newOnlineUser(null, null);
 		//System.out.println(chunks);
 	}
 

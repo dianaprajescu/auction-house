@@ -9,7 +9,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -35,7 +34,6 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	private MainTableModel model;
 	private MainTable table;
 
-	private JLabel item;
 	private GUIMediator GUImed = new GUIMediator();
 	private Mediator med;
 
@@ -43,7 +41,7 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	{
 		super("Auction House");
 		this.setLocationRelativeTo(null);
-		setSize(600, 300);
+		setSize(900, 500);
 
 		// First display login window.
         setVisible(false);
@@ -56,6 +54,16 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 
 		init();
 		build();
+	}
+
+	/**
+	 * Getter for mediator.
+	 *
+	 * @return  Mediator
+	 */
+	public Mediator getMediator()
+	{
+		return med;
 	}
 
 	/**
@@ -85,7 +93,7 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 		table.addMouseListener(new MainTableMouseListener(GUImed));
 		table.rebuildTable();
 
-		table.setPreferredScrollableViewportSize(new Dimension(500, 250));
+		table.setPreferredScrollableViewportSize(new Dimension(800, 400));
         table.setFillsViewportHeight(true);
 	}
 

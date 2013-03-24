@@ -281,8 +281,8 @@ public class GUIMediator {
 				((MainTableModel)gui.getTable().getModel()).fireTableDataChanged();
 				gui.getTable().rebuildTable();
 
-
 				// TODO Launch offer request in the sistem. (Notify Network?)
+				gui.getMediator().activateService((String) gui.getTable().getValueAt(row, 0), username.getText());
 
 				break;
 

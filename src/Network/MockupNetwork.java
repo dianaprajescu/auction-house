@@ -23,11 +23,11 @@ public class MockupNetwork implements INetwork {
 	}
 
 	/**
-	 * Buyers are notified if a new seller comes online.
+	 * Users are notified if a new users activates a service or comes online.
 	 */
-	public void newOnlineSeller ()
+	public void newOnlineUser(String service, String username)
 	{
-		med.newOnlineSeller("gigel", 1, 1);
+
 	}
 
 	/**
@@ -36,9 +36,9 @@ public class MockupNetwork implements INetwork {
 	 * @param   int  buyer_id    The buyer that activated the service.
 	 * @param   int  service_id  The active service.
 	 */
-	public void newActiveService(int buyer_id, int service_id)
+	public void newActiveService(int serviceId, int userId)
 	{
-
+		med.newOnlineUser(serviceId, userId);
 	}
 
 	/**
