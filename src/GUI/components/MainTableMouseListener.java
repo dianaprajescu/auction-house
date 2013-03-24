@@ -4,14 +4,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JList;
+import javax.swing.JTable;
 
 import GUI.GUIMediator;
 
-public class TableMouseListener extends MouseAdapter{
+public class MainTableMouseListener extends MouseAdapter{
 	
 	private GUIMediator gui;
 
-	public TableMouseListener(GUIMediator gui)
+	public MainTableMouseListener(GUIMediator gui)
 	{
 		this.gui = gui;
 	}
@@ -21,7 +22,7 @@ public class TableMouseListener extends MouseAdapter{
 	
     private void check(MouseEvent e) {
     	if (e.isPopupTrigger()) { //if the event shows the menu
-    		Table source = (Table) e.getSource();
+    		MainTable source = (MainTable) e.getSource();
             int row = source.rowAtPoint( e.getPoint() );
             int column = source.columnAtPoint( e.getPoint() );
             
@@ -38,8 +39,9 @@ public class TableMouseListener extends MouseAdapter{
             	source.editCellAt(row, column);
             	
             	e.translatePoint(source.getLocation().x - source.getEditorComponent().getLocation().x, source.getLocation().y - source.getEditorComponent().getLocation().y);
+            	e.setSource((JTable)source.getEditorComponent());
             	
-            	((JList)source.getEditorComponent()).dispatchEvent(e);
+            	((JTable)e.getSource()).dispatchEvent(e);
             }
         }
     }

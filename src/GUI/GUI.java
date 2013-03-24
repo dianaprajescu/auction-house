@@ -14,11 +14,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 import GUI.components.LogoutButton;
-import GUI.components.Table;
-import GUI.components.TableModel;
-import GUI.components.TableMouseListener;
+import GUI.components.CellTableModel;
+import GUI.components.MainTable;
+import GUI.components.MainTableModel;
+import GUI.components.MainTableMouseListener;
 import app.Command;
 
 /**
@@ -31,8 +33,8 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	 */
 	private static final long serialVersionUID = 5803021471507830897L;
 	
-	private TableModel model;
-	private Table table;
+	private MainTableModel model;
+	private MainTable table;
 	private JLabel item;
 	private GUIMediator med = new GUIMediator();
 	
@@ -61,13 +63,22 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	            "User List",
 	            "Status"};
 		
-		DefaultListModel lmodel = new DefaultListModel();
-		lmodel.addElement("user1");
-		lmodel.addElement("user2");
+		CellTableModel lmodel = new CellTableModel();
+		String[] columns = {"User", "Status", "Progress"};
+		lmodel.setColumnNames(columns);
+		String[] rowData1 = {"user1", "status1", ""};
+		String[] rowData2 = {"user2", "status2", ""};
+		lmodel.addRow(rowData1);
+		lmodel.addRow(rowData2);
+		lmodel.addRow(rowData2);
+		Integer[] idsx = {1,2,3};
+		lmodel.setEntryIds(idsx);
 		
 		DefaultComboBoxModel cmodel = new DefaultComboBoxModel();
 		cmodel.addElement("user1");
 		cmodel.addElement("user2");
+		
+		Integer[] ids = {1,2,3,4,5,6};
 		
 		Object[][] data = {
 		        {"Kathy",  lmodel, "inactive"},
@@ -79,10 +90,10 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 		        };
 		
 		// Initialize model.
-		model = new TableModel(columnNames, data);	
+		model = new MainTableModel(columnNames, data, ids);	
 		
-		table = new Table(model, med);
-		table.addMouseListener(new TableMouseListener(med));
+		table = new MainTable(model, med);
+		table.addMouseListener(new MainTableMouseListener(med));
 		
 		try {
 		    for (int row=0; row<table.getRowCount(); row++) {
@@ -101,7 +112,7 @@ public class GUI extends JFrame implements IGUI, ActionListener {
         table.setFillsViewportHeight(true);
 	}
 	
-	public JTable getTable()
+	public MainTable getTable()
 	{
 		return this.table;
 	}

@@ -5,7 +5,7 @@ import javax.swing.table.AbstractTableModel;
  * @author Stedy
  *
  */
-public class TableModel extends AbstractTableModel {
+public class MainTableModel extends AbstractTableModel {
 	/**
 	 * Serializable class.
 	 */
@@ -13,11 +13,13 @@ public class TableModel extends AbstractTableModel {
 	
 	private String[] columnNames;
 	private Object[][] data;
+	private Integer[] entryIds;
 	 
-	public TableModel(String[] columnNames, Object[][] data)
+	public MainTableModel(String[] columnNames, Object[][] data, Integer[] entryIds)
 	{
 		this.columnNames = columnNames;
 		this.data = data;
+		this.entryIds = entryIds;
 	}
 	 
 	public int getColumnCount()
@@ -38,6 +40,16 @@ public class TableModel extends AbstractTableModel {
 	public Object getValueAt(int row, int col)
 	{
 		return data[row][col];
+	}
+	
+	public Integer getIdAt(int row)
+	{
+		return entryIds[row];
+	}
+	
+	public String getStatusAt(int row)
+	{
+		return (String) data[row][2];
 	}
 	 
     /*
