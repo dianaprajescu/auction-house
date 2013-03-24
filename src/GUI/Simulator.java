@@ -7,8 +7,6 @@ import java.util.List;
 
 import javax.swing.SwingWorker;
 
-import Network.MockupNetwork;
-
 /**
  * @author Stedy
  *
@@ -56,8 +54,8 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 	@Override
 	protected void process(List<Integer> chunks) {
 		// TODO 3.3 - print values received
-		MockupNetwork mock = new MockupNetwork();
-		mock.newOnlineSeller();
+		//MockupNetwork mock = new MockupNetwork();
+		//mock.newOnlineSeller();
 		//System.out.println(chunks);
 	}
 

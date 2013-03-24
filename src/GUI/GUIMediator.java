@@ -9,15 +9,18 @@ import java.util.HashMap;
 
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JTable;
 
 import GUI.components.BuyerType;
+import GUI.components.MainTableModel;
 import GUI.components.PasswordField;
 import GUI.components.PopupMenuItem;
 import GUI.components.SellerType;
-import GUI.components.Table;
+import GUI.components.MainTable;
 import GUI.components.UsernameField;
 import app.Database;
 
@@ -144,12 +147,15 @@ public class GUIMediator {
 	/**
 	 * Show service option list.
 	 *
-	 * @param   Table  table  Source of the mouse event.
+	 * @param   MainTable  table  Source of the mouse event.
 	 * @param   int    x      The x coordinate where the right click was made.
 	 * @param   int    y      The y coordinate where the right click was made.
 	 */
-	public void showServicePopup(Table table, int x, int y)
+	public void showServicePopup(MainTable table, int x, int y)
 	{
+		System.out.println(this.gui.getTable().getSelectedStatus());
+		System.out.println(this.gui.getTable().getSelectedId());
+		
 		// Get service status.
 		String status = (String) this.gui.getTable().getModel().getValueAt(this.gui.getTable().getSelectedRow(), 2);
 		int intStatus = this.getIntStatus(status);
@@ -177,8 +183,17 @@ public class GUIMediator {
 		}
 	}
 
-	public void showListPopup(JList list, int x, int y)
+	public void showTablePopup(JTable table, int x, int y)
 	{
+		JPopupMenu popup = new JPopupMenu();
+		popup.add(new JMenuItem("test"));
+		popup.add(new JMenuItem("test1"));
+		popup.show(table, x, y);
+		
+		System.out.println(this.gui.getTable().getSelectedUserId());
+		System.out.println(this.gui.getTable().getSelectedUserStatus());
+		
+		/*
 		String user = (String) list.getSelectedValue();
 
 		String status = (String) this.gui.getTable().getModel().getValueAt(this.gui.getTable().getSelectedRow(), 2);
@@ -205,7 +220,7 @@ public class GUIMediator {
 			}
 		}
 
-        popup.show(list, x, y); //and show the menu
+        popup.show(list, x, y); //and show the menu */
 	}
 
 	public void userAction(String command)
