@@ -3,20 +3,18 @@ package GUI.components;
 import javax.swing.table.AbstractTableModel;
 
 public class CellTableModel extends AbstractTableModel{
-	private String[] columnNames;
+	private String[] columnNames = {"User", "Status", "Progress"};
 	private Object[][] data;
 	private Integer[] entryIds;
 
 	public CellTableModel()
 	{
 		this.data = null;
-		this.columnNames = null;
 		this.entryIds = null;
 	}
 
-	public CellTableModel(String[] columnNames, Object[][] data, Integer[] entryIds)
+	public CellTableModel(Object[][] data, Integer[] entryIds)
 	{
-		this.columnNames = columnNames;
 		this.data = data;
 		this.entryIds = entryIds;
 	}

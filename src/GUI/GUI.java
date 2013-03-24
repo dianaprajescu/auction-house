@@ -68,8 +68,8 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 		CellTableModel lmodel = new CellTableModel();
 		String[] columns = {"User", "Status", "Progress"};
 		lmodel.setColumnNames(columns);
-		Object[] rowData1 = {0, "user1", "status1", ""};
-		Object[] rowData2 = {1, "user2", "status2", ""};
+		Object[] rowData1 = {0, "user1", "No Offer", ""};
+		Object[] rowData2 = {1, "user2", "No Offer", ""};
 		lmodel.addRow(rowData1);
 		lmodel.addRow(rowData2);
 		lmodel.addRow(rowData2);
@@ -79,12 +79,12 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 		Integer[] ids = {1,2,3,4,5,6};
 
 		Object[][] data = {
-		        {"Kathy",  lmodel, "inactive"},
-		        {"John", lmodel, "inactive"},
-		        {"Sue", lmodel, "inactive"},
-		        {"Sue", lmodel, "inactive"},
-		        {"Sue", lmodel, "inactive"},
-		        {"Jane", lmodel, "inactive"}
+		        {"Kathy",  new CellTableModel(), "inactive"},
+		        {"John", new CellTableModel(), "inactive"},
+		        {"Sue", new CellTableModel(), "inactive"},
+		        {"Sue", new CellTableModel(), "inactive"},
+		        {"Sue", new CellTableModel(), "inactive"},
+		        {"Jane", new CellTableModel(), "inactive"}
 		        };
 
 		// Initialize model.
