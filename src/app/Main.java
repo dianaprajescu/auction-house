@@ -1,14 +1,10 @@
 /**
- * 
+ *
  */
 package app;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import javax.swing.JOptionPane;
-
 import GUI.GUI;
+import GUI.Simulator;
 
 /**
  * @author Stedy
@@ -21,7 +17,10 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		new GUI();
+		GUI gui = new GUI();
+
+		Simulator s = new Simulator(gui);
+		s.execute();
 	}
 
 }
