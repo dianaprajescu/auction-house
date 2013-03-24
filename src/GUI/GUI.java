@@ -6,6 +6,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -18,6 +20,7 @@ import GUI.components.MainTable;
 import GUI.components.MainTableModel;
 import GUI.components.MainTableMouseListener;
 import app.Command;
+import app.Database;
 import app.Mediator;
 
 /**
@@ -34,10 +37,10 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	private MainTable table;
 
 	private JLabel item;
-	private GUIMediator med = new GUIMediator();
-	private Mediator mmed;
+	private GUIMediator GUImed = new GUIMediator();
+	private Mediator med;
 
-	public GUI (Mediator mmed)
+	public GUI (Mediator med)
 	{
 		super("Auction House");
 		this.setLocationRelativeTo(null);
@@ -47,10 +50,10 @@ public class GUI extends JFrame implements IGUI, ActionListener {
         setVisible(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        med.registerGUI(this);
+        GUImed.registerGUI(this);
 
-        this.mmed = mmed;
-        mmed.registerGUI(this);
+        this.med = med;
+        med.registerGUI(this);
 
 		init();
 		build();
@@ -61,37 +64,25 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	 */
 	public void init() {
 		// Populate model.
-		String[] columnNames = {"Service",
-	            "User List",
-	            "Status"};
+		model = new MainTableModel();
 
-		CellTableModel lmodel = new CellTableModel();
-		String[] columns = {"User", "Status", "Progress"};
-		lmodel.setColumnNames(columns);
-		Object[] rowData1 = {0, "user1", "No Offer", ""};
-		Object[] rowData2 = {1, "user2", "No Offer", ""};
-		lmodel.addRow(rowData1);
-		lmodel.addRow(rowData2);
-		lmodel.addRow(rowData2);
-		Integer[] idsx = {1,2,3};
-		lmodel.setEntryIds(idsx);
+		// Get services from DB.
+		Database db = new Database();
+		ResultSet rs = db.query("SELECT * FROM service");
 
-		Integer[] ids = {1,2,3,4,5,6};
+		try {
+			while (rs.next())
+			{
+				Object[] row = {rs.getInt("id"), rs.getString("name"),  new CellTableModel(), "Inactive"};
+				model.addRow(row);
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
-		Object[][] data = {
-		        {"Kathy",  new CellTableModel(), "inactive"},
-		        {"John", new CellTableModel(), "inactive"},
-		        {"Sue", new CellTableModel(), "inactive"},
-		        {"Sue", new CellTableModel(), "inactive"},
-		        {"Sue", new CellTableModel(), "inactive"},
-		        {"Jane", new CellTableModel(), "inactive"}
-		        };
-
-		// Initialize model.
-		model = new MainTableModel(columnNames, data, ids);
-
-		table = new MainTable(model, med);
-		table.addMouseListener(new MainTableMouseListener(med));
+		table = new MainTable(model, GUImed);
+		table.addMouseListener(new MainTableMouseListener(GUImed));
 
 		try {
 		    for (int row=0; row<table.getRowCount(); row++) {
@@ -110,6 +101,11 @@ public class GUI extends JFrame implements IGUI, ActionListener {
         table.setFillsViewportHeight(true);
 	}
 
+	/**
+	 * Getter for table.
+	 *
+	 * @return  MainTable The table.
+	 */
 	public MainTable getTable()
 	{
 		return this.table;
@@ -120,13 +116,13 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	 */
 	public void build() {
 
-		new Login(this, med);
+		new Login(this, GUImed);
 
 		// Main panel.
 		JPanel mainPanel = new JPanel();
 		//mainPanel.add(new JLabel("Welcome to Auction House!"), "North");
 
-        mainPanel.add(new LogoutButton(this, med));
+        mainPanel.add(new LogoutButton(this, GUImed));
         mainPanel.add(new JScrollPane(table), "South");
 
         getContentPane().add(BorderLayout.CENTER, mainPanel);
