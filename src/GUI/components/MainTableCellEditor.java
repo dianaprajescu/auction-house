@@ -19,10 +19,12 @@ public class MainTableCellEditor extends AbstractCellEditor implements TableCell
 		this.model = model;
 	}
 
+	@Override
 	public Object getCellEditorValue() {
 		return this.model;
 	}
 
+	@Override
 	public Component getTableCellEditorComponent(JTable table, Object value,
 			boolean isSelected, int row, int column) {
 		if (column == 1)

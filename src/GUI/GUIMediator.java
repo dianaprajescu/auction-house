@@ -166,7 +166,7 @@ public class GUIMediator {
 			// Service inactive.
 			if (status.compareToIgnoreCase("inactive") == 0)
 			{
-				popup.add(new PopupMenuItem("Launch Offer Request", this, this.gui, gui.getTable().getSelectedRow()));
+				popup.add(new PopupMenuItem("Launch Offer Request", this, this.gui, gui.getTable().getSelectedRow(), 0));
 			}
 
 			// Service active.
@@ -189,7 +189,7 @@ public class GUIMediator {
 
 				if (accepted == false)
 				{
-					popup.add(new PopupMenuItem("Drop Offer Request", this, this.gui, gui.getTable().getSelectedRow()));
+					popup.add(new PopupMenuItem("Drop Offer Request", this, this.gui, gui.getTable().getSelectedRow(), 0));
 				}
 			}
 
@@ -241,20 +241,28 @@ public class GUIMediator {
 
 				if (accepted == false)
 				{
-					popup.add(new PopupMenuItem("Accept Offer", this, this.gui, gui.getTable().getSelectedRow()));
+					popup.add(new PopupMenuItem("Accept Offer", this, this.gui, gui.getTable().getSelectedRow(), table.getSelectedRow()));
 				}
 
 				// Refuse offer.
-		        popup.add(new PopupMenuItem("Refuse Offer", this, this.gui, gui.getTable().getSelectedRow()));
+		        popup.add(new PopupMenuItem("Refuse Offer", this, this.gui, gui.getTable().getSelectedRow(), table.getSelectedRow()));
 			}
 		}
 		else
 		{
-			popup.add(new PopupMenuItem("Make Offer", this, this.gui, gui.getTable().getSelectedRow()));
+			if (intStatus == 1)
+			{
+				popup.add(new PopupMenuItem("Make Offer", this, this.gui, gui.getTable().getSelectedRow(), table.getSelectedRow()));
+			}
+
+			if (intStatus == 2)
+			{
+				popup.add(new PopupMenuItem("Remove Offer", this, this.gui, gui.getTable().getSelectedRow(), table.getSelectedRow()));
+			}
 
 			if (intStatus == 3)
 			{
-				popup.add(new PopupMenuItem("Drop auction", this, this.gui, gui.getTable().getSelectedRow()));
+				popup.add(new PopupMenuItem("Drop auction", this, this.gui, gui.getTable().getSelectedRow(), table.getSelectedRow()));
 			}
 		}
 
@@ -267,39 +275,99 @@ public class GUIMediator {
 	 * @param   String  command  The requested command.
 	 * @param   int     row      The selected row in table.
 	 */
-	public void userAction(String command, int row)
+	public void userAction(String command, int mainRow, int cellRow)
 	{
 		//TODO do sth based on command.
 		System.out.println(command);
 		System.out.println(this.gui.getTable().getSelectedService());
 
+		CellTableModel ctm;
+
 		switch (command.toLowerCase())
 		{
 			case "launch offer request":
 				// Activate service.
-				MainTableModel mtm = (MainTableModel) gui.getTable().getModel();
-				mtm.setStatusAt("Active", row);
-				System.out.println("----" + mtm.getStatusAt(row));
-
-				((MainTableModel)gui.getTable().getModel()).fireTableDataChanged();
-				gui.getTable().rebuildTable();
+				((MainTableModel) gui.getTable().getModel()).setStatusAt("Active", mainRow);
 
 				// TODO Launch offer request in the sistem. (Notify Network?)
-				gui.getMediator().activateService(((MainTableModel)gui.getTable().getModel()).getIdAt(row), this.username.getId());
+				gui.getMediator().activateService(((MainTableModel)gui.getTable().getModel()).getIdAt(mainRow), this.username.getId());
 
 				break;
 
 			case "drop offer request":
+				// Deactivate service.
+				((MainTableModel) gui.getTable().getModel()).setStatusAt("Inactive", mainRow);
+
+				// Clear user list.
+				gui.getTable().setValueAt(new CellTableModel(), mainRow, 1);
+
+				// TODO Refuse all offers.
+				//gui.getMediator().refuseAllOffers();
+
 				break;
+
 			case "accept offer":
+				// Accept offer.
+				ctm = (CellTableModel) gui.getTable().getValueAt(mainRow, 1);
+
+				// Refuse offers.
+				int i;
+				for (i = 0; i < ctm.getRowCount(); i++)
+				{
+					if (i != cellRow)
+					{
+						ctm.setValueAt("Offer Refused", i, 1);
+					}
+					else
+					{
+						ctm.setValueAt("Offer Accepted", cellRow, 1);
+					}
+				}
+
+				// Refuse all other offers.
+				//gui.getMediator().refuseAllOffers();
+
 				break;
+
 			case "refuse offer":
+				// Refuse offer.
+				ctm = (CellTableModel) gui.getTable().getValueAt(mainRow, 1);
+				ctm.setValueAt("Offer Refused", cellRow, 1);
+
+				// TODO Refuse offer.
+				//gui.getMediator().refuseOffer();
+
 				break;
+
 			case "make offer":
+				// Make offer.
+				ctm = (CellTableModel) gui.getTable().getValueAt(mainRow, 1);
+				ctm.setValueAt("Offer Made", cellRow, 1);
+
+				// TODO Make offer.
+				//gui.getMediator().makeOffer();
+
 				break;
+
+			case "remove offer":
+				// remove offer.
+				ctm = (CellTableModel) gui.getTable().getValueAt(mainRow, 1);
+				ctm.setValueAt("No Offer", cellRow, 1);
+
+				// TODO Remove offer.
+				//gui.getMediator().removeOffer();
+
+				break;
+
 			case "drop auction":
+				// Drop auction.
+				ctm = (CellTableModel) gui.getTable().getValueAt(mainRow, 1);
+				ctm.setValueAt("No Offer", cellRow, 1);
 				break;
 		}
+
+		((MainTableModel)gui.getTable().getModel()).fireTableDataChanged();
+		gui.getTable().rebuildTable();
 	}
 
 	/**

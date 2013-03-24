@@ -83,9 +83,6 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 		try {
 			while (rs.next())
 			{
-				/* CellTableModel x = new CellTableModel();
-				Object[] rowx = {1, "user", "no offer", 0};
-				x.addRow(rowx); */
 				Object[] row = {rs.getInt("id"), rs.getString("name"), new CellTableModel(), "Inactive"};
 				model.addRow(row);
 			}
