@@ -95,8 +95,8 @@ public class GUIMediator {
 		login.setVisible(false);
 
 		// Add username label in main frame.
-		JPanel mainPanel = (JPanel) gui.getContentPane().getComponent(0);
-		mainPanel.add(new JLabel("Welcome to Auction House, " + username.getText() + "!"), "North", 0);
+		JLabel welcome = gui.getWelcomeLabel();
+		welcome.setText("Welcome to Auction House, " + username.getText() + "!");
 
 		// Set gui frame visible.
 		gui.setVisible(true);

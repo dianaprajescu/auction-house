@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -20,17 +21,15 @@ import GUI.components.MainTableMouseListener;
 import app.Command;
 import app.Database;
 import app.Mediator;
+import javax.swing.SwingConstants;
+import javax.swing.JSeparator;
 
 /**
  * @author Stedy
  *
  */
 public class GUI extends JFrame implements IGUI, ActionListener {
-	/**
-	 * Serializable class.
-	 */
-	private static final long serialVersionUID = 5803021471507830897L;
-
+	
 	private MainTableModel model;
 	private MainTable table;
 
@@ -39,11 +38,14 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 
 	private JPanel mainPanel;
 
+	private JLabel welcome;
+	private JSeparator separator;
+
 	public GUI (Mediator med)
 	{
 		super("Auction House");
 		this.setLocationRelativeTo(null);
-		setSize(900, 500);
+		setSize(900, 600);
 
 		// First display login window.
         setVisible(false);
@@ -98,7 +100,7 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 		table.addMouseListener(new MainTableMouseListener(GUImed, this));
 		table.rebuildTable();
 
-		table.setPreferredScrollableViewportSize(new Dimension(800, 400));
+		table.setPreferredScrollableViewportSize(new Dimension(700, 500));
         table.setFillsViewportHeight(true);
 	}
 
@@ -127,12 +129,31 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 
 		// Main panel.
 		mainPanel = new JPanel();
-		//mainPanel.add(new JLabel("Welcome to Auction House!"), "North");
+		mainPanel.setLayout(null);
+		
+		welcome = new JLabel();
+		welcome.setHorizontalAlignment(SwingConstants.CENTER);
+		welcome.setBounds(10, 5, 864, 20);
+		mainPanel.add(welcome);
 
-        mainPanel.add(new LogoutButton(this, GUImed));
-        mainPanel.add(new JScrollPane(table), "South");
-
-        getContentPane().add(BorderLayout.CENTER, mainPanel);
+		LogoutButton logout = new LogoutButton(this, GUImed);
+		logout.setBounds(790, 7, 84, 18);
+        mainPanel.add(logout);
+        
+        JScrollPane scroll = new JScrollPane(table);
+        scroll.setBounds(10,43,864,508);
+        mainPanel.add(scroll);
+        
+        getContentPane().add(mainPanel);
+        
+        separator = new JSeparator();
+        separator.setBounds(239, 25, 400, 2);
+        mainPanel.add(separator);
+	}
+	
+	public JLabel getWelcomeLabel()
+	{
+		return this.welcome;
 	}
 
 	@Override
