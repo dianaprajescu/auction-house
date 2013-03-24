@@ -3,6 +3,7 @@ import interfaces.IGUI;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
@@ -44,8 +45,17 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	public GUI (Mediator med)
 	{
 		super("Auction House");
-		this.setLocationRelativeTo(null);
+		setResizable(false);
 		setSize(900, 600);
+		
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	    int height = screenSize.height/2;
+	    int width = screenSize.width/2;
+	    int fHeight = this.getHeight()/2;
+	    int fWidth = this.getWidth()/2;
+	    
+	    this.setLocation(width-fWidth, height-fHeight);
+		
 
 		// First display login window.
         setVisible(false);
@@ -130,15 +140,15 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 		
 		welcome = new JLabel();
 		welcome.setHorizontalAlignment(SwingConstants.CENTER);
-		welcome.setBounds(10, 5, 864, 20);
+		welcome.setBounds(10, 5, 874, 20);
 		mainPanel.add(welcome);
 
 		LogoutButton logout = new LogoutButton(this, GUImed);
-		logout.setBounds(790, 7, 84, 18);
+		logout.setBounds(800, 7, 84, 18);
         mainPanel.add(logout);
         
         JScrollPane scroll = new JScrollPane(table);
-        scroll.setBounds(10,43,864,508);
+        scroll.setBounds(10,43,874,508);
         mainPanel.add(scroll);
         
         getContentPane().add(mainPanel);

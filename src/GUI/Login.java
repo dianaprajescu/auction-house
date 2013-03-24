@@ -6,6 +6,7 @@ package GUI;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 
 import interfaces.IGUIMediator;
@@ -42,8 +43,16 @@ public class Login extends JFrame {
 	{
 		super("Login");
 		setResizable(false);
-		this.setLocationRelativeTo(null);
 		setSize(400, 200); 
+		
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	    int height = screenSize.height/2;
+	    int width = screenSize.width/2;
+	    int fHeight = this.getHeight()/2;
+	    int fWidth = this.getWidth()/2;
+	    
+	    this.setLocation(width-fWidth, height-fHeight);
+		
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         med.registerLogin(this);
 		
