@@ -60,6 +60,18 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	{
 		return this.client.launchOfferRequest(serviceId, userId);
 	}
+	
+	/**
+	 * Drop offer request.
+	 * 
+	 * @param serviceId
+	 * @param userId
+	 * @return
+	 */
+	public boolean dropOfferRequest(int serviceId, int userId)
+	{
+		return this.client.dropOfferRequest(serviceId, userId);
+	}
 
 	/**
 	 * Update transfer. 

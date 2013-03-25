@@ -54,4 +54,13 @@ public interface IGUIMediator {
 	 * @param
 	 */
 	public CellTableModel launchOfferRequest(int serviceId, int userId);
+	
+	/**
+	 * Drop offer request.
+	 * 
+	 * @param serviceId
+	 * @param userId
+	 * @return
+	 */
+	public boolean dropOfferRequest(int serviceId, int userId);
 }

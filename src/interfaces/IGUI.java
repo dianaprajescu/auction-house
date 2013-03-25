@@ -41,10 +41,19 @@ public interface IGUI {
 	public void updateTransfer(int serviceId, int userId, int progress);
 	
 	/**
-	 * Activates a service.
+	 * Launch offer request.
 	 * 
 	 * @param serviceId
 	 * @param userId
 	 */
 	public CellTableModel launchOfferRequest(int serviceId, int userId);
+	
+	/**
+	 * Drop offer request.
+	 * 
+	 * @param serviceId
+	 * @param userId
+	 * @return
+	 */
+	public boolean dropOfferRequest(int serviceId, int userId);
 }

@@ -111,5 +111,18 @@ public class MockupWSClient implements IWSClient {
 		
 		return ct;
 	}
-
+	
+	/**
+	 * Drop offer request.
+	 * 
+	 * @param serviceId
+	 * @param userId
+	 * @return
+	 */
+	public boolean dropOfferRequest(int serviceId, int userId)
+	{
+		//TODO send refuse offer to all sellers.
+		
+		return true;
+	}
 }

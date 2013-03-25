@@ -211,7 +211,7 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	}
 	
 	/**
-	 * Activates a service.
+	 * Launch offer request.
 	 * 
 	 * @param serviceId
 	 * @param userId
@@ -219,5 +219,16 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	public CellTableModel launchOfferRequest(int serviceId, int userId)
 	{
 		return this.mainMed.launchOfferRequest(serviceId, userId);
+	}
+	
+	/**
+	 * Drop an offer request.
+	 * 
+	 * @param serviceId
+	 * @param userId
+	 */
+	public boolean dropOfferRequest(int serviceId, int userId)
+	{
+		return this.mainMed.dropOfferRequest(serviceId, userId);
 	}
 }

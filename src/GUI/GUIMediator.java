@@ -259,14 +259,8 @@ public class GUIMediator {
 				break;
 
 			case "drop offer request":
-				// Deactivate service.
-				((MainTableModel) gui.getTable().getModel()).setStatusAt("Inactive", mainRow);
-
-				// Clear user list.
-				gui.getTable().setValueAt(new CellTableModel(), mainRow, 1);
-
-				// TODO Refuse all offers.
-				//gui.getMediator().refuseAllOffers();
+				
+				this.dropOfferRequest(mainRow);
 
 				break;
 
@@ -373,9 +367,28 @@ public class GUIMediator {
 		}
 	}
 	
-	private void dropOffer()
+	private void dropOfferRequest(int mainRow)
 	{
+		MainTable table = ((GUI)this.gui).getTable();
+		MainTableModel mtm = (MainTableModel) table.getModel();
 		
+		// Get the service id.
+		int serviceId = mtm.getIdAt(mainRow);
+		
+		boolean dropRequest = gui.dropOfferRequest(serviceId, this.username.getId());
+		
+		if (!dropRequest) 
+		{
+			JOptionPane.showMessageDialog(null, "Dropping offer request failed.");
+		}
+		else 
+		{
+			// Deactivate service.
+			mtm.setStatusAt("Inactive", mainRow);
+	
+			// Clear user list.
+			mtm.setValueAt(new CellTableModel(), mainRow, 1);
+		}
 	}
 	
 	/**
