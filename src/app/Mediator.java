@@ -56,9 +56,9 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	 * @param   int  userType  1 for buyer and 2 for seller.
 	 * @param
 	 */
-	public CellTableModel activateService(int serviceId, int userId)
+	public CellTableModel launchOfferRequest(int serviceId, int userId)
 	{
-		return this.client.activateService(serviceId, userId);
+		return this.client.launchOfferRequest(serviceId, userId);
 	}
 
 	/**

@@ -92,7 +92,7 @@ public class MockupWSClient implements IWSClient {
 	 * @param   int  buyer_id    The buyer that activated the service.
 	 * @param   int  service_id  The active service.
 	 */
-	public CellTableModel activateService(int serviceId, int userId)
+	public CellTableModel launchOfferRequest(int serviceId, int userId)
 	{
 		// Populate model with a random number of sellers.
 		int noSellers = new Random().nextInt(6) + 1;

@@ -254,7 +254,7 @@ public class GUIMediator {
 		{
 			case "launch offer request":
 				
-				this.launchOffer(mainRow);
+				this.launchOfferRequest(mainRow);
 				
 				break;
 
@@ -346,7 +346,7 @@ public class GUIMediator {
 	 * 
 	 * @param mainRow
 	 */
-	private void launchOffer(int mainRow)
+	private void launchOfferRequest(int mainRow)
 	{
 		MainTable table = ((GUI)this.gui).getTable();
 		MainTableModel mtm = (MainTableModel) table.getModel();
@@ -356,7 +356,7 @@ public class GUIMediator {
 		int serviceId = ((MainTableModel)gui.getTable().getModel()).getIdAt(mainRow);
 		
 		// Launch offer request in the sistem.
-		ctm = gui.activateService(serviceId, this.username.getId());
+		ctm = gui.launchOfferRequest(serviceId, this.username.getId());
 		
 		// Could not do the action.
 		if (ctm == null)
@@ -371,6 +371,11 @@ public class GUIMediator {
 			table.setValueAt(ctm, mainRow, 1);
 			((GUI)this.gui).getTable().rebuildTable();
 		}
+	}
+	
+	private void dropOffer()
+	{
+		
 	}
 	
 	/**

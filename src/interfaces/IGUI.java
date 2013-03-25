@@ -46,5 +46,5 @@ public interface IGUI {
 	 * @param serviceId
 	 * @param userId
 	 */
-	public CellTableModel activateService(int serviceId, int userId);
+	public CellTableModel launchOfferRequest(int serviceId, int userId);
 }

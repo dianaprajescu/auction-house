@@ -6,6 +6,7 @@ import app.UserType;
 
 import GUI.GUI;
 import GUI.Login;
+import GUI.components.CellTableModel;
 import GUI.components.LoginButton;
 import GUI.components.LogoutButton;
 import GUI.components.PasswordField;
@@ -45,4 +46,12 @@ public interface IGUIMediator {
 	 * @param sellerId
 	 */
 	public void startTransfer(int serviceId, int buyerId, int sellerId);
+	
+	/**
+	 * A buyer has launched an offer request.
+	 *
+	 * @param   int  userType  1 for buyer and 2 for seller.
+	 * @param
+	 */
+	public CellTableModel launchOfferRequest(int serviceId, int userId);
 }

@@ -14,5 +14,5 @@ public interface IWSClient {
 	
 	public boolean logout(int userId);
 	
-	public CellTableModel activateService(int serviceId, int userId);
+	public CellTableModel launchOfferRequest(int serviceId, int userId);
 }

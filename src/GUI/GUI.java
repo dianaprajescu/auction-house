@@ -216,8 +216,8 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	 * @param serviceId
 	 * @param userId
 	 */
-	public CellTableModel activateService(int serviceId, int userId)
+	public CellTableModel launchOfferRequest(int serviceId, int userId)
 	{
-		return this.mainMed.activateService(serviceId, userId);
+		return this.mainMed.launchOfferRequest(serviceId, userId);
 	}
 }
