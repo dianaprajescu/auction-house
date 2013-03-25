@@ -21,6 +21,7 @@ import GUI.components.PopupMenuItem;
 import GUI.components.SellerType;
 import GUI.components.UsernameField;
 import app.Database;
+import app.UserType;
 
 /**
  * @author diana
@@ -38,67 +39,57 @@ public class GUIMediator {
 	 * Login.
 	 */
 	public void login() {
-		// Connect db.
-		Database db = new Database();
-
-		// Search if user exists in the DB.
-		ResultSet rs = db.query("SELECT * FROM user WHERE username = '" + username.getText() + "'");
-
-		try {
-			if (!rs.next())
-			{
-				JOptionPane.showMessageDialog(null, "The username " + username.getText() + " does not exist!",
-						"Invalid Login", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			else
-			{
-				// Check password.
-				if (rs.getString("password").compareTo(password.getText()) != 0)
-				{
-					JOptionPane.showMessageDialog(null, "Password is incorect!",
-							"Invalid Login", JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-				else
-				{
-					// Set username id from db.
-					username.setId(rs.getInt("id"));
-				}
-			}
-
-		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(null, "Connection with DB lost!", "Connection lost", JOptionPane.ERROR_MESSAGE);
-			System.exit(0);
-		}
-
-		// Login user and save type.
+		
+		int logged = -1;
+		
+		UserType type;
+		
+		// User is buyer.
 		if (buyer.isSelected())
 		{
-			username.setType(1);
-			rs = db.query("UPDATE user SET logged = '2', type = '1' WHERE username = '" + username.getText() + "'");
+			type = UserType.BUYER;
+			
 		}
+		// User is seller.
 		else if (seller.isSelected())
 		{
-			username.setType(2);
-			rs = db.query("UPDATE user SET logged = '2', type = '2' WHERE username = '" + username.getText() + "'");
+			type = UserType.SELLER;
 		}
 		else
 		{
-			JOptionPane.showMessageDialog(null, "Please select Buyer or Seller profile!",
-					"Invalid Login", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "No User Type was selected.");
 			return;
 		}
+		
+		logged = this.gui.login(username.getText(), password.getText(), type);
+		
+		// Could not login.
+		if (logged == -1)
+		{
+			JOptionPane.showMessageDialog(null, "Invalid login data.");
+			return;
+		}
+		
+		// Login user with the ID got.
+		else
+		{
+			// Close login frame.
+			login.setVisible(false);
 
-		// Close login frame.
-		login.setVisible(false);
+			// Set the logged in userID;
+			username.setId(logged);
+			
+			// Set the logged userType.
+			username.setType(type);
+			
+			// Add username label in main frame.
+			JLabel welcome = gui.getWelcomeLabel();
+			welcome.setText("Welcome to Auction House, " + username.getText() + "!");
 
-		// Add username label in main frame.
-		JLabel welcome = gui.getWelcomeLabel();
-		welcome.setText("Welcome to Auction House, " + username.getText() + "!");
-
-		// Set gui frame visible.
-		gui.setVisible(true);
+			// Set gui frame visible.
+			gui.setVisible(true);
+		}
+		
 	}
 
 	/**
@@ -110,7 +101,7 @@ public class GUIMediator {
 		ResultSet rs;
 
 		// Seller can logout only if he is not taking part into any auctions or if his offers are passed.
-		if (username.getType() == 2)
+		if (this.username.getType() == UserType.SELLER)
 		{
 			rs = db.query("SELECT * FROM offer WHERE seller_id = '" + username.getId() + "'");
 			try {
@@ -156,7 +147,7 @@ public class GUIMediator {
 		String status = this.gui.getTable().getSelectedStatus();
 
 		// If user is a buyer.
-		if (username.getType() == 1)
+		if (this.username.getType() == UserType.BUYER)
 		{
 			// Create popup menu for services.
 			JPopupMenu popup = new JPopupMenu();
@@ -223,7 +214,7 @@ public class GUIMediator {
 		JPopupMenu popup = new JPopupMenu();
 
 		// If user is a buyer.
-		if (username.getType() == 1)
+		if (this.username.getType() == UserType.BUYER)
 		{
 			// Accept or refuse offer are available only if an offer was made.
 			if (intStatus == 2)

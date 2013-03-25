@@ -5,6 +5,8 @@ package GUI.components;
 
 import javax.swing.JTextField;
 
+import app.UserType;
+
 import GUI.GUIMediator;
 
 /**
@@ -22,7 +24,7 @@ public class UsernameField extends JTextField {
 	/**
 	 * User type (buyer = 1, seller = 2).
 	 */
-	private int type;
+	private UserType type;
 
 	public UsernameField(GUIMediator med) {
 		this.med = med;
@@ -54,7 +56,7 @@ public class UsernameField extends JTextField {
 	 * 
 	 * @param   int  type  The type to set.
 	 */
-	public void setType(int type)
+	public void setType(UserType type)
 	{
 		this.type = type;
 	}
@@ -64,7 +66,7 @@ public class UsernameField extends JTextField {
 	 * 
 	 * @return  int  The type.
 	 */
-	public int getType()
+	public UserType getType()
 	{
 		return this.type;
 	}

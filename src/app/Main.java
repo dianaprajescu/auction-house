@@ -3,6 +3,7 @@
  */
 package app;
 
+import WSClient.MockupWSClient;
 import GUI.GUI;
 import GUI.Simulator;
 
@@ -19,6 +20,7 @@ public class Main {
 		// TODO Auto-generated method stub
 		Mediator med = new Mediator();
 		GUI gui = new GUI(med);
+		MockupWSClient wsClient = new MockupWSClient(med);
 
 		Simulator s = new Simulator(med, gui);
 		s.execute();

@@ -22,6 +22,8 @@ import GUI.components.MainTableMouseListener;
 import app.Command;
 import app.Database;
 import app.Mediator;
+import app.UserType;
+
 import javax.swing.SwingConstants;
 import javax.swing.JSeparator;
 
@@ -174,5 +176,10 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	{
 		this.med.startTransfer(serviceId, userId);
 	}
-
+	
+	// Login user
+	public int login(String username, String password, UserType type)
+	{
+		return this.med.login(username, password, type);
+	}
 }

@@ -26,6 +26,18 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	private IGUI gui;
 	private INetwork network;
 	private IWSClient client;
+	
+	/**
+	 * In GUIMediator. Login an user.
+	 * 
+	 * @param username
+	 * @param password
+	 * @param type
+	 */
+	public int login(String username, String password, UserType type)
+	{
+		return this.client.login(username, password, type);
+	}
 
 	/**
 	 * A buyer has launched an offer request.
