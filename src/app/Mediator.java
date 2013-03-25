@@ -110,6 +110,18 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	{
 		return this.client.makeOffer(serviceId, buyerId, sellerId, price);
 	}
+	
+	/**
+	 * Remove offer. 
+	 * @param serviceId
+	 * @param buyerId
+	 * @param sellerId
+	 * @return
+	 */
+	public boolean removeOffer(int serviceId, int buyerId, int sellerId)
+	{
+		return this.client.removeOffer(serviceId, buyerId, sellerId);
+	}
 
 	/**
 	 * Update transfer. 

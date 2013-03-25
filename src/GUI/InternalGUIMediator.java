@@ -277,12 +277,8 @@ public class InternalGUIMediator {
 				break;
 
 			case "remove offer":
-				// remove offer.
-				ctm = (CellTableModel) gui.getTable().getValueAt(mainRow, 1);
-				ctm.setValueAt("No Offer", cellRow, 1);
-
-				// TODO Remove offer.
-				//gui.getMediator().removeOffer();
+				
+				this.removeOffer(mainRow, cellRow);
 
 				break;
 
@@ -470,6 +466,38 @@ public class InternalGUIMediator {
 		{
 			// Update offer in GUI.
 			ctm.setValueAt("Offer Made", cellRow, 1);
+		}
+	}
+	
+	/**
+	 * Refuse offer.
+	 * 
+	 * @param mainRow
+	 * @param cellRow
+	 */
+	private void removeOffer(int mainRow, int cellRow)
+	{
+		MainTable table = ((GUI)this.gui).getTable();
+		MainTableModel mtm = (MainTableModel) table.getModel();
+		CellTableModel ctm = (CellTableModel) table.getValueAt(mainRow, 1);
+		
+		// Get the service id.
+		int serviceId = mtm.getIdAt(mainRow);
+		
+		// Get the accepted offer id. Seller id.
+		int buyerId = ctm.getIdAt(cellRow);
+		
+		boolean removeRequest = gui.removeOffer(serviceId, buyerId, this.username.getId());
+
+		// Request failed.
+		if (!removeRequest)
+		{
+			JOptionPane.showMessageDialog(null, "Could not remove offer.");
+		}
+		else
+		{
+			// Update offer in GUI.
+			ctm.setValueAt("No Offer", cellRow, 1);
 		}
 	}
 	

@@ -53,4 +53,13 @@ public interface IWSClient {
 	 * @return
 	 */
 	public boolean makeOffer(int serviceId, int buyerId, int sellerId, int price);
+	
+	/**
+	 * Remove offer. 
+	 * @param serviceId
+	 * @param buyerId
+	 * @param sellerId
+	 * @return
+	 */
+	public boolean removeOffer(int serviceId, int buyerId, int sellerId);
 }
