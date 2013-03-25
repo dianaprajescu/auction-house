@@ -10,4 +10,6 @@ import app.UserType;
 public interface IWSClient {
 	
 	public int login(String username, String password, UserType type);
+	
+	public boolean logout(int userId);
 }

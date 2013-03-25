@@ -29,4 +29,11 @@ public interface IGUIMediator {
 	 * @param type
 	 */
 	public int login(String username, String password, UserType type);
+	
+	/**
+	 * Logout user with the ID passed in input.
+	 * @param userId
+	 * @return
+	 */
+	public boolean logout(int userId);
 }

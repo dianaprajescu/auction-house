@@ -37,7 +37,7 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	private MainTable table;
 
 	private GUIMediator GUImed = new GUIMediator();
-	private Mediator med;
+	private Mediator mainMed;
 
 	private JPanel mainPanel;
 
@@ -65,7 +65,7 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 
         GUImed.registerGUI(this);
 
-        this.med = med;
+        this.mainMed = med;
         med.registerGUI(this);
 
 		init();
@@ -79,7 +79,7 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	 */
 	public Mediator getMediator()
 	{
-		return med;
+		return mainMed;
 	}
 
 	/**
@@ -174,12 +174,30 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 
 	public void startTransfer(int serviceId, int userId)
 	{
-		this.med.startTransfer(serviceId, userId);
+		this.mainMed.startTransfer(serviceId, userId);
 	}
 	
-	// Login user
+	/**
+	 * Login user.
+	 * 
+	 * @param username
+	 * @param password
+	 * @param type
+	 * @return
+	 */
 	public int login(String username, String password, UserType type)
 	{
-		return this.med.login(username, password, type);
+		return this.mainMed.login(username, password, type);
+	}
+	
+	/**
+	 * Logout user.
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	public boolean logout(int userId)
+	{
+		return this.mainMed.logout(userId);
 	}
 }

@@ -57,11 +57,11 @@ public class MockupWSClient implements IWSClient {
 		// Login user and save type.
 		if (type == UserType.BUYER)
 		{
-			rs = db.query("UPDATE user SET logged = '2', type = '1' WHERE username = '" + username + "'");
+			rs = db.query("UPDATE user SET type = '1' WHERE username = '" + username + "'");
 		}
 		else if (type == UserType.SELLER)
 		{
-			rs = db.query("UPDATE user SET logged = '2', type = '2' WHERE username = '" + username + "'");
+			rs = db.query("UPDATE user SET type = '2' WHERE username = '" + username + "'");
 		}
 		else
 		{
@@ -70,6 +70,17 @@ public class MockupWSClient implements IWSClient {
 		}
 		
 		return loggedId;
+	}
+	
+	/**
+	 * Logout user.
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	public boolean logout(int userId)
+	{
+		return true;
 	}
 
 }

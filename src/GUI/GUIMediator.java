@@ -96,39 +96,18 @@ public class GUIMediator {
 	 * Logout.
 	 */
 	public void logout() {
-		// Connect db.
-		Database db = new Database();
-		ResultSet rs;
-
-		// Seller can logout only if he is not taking part into any auctions or if his offers are passed.
-		if (this.username.getType() == UserType.SELLER)
+		
+		//TODO verify if we can logout the user by checking the values from CTM.
+		
+		if (this.gui.logout(username.getId()))
 		{
-			rs = db.query("SELECT * FROM offer WHERE seller_id = '" + username.getId() + "'");
-			try {
-				// The seller is taking part in some auctions.
-				if (rs.next())
-				{
-					// TODO Are the seller's offers passed?
-
-				}
-
-			} catch (SQLException e) {
-				//  TODO remove all data related to this user.
-				JOptionPane.showMessageDialog(null, "Unexpected error! " + e.getMessage(), "Logout problem", JOptionPane.ERROR_MESSAGE);
-				System.exit(0);
-			}
+			gui.dispose();
+			login.setVisible(true);
 		}
-
-		// When buyer loogs out he leaves all active auctions, declining all offers.
-		// If there is no offer, his request is canceled.
-
-		// Logging out during service transfer will cause the transfer to fail and it'll be marked accordingly.
-
-		// Logout.
-		rs = db.query("UPDATE user SET logged = '1' WHERE username = '" + username.getText() + "'");
-		gui.dispose();
-
-		login.setVisible(true);
+		else
+		{
+			JOptionPane.showMessageDialog(null, "Could not logout at current stage.");
+		}
 	}
 
 	/**

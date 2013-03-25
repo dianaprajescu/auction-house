@@ -38,6 +38,17 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	{
 		return this.client.login(username, password, type);
 	}
+	
+	/**
+	 * Logout user.
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	public boolean logout(int userId)
+	{
+		return this.client.logout(userId);
+	}
 
 	/**
 	 * A buyer has launched an offer request.
