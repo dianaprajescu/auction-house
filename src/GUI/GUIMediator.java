@@ -137,7 +137,6 @@ public class GUIMediator {
 		rs = db.query("UPDATE user SET logged = '1' WHERE username = '" + username.getText() + "'");
 		gui.dispose();
 
-		JOptionPane.showMessageDialog(null, "Logged out successfully!", "Good bye!", JOptionPane.INFORMATION_MESSAGE);
 		login.setVisible(true);
 	}
 

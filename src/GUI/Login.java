@@ -117,6 +117,7 @@ public class Login extends JFrame {
         
         // Add login button.
         LoginButton login = new LoginButton(al, med);
+        login.setFocusable(false);
         login.setBounds(155,138,78,23);
         loginPanel.add(login);
         
