@@ -1,5 +1,6 @@
 package interfaces;
 
+import GUI.components.CellTableModel;
 import app.Mediator;
 import app.UserType;
 
@@ -12,4 +13,6 @@ public interface IWSClient {
 	public int login(String username, String password, UserType type);
 	
 	public boolean logout(int userId);
+	
+	public CellTableModel activateService(int serviceId, int userId);
 }

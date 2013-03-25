@@ -181,12 +181,7 @@ public class GUIMediator {
 	 */
 	public void showTablePopup(CellTable table, int x, int y)
 	{
-		System.out.println(this.gui.getTable().getSelectedUserId());
-		System.out.println(this.gui.getTable().getSelectedUserStatus());
-
-		// TODO start transfer when win
-		// this.gui.startTransfer(this.gui.getTable().getSelectedId(), this.gui.getTable().getSelectedUserId());
-
+		// Get the status of the current row.
 		String status = gui.getTable().getSelectedUserStatus();
 		int intStatus = this.getIntStatus(status);
 
@@ -251,20 +246,16 @@ public class GUIMediator {
 	 */
 	public void userAction(String command, int mainRow, int cellRow)
 	{
-		System.out.println(command);
-		System.out.println(this.gui.getTable().getSelectedService());
-
+		MainTable table = ((GUI)this.gui).getTable();
+		MainTableModel mtm = (MainTableModel) table.getModel();
 		CellTableModel ctm;
-
+		
 		switch (command.toLowerCase())
 		{
 			case "launch offer request":
-				// Activate service.
-				((MainTableModel) gui.getTable().getModel()).setStatusAt("Active", mainRow);
-
-				// TODO Launch offer request in the sistem. (Notify Network?)
-				gui.getMediator().activateService(((MainTableModel)gui.getTable().getModel()).getIdAt(mainRow), this.username.getId());
-
+				
+				this.launchOffer(mainRow);
+				
 				break;
 
 			case "drop offer request":
@@ -348,6 +339,38 @@ public class GUIMediator {
 
 		((MainTableModel)gui.getTable().getModel()).fireTableDataChanged();
 		gui.getTable().rebuildTable();
+	}
+	
+	/**
+	 * Launch offer request.
+	 * 
+	 * @param mainRow
+	 */
+	private void launchOffer(int mainRow)
+	{
+		MainTable table = ((GUI)this.gui).getTable();
+		MainTableModel mtm = (MainTableModel) table.getModel();
+		CellTableModel ctm;
+		
+		// Get the service id.
+		int serviceId = ((MainTableModel)gui.getTable().getModel()).getIdAt(mainRow);
+		
+		// Launch offer request in the sistem.
+		ctm = gui.activateService(serviceId, this.username.getId());
+		
+		// Could not do the action.
+		if (ctm == null)
+		{
+			JOptionPane.showMessageDialog(null, "Launching offer request failed.");
+		}
+		else
+		{
+			// Activate service.
+			mtm.setStatusAt("Active", mainRow);
+			
+			table.setValueAt(ctm, mainRow, 1);
+			((GUI)this.gui).getTable().rebuildTable();
+		}
 	}
 	
 	/**

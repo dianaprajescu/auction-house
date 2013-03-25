@@ -36,17 +36,6 @@ public class MockupNetwork implements INetwork {
 	}
 
 	/**
-	 * Sellers are notified when a buyer activates a service.
-	 *
-	 * @param   int  buyer_id    The buyer that activated the service.
-	 * @param   int  service_id  The active service.
-	 */
-	public void activateService(int serviceId, int userId)
-	{
-		med.loadUserList(serviceId);
-	}
-
-	/**
 	 * Start transfer from seller to buyer.
 	 * 
 	 * @param serviceId

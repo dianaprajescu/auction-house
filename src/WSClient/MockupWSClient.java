@@ -2,9 +2,12 @@ package WSClient;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Random;
 
 import javax.swing.JOptionPane;
 
+import GUI.GUI;
+import GUI.components.CellTableModel;
 import app.Database;
 import app.Mediator;
 import app.UserType;
@@ -81,6 +84,32 @@ public class MockupWSClient implements IWSClient {
 	public boolean logout(int userId)
 	{
 		return true;
+	}
+	
+	/**
+	 * Sellers are notified when a buyer activates a service.
+	 *
+	 * @param   int  buyer_id    The buyer that activated the service.
+	 * @param   int  service_id  The active service.
+	 */
+	public CellTableModel activateService(int serviceId, int userId)
+	{
+		// Populate model with a random number of sellers.
+		int noSellers = new Random().nextInt(6) + 1;
+		
+		// Create a new CellTableModel.
+		CellTableModel ct = new CellTableModel();
+
+		for (int i = 0; i < noSellers; i++)
+		{
+			// Create sellers.
+			// TODO must be unique.
+			int sellerId = (new Random().nextInt(3)) + i * 3;
+			Object[] rowx = {sellerId, "seller_name" + sellerId, "No Offer", 0};
+			ct.addRow(rowx);
+		}
+		
+		return ct;
 	}
 
 }

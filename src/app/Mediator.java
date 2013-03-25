@@ -56,38 +56,9 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	 * @param   int  userType  1 for buyer and 2 for seller.
 	 * @param
 	 */
-	public void activateService(int serviceId, int userId)
+	public CellTableModel activateService(int serviceId, int userId)
 	{
-		((MockupNetwork) this.network).activateService(serviceId, userId);
-	}
-
-	public void loadUserList(int serviceId)
-	{
-		// Populate model with a random number of sellers.
-		int noSellers = new Random().nextInt(6) + 1;
-
-		MainTableModel mtm = (MainTableModel) ((GUI)this.gui).getTable().getModel();
-		int row = mtm.findRowByServiceId(serviceId);
-
-		if (row >= 0)
-		{
-			// Get cell to update model.
-			CellTableModel ct = (CellTableModel)((GUI)this.gui).getTable().getValueAt(row, 1);
-
-			int i;
-			for (i = 0; i < noSellers; i++)
-			{
-				// Create sellers.
-				// TODO must be unique.
-				int sellerId = (new Random().nextInt(3)) + i * 3;
-				Object[] rowx = {sellerId, "seller_name" + sellerId, "No Offer", 0};
-				ct.addRow(rowx);
-			}
-
-
-			ct.fireTableDataChanged();
-			((GUI)this.gui).getTable().rebuildTable();
-		}
+		return this.client.activateService(serviceId, userId);
 	}
 
 	/**

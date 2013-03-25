@@ -1,5 +1,6 @@
 package interfaces;
 
+import GUI.components.CellTableModel;
 import app.UserType;
 
 /**
@@ -38,4 +39,12 @@ public interface IGUI {
 	 * @param progress
 	 */
 	public void updateTransfer(int serviceId, int userId, int progress);
+	
+	/**
+	 * Activates a service.
+	 * 
+	 * @param serviceId
+	 * @param userId
+	 */
+	public CellTableModel activateService(int serviceId, int userId);
 }

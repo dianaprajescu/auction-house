@@ -73,16 +73,6 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	}
 
 	/**
-	 * Getter for mediator.
-	 *
-	 * @return  Mediator
-	 */
-	public Mediator getMediator()
-	{
-		return mainMed;
-	}
-
-	/**
 	 * Initialize model.
 	 */
 	@Override
@@ -218,5 +208,16 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	public boolean logout(int userId)
 	{
 		return this.mainMed.logout(userId);
+	}
+	
+	/**
+	 * Activates a service.
+	 * 
+	 * @param serviceId
+	 * @param userId
+	 */
+	public CellTableModel activateService(int serviceId, int userId)
+	{
+		return this.mainMed.activateService(serviceId, userId);
 	}
 }
