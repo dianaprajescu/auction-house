@@ -36,10 +36,10 @@ import javax.swing.JSeparator;
  *
  */
 public class Login extends JFrame {
-	private GUIMediator med;
+	private InternalGUIMediator med;
 	private ActionListener al;
 	
-	public Login (ActionListener al, GUIMediator med)
+	public Login (ActionListener al, InternalGUIMediator med)
 	{
 		super("Login");
 		setResizable(false);

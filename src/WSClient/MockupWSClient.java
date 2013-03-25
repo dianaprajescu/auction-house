@@ -125,4 +125,32 @@ public class MockupWSClient implements IWSClient {
 		
 		return true;
 	}
+	
+	/**
+	 * Accept offer. 
+	 * @param serviceId
+	 * @param buyerId
+	 * @param sellerId
+	 * @return
+	 */
+	public boolean acceptOffer(int serviceId, int buyerId, int sellerId)
+	{
+		//TODO send refuse offer to all sellers.
+		
+		return true;
+	}
+	
+	/**
+	 * Refuse offer. 
+	 * @param serviceId
+	 * @param buyerId
+	 * @param sellerId
+	 * @return
+	 */
+	public boolean refuseOffer(int serviceId, int buyerId, int sellerId)
+	{
+		//TODO send refuse the selers offer.
+		
+		return true;
+	}
 }

@@ -6,14 +6,14 @@ import java.awt.event.MouseEvent;
 import javax.swing.JTable;
 
 import GUI.GUI;
-import GUI.GUIMediator;
+import GUI.InternalGUIMediator;
 
 public class MainTableMouseListener extends MouseAdapter{
 
-	private GUIMediator med;
+	private InternalGUIMediator med;
 	private GUI gui;
 
-	public MainTableMouseListener(GUIMediator med, GUI gui)
+	public MainTableMouseListener(InternalGUIMediator med, GUI gui)
 	{
 		this.med = med;
 		this.gui = gui;

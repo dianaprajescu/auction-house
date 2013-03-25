@@ -36,7 +36,7 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	private MainTableModel model;
 	private MainTable table;
 
-	private GUIMediator GUImed = new GUIMediator();
+	private InternalGUIMediator GUImed = new InternalGUIMediator();
 	private Mediator mainMed;
 
 	private JPanel mainPanel;
@@ -230,5 +230,29 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	public boolean dropOfferRequest(int serviceId, int userId)
 	{
 		return this.mainMed.dropOfferRequest(serviceId, userId);
+	}
+	
+	/**
+	 * Accept offer. 
+	 * @param serviceId
+	 * @param buyerId
+	 * @param sellerId
+	 * @return
+	 */
+	public boolean acceptOffer(int serviceId, int buyerId, int sellerId)
+	{
+		return this.mainMed.acceptOffer(serviceId, buyerId, sellerId);
+	}
+	
+	/**
+	 * Refuse offer. 
+	 * @param serviceId
+	 * @param buyerId
+	 * @param sellerId
+	 * @return
+	 */
+	public boolean refuseOffer(int serviceId, int buyerId, int sellerId)
+	{
+		return this.mainMed.refuseOffer(serviceId, buyerId, sellerId);
 	}
 }

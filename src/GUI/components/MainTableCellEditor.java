@@ -7,14 +7,14 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 
-import GUI.GUIMediator;
+import GUI.InternalGUIMediator;
 
 public class MainTableCellEditor extends AbstractCellEditor implements TableCellEditor{
 
-	GUIMediator guiMed;
+	InternalGUIMediator guiMed;
 	Object model;
 
-	public MainTableCellEditor(GUIMediator guiMed, Object model) {
+	public MainTableCellEditor(InternalGUIMediator guiMed, Object model) {
 		this.guiMed = guiMed;
 		this.model = model;
 	}

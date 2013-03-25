@@ -27,7 +27,7 @@ import app.UserType;
  * @author diana
  *
  */
-public class GUIMediator {
+public class InternalGUIMediator {
 	private GUI gui;
 	private Login login;
 	private UsernameField username;
@@ -149,15 +149,9 @@ public class GUIMediator {
 					String userStatus = ctm.getStatusAt(i);
 					int intStatus = this.getIntStatus(userStatus);
 
-					if (intStatus >= 4 && intStatus <= 8)
+					if (intStatus >= 5 && intStatus <= 8)
 					{
-						System.out.println("status " + intStatus);
 						accepted = true;
-					}
-
-					if (intStatus == 9)
-					{
-						accepted = false;
 					}
 				}
 
@@ -202,7 +196,7 @@ public class GUIMediator {
 					String userStatus = ctm.getStatusAt(i);
 					int intuserStatus = this.getIntStatus(userStatus);
 
-					if (intuserStatus == 4)
+					if (intuserStatus == 5)
 					{
 						accepted = true;
 					}
@@ -265,42 +259,14 @@ public class GUIMediator {
 				break;
 
 			case "accept offer":
-				// Accept offer.
-				ctm = (CellTableModel) gui.getTable().getValueAt(mainRow, 1);
-
-				// Refuse offers.
-				int i;
-				for (i = 0; i < ctm.getRowCount(); i++)
-				{
-					if (i != cellRow)
-					{
-						String status = ctm.getStatusAt(i);
-						int intStatus = this.getIntStatus(status);
-
-						if (intStatus == 2)
-						{
-							ctm.setValueAt("Offer Refused", i, 1);
-						}
-					}
-					else
-					{
-						ctm.setValueAt("Transfer Started", cellRow, 1);
-						gui.startTransfer(((MainTableModel)gui.getTable().getModel()).getIdAt(mainRow), this.username.getId(), ((CellTableModel)gui.getTable().getValueAt(mainRow, 1)).getIdAt(cellRow));
-					}
-				}
-
-				// Refuse all other offers.
-				//gui.getMediator().refuseAllOffers();
+				
+				this.acceptOffer(mainRow, cellRow);
 
 				break;
 
 			case "refuse offer":
-				// Refuse offer.
-				ctm = (CellTableModel) gui.getTable().getValueAt(mainRow, 1);
-				ctm.setValueAt("Offer Refused", cellRow, 1);
-
-				// TODO Refuse offer.
-				//gui.getMediator().refuseOffer();
+				
+				this.refuseOffer(mainRow, cellRow);
 
 				break;
 
@@ -367,6 +333,11 @@ public class GUIMediator {
 		}
 	}
 	
+	/**
+	 * Drop offer request.
+	 * 
+	 * @param mainRow
+	 */
 	private void dropOfferRequest(int mainRow)
 	{
 		MainTable table = ((GUI)this.gui).getTable();
@@ -388,6 +359,87 @@ public class GUIMediator {
 	
 			// Clear user list.
 			mtm.setValueAt(new CellTableModel(), mainRow, 1);
+		}
+	}
+	
+	/**
+	 * Accept offer.
+	 * 
+	 * @param mainRow
+	 * @param cellRow
+	 */
+	private void acceptOffer(int mainRow, int cellRow)
+	{
+		MainTable table = ((GUI)this.gui).getTable();
+		MainTableModel mtm = (MainTableModel) table.getModel();
+		CellTableModel ctm = (CellTableModel) table.getValueAt(mainRow, 1);
+		
+		// Get the service id.
+		int serviceId = mtm.getIdAt(mainRow);
+		
+		// Get the accepted offer id. Seller id.
+		int sellerId = ctm.getIdAt(cellRow);
+		
+		boolean acceptRequest = gui.acceptOffer(serviceId, this.username.getId(), sellerId);
+
+		if (!acceptRequest)
+		{
+			JOptionPane.showMessageDialog(null, "Could not accept offer.");
+		}
+		else
+		{
+			// Refuse offers.
+			int i;
+			for (i = 0; i < ctm.getRowCount(); i++)
+			{
+				if (i != cellRow)
+				{
+					String status = ctm.getStatusAt(i);
+					int intStatus = this.getIntStatus(status);
+	
+					if (intStatus == 2)
+					{
+						ctm.setValueAt("Offer Refused", i, 1);
+					}
+				}
+				else
+				{
+					ctm.setValueAt("Transfer Started", cellRow, 1);
+					gui.startTransfer(serviceId, this.username.getId(), sellerId);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Refuse offer.
+	 * 
+	 * @param mainRow
+	 * @param cellRow
+	 */
+	private void refuseOffer(int mainRow, int cellRow)
+	{
+		MainTable table = ((GUI)this.gui).getTable();
+		MainTableModel mtm = (MainTableModel) table.getModel();
+		CellTableModel ctm = (CellTableModel) table.getValueAt(mainRow, 1);
+		
+		// Get the service id.
+		int serviceId = mtm.getIdAt(mainRow);
+		
+		// Get the accepted offer id. Seller id.
+		int sellerId = ctm.getIdAt(cellRow);
+		
+		boolean refuseRequest = gui.refuseOffer(serviceId, this.username.getId(), sellerId);
+
+		// Request failed.
+		if (!refuseRequest)
+		{
+			JOptionPane.showMessageDialog(null, "Could not accept offer.");
+		}
+		else
+		{
+			// Update offer in GUI.
+			ctm.setValueAt("Offer Refused", cellRow, 1);
 		}
 	}
 	
@@ -441,8 +493,8 @@ public class GUIMediator {
 		hm.put("no offer", new Integer(1));
 		hm.put("offer made", new Integer(2));
 		hm.put("offer exceeded", new Integer(3));
-		hm.put("offer accepted", new Integer(4));
-		hm.put("offer refused", new Integer(5));
+		hm.put("offer refused", new Integer(4));
+		hm.put("offer accepted", new Integer(5));
 		hm.put("transfer started", new Integer(6));
 		hm.put("transfer in progress", new Integer(7));
 		hm.put("transfer failed", new Integer(8));

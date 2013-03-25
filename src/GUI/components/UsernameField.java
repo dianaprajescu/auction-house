@@ -7,14 +7,14 @@ import javax.swing.JTextField;
 
 import app.UserType;
 
-import GUI.GUIMediator;
+import GUI.InternalGUIMediator;
 
 /**
  * @author diana
  *
  */
 public class UsernameField extends JTextField {
-	private GUIMediator med;
+	private InternalGUIMediator med;
 	
 	/**
 	 * User id from db.
@@ -26,7 +26,7 @@ public class UsernameField extends JTextField {
 	 */
 	private UserType type;
 
-	public UsernameField(GUIMediator med) {
+	public UsernameField(InternalGUIMediator med) {
 		this.med = med;
 		med.registerUsername(this);
 	}

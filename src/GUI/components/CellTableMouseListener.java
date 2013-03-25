@@ -6,13 +6,13 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JPanel;
 
-import GUI.GUIMediator;
+import GUI.InternalGUIMediator;
 
 public class CellTableMouseListener extends MouseAdapter{
 
-	private GUIMediator gui;
+	private InternalGUIMediator gui;
 
-	public CellTableMouseListener(GUIMediator gui)
+	public CellTableMouseListener(InternalGUIMediator gui)
 	{
 		this.gui = gui;
 	}

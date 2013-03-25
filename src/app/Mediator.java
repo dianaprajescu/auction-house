@@ -72,6 +72,30 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	{
 		return this.client.dropOfferRequest(serviceId, userId);
 	}
+	
+	/**
+	 * Accept offer. 
+	 * @param serviceId
+	 * @param buyerId
+	 * @param sellerId
+	 * @return
+	 */
+	public boolean acceptOffer(int serviceId, int buyerId, int sellerId)
+	{
+		return this.client.acceptOffer(serviceId, buyerId, sellerId);
+	}
+	
+	/**
+	 * Refuse offer. 
+	 * @param serviceId
+	 * @param buyerId
+	 * @param sellerId
+	 * @return
+	 */
+	public boolean refuseOffer(int serviceId, int buyerId, int sellerId)
+	{
+		return this.client.refuseOffer(serviceId, buyerId, sellerId);
+	}
 
 	/**
 	 * Update transfer. 

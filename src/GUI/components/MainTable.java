@@ -6,13 +6,13 @@ import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
-import GUI.GUIMediator;
+import GUI.InternalGUIMediator;
 
 public class MainTable extends JTable
 {
-	GUIMediator gui;
+	InternalGUIMediator gui;
 
-	public MainTable(MainTableModel model, GUIMediator gui)
+	public MainTable(MainTableModel model, InternalGUIMediator gui)
 	{
 		super(model);
 		this.gui = gui;

@@ -63,4 +63,22 @@ public interface IGUIMediator {
 	 * @return
 	 */
 	public boolean dropOfferRequest(int serviceId, int userId);
+	
+	/**
+	 * Accept offer. 
+	 * @param serviceId
+	 * @param buyerId
+	 * @param sellerId
+	 * @return
+	 */
+	public boolean acceptOffer(int serviceId, int buyerId, int sellerId);
+	
+	/**
+	 * Refuse offer. 
+	 * @param serviceId
+	 * @param buyerId
+	 * @param sellerId
+	 * @return
+	 */
+	public boolean refuseOffer(int serviceId, int buyerId, int sellerId);
 }
