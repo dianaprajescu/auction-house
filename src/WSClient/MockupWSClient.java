@@ -153,4 +153,20 @@ public class MockupWSClient implements IWSClient {
 		
 		return true;
 	}
+	
+	/**
+	 * Make offer.
+	 * 
+	 * @param serviceId
+	 * @param buyerId
+	 * @param sellerId
+	 * @param price
+	 * @return
+	 */
+	public boolean makeOffer(int serviceId, int buyerId, int sellerId, int price)
+	{
+		//TODO send offer to the buyer. Update other offers (offer exceeded).
+		
+		return true;
+	}
 }

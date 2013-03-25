@@ -271,13 +271,9 @@ public class InternalGUIMediator {
 				break;
 
 			case "make offer":
-				// Make offer.
-				ctm = (CellTableModel) gui.getTable().getValueAt(mainRow, 1);
-				ctm.setValueAt("Offer Made", cellRow, 1);
-
-				// TODO Make offer.
-				//gui.getMediator().makeOffer();
-
+				
+				this.makeOffer(mainRow, cellRow);
+				
 				break;
 
 			case "remove offer":
@@ -434,12 +430,46 @@ public class InternalGUIMediator {
 		// Request failed.
 		if (!refuseRequest)
 		{
-			JOptionPane.showMessageDialog(null, "Could not accept offer.");
+			JOptionPane.showMessageDialog(null, "Could not refuse offer.");
 		}
 		else
 		{
 			// Update offer in GUI.
 			ctm.setValueAt("Offer Refused", cellRow, 1);
+		}
+	}
+	
+	/**
+	 * Make offer.
+	 * 
+	 * @param mainRow
+	 * @param cellRow
+	 */
+	private void makeOffer(int mainRow, int cellRow)
+	{
+		MainTable table = ((GUI)this.gui).getTable();
+		MainTableModel mtm = (MainTableModel) table.getModel();
+		CellTableModel ctm = (CellTableModel) table.getValueAt(mainRow, 1);
+		
+		// Get the service id.
+		int serviceId = mtm.getIdAt(mainRow);
+		
+		// Get the accepted offer id. Seller id.
+		int buyerId = ctm.getIdAt(cellRow);
+		
+		//TODO show a price input.
+		int price = 0;
+		boolean makeOfferRequest = gui.makeOffer(serviceId, buyerId, this.username.getId(), price);
+
+		// Request failed.
+		if (!makeOfferRequest)
+		{
+			JOptionPane.showMessageDialog(null, "Could not make offer.");
+		}
+		else
+		{
+			// Update offer in GUI.
+			ctm.setValueAt("Offer Made", cellRow, 1);
 		}
 	}
 	

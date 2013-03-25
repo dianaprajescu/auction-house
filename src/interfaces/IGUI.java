@@ -74,4 +74,15 @@ public interface IGUI {
 	 * @return
 	 */
 	public boolean refuseOffer(int serviceId, int buyerId, int sellerId);
+	
+	/**
+	 * Make offer.
+	 * 
+	 * @param serviceId
+	 * @param buyerId
+	 * @param sellerId
+	 * @param price
+	 * @return
+	 */
+	public boolean makeOffer(int serviceId, int buyerId, int sellerId, int price);
 }

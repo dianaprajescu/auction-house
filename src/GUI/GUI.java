@@ -255,4 +255,18 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	{
 		return this.mainMed.refuseOffer(serviceId, buyerId, sellerId);
 	}
+	
+	/**
+	 * Make offer.
+	 * 
+	 * @param serviceId
+	 * @param buyerId
+	 * @param sellerId
+	 * @param price
+	 * @return
+	 */
+	public boolean makeOffer(int serviceId, int buyerId, int sellerId, int price)
+	{
+		return this.mainMed.makeOffer(serviceId, buyerId, sellerId, price);
+	}
 }
