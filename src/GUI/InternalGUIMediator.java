@@ -97,8 +97,6 @@ public class InternalGUIMediator {
 	 */
 	public void logout() {
 		
-		//TODO verify if we can logout the user by checking the values from CTM.
-		
 		if (this.gui.logout(username.getId()))
 		{
 			gui.dispose();
@@ -271,7 +269,7 @@ public class InternalGUIMediator {
 				break;
 
 			case "make offer":
-				
+
 				this.makeOffer(mainRow, cellRow);
 				
 				break;

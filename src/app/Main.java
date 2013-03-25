@@ -20,7 +20,7 @@ public class Main {
 		// TODO Auto-generated method stub
 		Mediator med = new Mediator();
 		GUI gui = new GUI(med);
-		MockupWSClient wsClient = new MockupWSClient(med);
+		MockupWSClient wsClient = new MockupWSClient(med, gui);
 
 		Simulator s = new Simulator(med, gui);
 		s.execute();

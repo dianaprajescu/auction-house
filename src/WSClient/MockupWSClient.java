@@ -17,10 +17,15 @@ public class MockupWSClient implements IWSClient {
 	
 	private Mediator med;
 	
-	public MockupWSClient(Mediator med)
+	private GUI gui;
+	
+	public MockupWSClient(Mediator med, GUI gui)
 	{
 		this.med = med;
 		med.registerWSClient(this);
+		
+		// Only used in simulation.
+		this.gui = gui;
 	}
 
 	@Override
@@ -83,6 +88,8 @@ public class MockupWSClient implements IWSClient {
 	 */
 	public boolean logout(int userId)
 	{
+		//TODO verify in GUI if we can do logout.
+		
 		return true;
 	}
 	
@@ -180,5 +187,41 @@ public class MockupWSClient implements IWSClient {
 	public boolean removeOffer(int serviceId, int buyerId, int sellerId)
 	{
 		return true;
+	}
+
+	@Override
+	public void offerRefused(int serviceId, int buyerId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void offerAccepted(int serviceId, int buyerId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void offerExceeded(int serviceId, int buyerId, int price) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeExceeded(int serviceId, int buyerId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void offerMade(int serviceId, int sellerId, int price) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void offerRemoved(int serviceId, int sellerId) {
+		// TODO Auto-generated method stub
+		
 	}
 }

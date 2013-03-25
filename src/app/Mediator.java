@@ -164,6 +164,48 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 		ct.fireTableDataChanged();
 		((GUI)this.gui).getTable().rebuildTable();
 	}
+	
+	@Override
+	public void offerRefused(int serviceId, int buyerId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void offerAccepted(int serviceId, int buyerId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void offerExceeded(int serviceId, int buyerId, int price) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeExceeded(int serviceId, int buyerId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void offerMade(int serviceId, int sellerId, int price) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void offerRemoved(int serviceId, int sellerId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void newUser(int serviceId, int userId) {
+		// TODO Auto-generated method stub
+		
+	}
 
 	@Override
 	public void registerGUI(IGUI gui) {
@@ -177,5 +219,4 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	public void registerWSClient(IWSClient client) {
 		this.client = client;
 	}
-
 }

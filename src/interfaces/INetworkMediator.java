@@ -15,4 +15,12 @@ public interface INetworkMediator {
 	 * @param progress
 	 */
 	public void updateTransfer(int serviceId, int userId, int progress);
+	
+	/**
+	 * New user gets online.
+	 * 
+	 * @param serviceId
+	 * @param userId
+	 */
+	public void newUser(int serviceId, int userId);
 }

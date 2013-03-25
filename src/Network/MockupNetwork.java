@@ -68,4 +68,10 @@ public class MockupNetwork implements INetwork {
 	{
 
 	}
+
+	@Override
+	public void newUser(int serviceId, int userId) {
+		// TODO Auto-generated method stub
+		
+	}
 }
