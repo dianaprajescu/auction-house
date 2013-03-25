@@ -17,7 +17,6 @@ import app.Mediator;
  */
 public class MockupNetwork implements INetwork {
 	private Mediator med;
-	private MockupNetwork network;
 
 	/**
 	 * Constructor.
@@ -25,7 +24,6 @@ public class MockupNetwork implements INetwork {
 	public MockupNetwork(Mediator med)
 	{
 		this.med = med;
-		this.network = this;
 		med.registerNetwork(this);
 	}
 
@@ -48,15 +46,24 @@ public class MockupNetwork implements INetwork {
 		med.loadUserList(serviceId);
 	}
 
-	public void initTransfer(final int serviceId, final int userId)
+	/**
+	 * Start transfer from seller to buyer.
+	 * 
+	 * @param serviceId
+	 * @param buyerId
+	 * @param sellerId
+	 */
+	public void startTransfer(final int serviceId, final int buyerId, final int sellerId)
 	{
-		TransferTask tt = new TransferTask((new Random()).nextInt(101));
+		TransferTask tt = new TransferTask( 20 + (new Random()).nextInt(61));
+		
 		tt.addPropertyChangeListener(new PropertyChangeListener(){
 			@Override
 			public void propertyChange(PropertyChangeEvent pce) {
 				if (pce.getPropertyName() == "progress")
 				{
-					med.updateTransfer(serviceId, userId, (int) pce.getNewValue());
+					med.updateTransfer(serviceId, sellerId, (int) pce.getNewValue());
+					med.updateTransfer(serviceId, buyerId, (int) pce.getNewValue());
 				}
 			}
 		});

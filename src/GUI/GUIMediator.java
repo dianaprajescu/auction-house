@@ -300,7 +300,7 @@ public class GUIMediator {
 					else
 					{
 						ctm.setValueAt("Transfer Started", cellRow, 1);
-						gui.startTransfer(((MainTableModel)gui.getTable().getModel()).getIdAt(mainRow), ((CellTableModel)gui.getTable().getValueAt(mainRow, 1)).getIdAt(cellRow));
+						gui.startTransfer(((MainTableModel)gui.getTable().getModel()).getIdAt(mainRow), this.username.getId(), ((CellTableModel)gui.getTable().getValueAt(mainRow, 1)).getIdAt(cellRow));
 					}
 				}
 
@@ -348,6 +348,42 @@ public class GUIMediator {
 
 		((MainTableModel)gui.getTable().getModel()).fireTableDataChanged();
 		gui.getTable().rebuildTable();
+	}
+	
+	/**
+	 * Transfer update.
+	 * @param serviceId
+	 * @param userId
+	 * @param progress
+	 */
+	public void updateTransfer(int serviceId, int userId, int progress)
+	{
+		// Cannot simulate both buyer and seller at the same time.
+		if (this.username.getId() != userId)
+		{
+			MainTable table = ((GUI)this.gui).getTable();
+			MainTableModel mtm = (MainTableModel) table.getModel();
+	
+			int serviceRow = mtm.findRowByServiceId(serviceId);
+			if (serviceRow >= 0)
+			{
+				CellTableModel ctm = (CellTableModel) table.getValueAt(serviceRow, 1);
+				int userRow = ctm.findRowByUserId(userId);
+	
+				if (progress != 100)
+				{
+					ctm.setValueAt("Transfer in Progress", userRow, 1);
+				}
+				else
+				{
+					ctm.setValueAt("Transfer Completed", userRow, 1);
+				}
+				ctm.setValueAt(progress, userRow, 2);
+	
+				ctm.fireTableDataChanged();
+				table.rebuildTable();
+			}
+		}
 	}
 
 	/**

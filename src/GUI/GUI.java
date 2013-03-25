@@ -172,9 +172,28 @@ public class GUI extends JFrame implements IGUI, ActionListener {
         comd.execute(e.getActionCommand());
 	}
 
-	public void startTransfer(int serviceId, int userId)
+	/**
+	 * Start transfer.
+	 * 
+	 * @param serviceId
+	 * @param buyerId
+	 * @param sellerId
+	 */
+	public void startTransfer(int serviceId, int buyerId, int sellerId)
 	{
-		this.mainMed.startTransfer(serviceId, userId);
+		this.mainMed.startTransfer(serviceId, buyerId, sellerId);
+	}
+	
+	/**
+	 * Update transfer.
+	 * 
+	 * @param serviceId
+	 * @param userId
+	 * @param progress
+	 */
+	public void updateTransfer(int serviceId, int userId, int progress)
+	{
+		this.GUImed.updateTransfer(serviceId, userId, progress);
 	}
 	
 	/**
