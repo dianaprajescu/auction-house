@@ -9,7 +9,6 @@ import java.util.HashMap;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
 import GUI.components.BuyerType;
@@ -181,9 +180,15 @@ public class GUIMediator {
 					String userStatus = ctm.getStatusAt(i);
 					int intStatus = this.getIntStatus(userStatus);
 
-					if (intStatus == 4)
+					if (intStatus >= 4 && intStatus <= 8)
 					{
+						System.out.println("status " + intStatus);
 						accepted = true;
+					}
+
+					if (intStatus == 9)
+					{
+						accepted = false;
 					}
 				}
 
@@ -277,7 +282,6 @@ public class GUIMediator {
 	 */
 	public void userAction(String command, int mainRow, int cellRow)
 	{
-		//TODO do sth based on command.
 		System.out.println(command);
 		System.out.println(this.gui.getTable().getSelectedService());
 
@@ -326,7 +330,8 @@ public class GUIMediator {
 					}
 					else
 					{
-						ctm.setValueAt("Offer Accepted", cellRow, 1);
+						ctm.setValueAt("Transfer Started", cellRow, 1);
+						gui.startTransfer(((MainTableModel)gui.getTable().getModel()).getIdAt(mainRow), ((CellTableModel)gui.getTable().getValueAt(mainRow, 1)).getIdAt(cellRow));
 					}
 				}
 
@@ -394,8 +399,8 @@ public class GUIMediator {
 		hm.put("offer refused", new Integer(5));
 		hm.put("transfer started", new Integer(6));
 		hm.put("transfer in progress", new Integer(7));
-		hm.put("transfer completed", new Integer(8));
-		hm.put("transfer failed", new Integer(9));
+		hm.put("transfer failed", new Integer(8));
+		hm.put("transfer completed", new Integer(9));
 
 		return hm.get(status.toLowerCase()).intValue();
 	}

@@ -55,7 +55,8 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 			for (i = 0; i < noSellers; i++)
 			{
 				// Create sellers.
-				int sellerId = new Random().nextInt(10) * i;
+				// TODO must be unique.
+				int sellerId = (new Random().nextInt(3)) + i * 3;
 				Object[] rowx = {sellerId, "seller_name" + sellerId, "No Offer", 0};
 				ct.addRow(rowx);
 			}
@@ -77,6 +78,14 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 			CellTableModel ctm = (CellTableModel) table.getValueAt(serviceRow, 1);
 			int userRow = ctm.findRowByUserId(userId);
 
+			if (progress != 100)
+			{
+				ctm.setValueAt("Transfer in Progress", userRow, 1);
+			}
+			else
+			{
+				ctm.setValueAt("Transfer Completed", userRow, 1);
+			}
 			ctm.setValueAt(progress, userRow, 2);
 
 			ctm.fireTableDataChanged();
