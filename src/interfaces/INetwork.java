@@ -21,7 +21,15 @@ public interface INetwork {
 	 * @param serviceId
 	 * @param userId
 	 */
-	public void newUser(int serviceId, int userId);
+	public void newUser(int serviceId, int userId, String username);
+	
+	/**
+	 * User goes offline.
+	 * 
+	 * @param serviceId
+	 * @param userId
+	 */
+	public void dropUser(int userId);
 	
 	/**
 	 * Launch an offer request.

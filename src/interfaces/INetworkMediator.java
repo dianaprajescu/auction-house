@@ -22,7 +22,15 @@ public interface INetworkMediator {
 	 * @param serviceId
 	 * @param userId
 	 */
-	public void newUser(int serviceId, int userId);
+	public void newUser(int serviceId, int userId, String username);
+	
+	/**
+	 * User goes offline.
+	 * 
+	 * @param serviceId
+	 * @param userId
+	 */
+	public void dropUser(int userId);
 	
 	/**
 	 * Announce a seller that his offer was refused.

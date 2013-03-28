@@ -9,6 +9,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Random;
 
+import GUI.GUI;
 import GUI.components.CellTableModel;
 import app.Mediator;
 
@@ -28,21 +29,7 @@ public class MockupNetwork implements INetwork {
 		med.registerNetwork(this);
 	}
 
-	/**
-	 * Users are notified if a new users activates a service or comes online.
-	 */
-	public void newOnlineUser(String service, String username)
-	{
-
-	}
-
-	/**
-	 * Start transfer from seller to buyer.
-	 * 
-	 * @param serviceId
-	 * @param buyerId
-	 * @param sellerId
-	 */
+	@Override
 	public void startTransfer(final int serviceId, final int buyerId, final int sellerId)
 	{
 		TransferTask tt = new TransferTask( 20 + (new Random()).nextInt(61));
@@ -61,17 +48,11 @@ public class MockupNetwork implements INetwork {
 	}
 
 	@Override
-	public void newUser(int serviceId, int userId) {
-		// TODO Auto-generated method stub
-		
+	public void newUser(int serviceId, int userId, String username) {
+		this.med.newUser(serviceId, userId, username);
 	}
 	
-	/**
-	 * Sellers are notified when a buyer activates a service.
-	 *
-	 * @param   int  buyer_id    The buyer that activated the service.
-	 * @param   int  service_id  The active service.
-	 */
+	@Override
 	public CellTableModel launchOfferRequest(int serviceId, int userId)
 	{
 		// Populate model with a random number of sellers.
@@ -92,13 +73,7 @@ public class MockupNetwork implements INetwork {
 		return ct;
 	}
 	
-	/**
-	 * Drop offer request.
-	 * 
-	 * @param serviceId
-	 * @param userId
-	 * @return
-	 */
+	@Override
 	public boolean dropOfferRequest(int serviceId, int userId)
 	{
 		//TODO send refuse offer to all sellers.
@@ -106,13 +81,7 @@ public class MockupNetwork implements INetwork {
 		return true;
 	}
 	
-	/**
-	 * Accept offer. 
-	 * @param serviceId
-	 * @param buyerId
-	 * @param sellerId
-	 * @return
-	 */
+	@Override
 	public boolean acceptOffer(int serviceId, int buyerId, int sellerId)
 	{
 		//TODO send refuse offer to all sellers.
@@ -120,13 +89,7 @@ public class MockupNetwork implements INetwork {
 		return true;
 	}
 	
-	/**
-	 * Refuse offer. 
-	 * @param serviceId
-	 * @param buyerId
-	 * @param sellerId
-	 * @return
-	 */
+	@Override
 	public boolean refuseOffer(int serviceId, int buyerId, int sellerId)
 	{
 		//TODO send refuse the selers offer.
@@ -134,15 +97,7 @@ public class MockupNetwork implements INetwork {
 		return true;
 	}
 	
-	/**
-	 * Make offer.
-	 * 
-	 * @param serviceId
-	 * @param buyerId
-	 * @param sellerId
-	 * @param price
-	 * @return
-	 */
+	@Override
 	public boolean makeOffer(int serviceId, int buyerId, int sellerId, int price)
 	{
 		//TODO send offer to the buyer. Update other offers (offer exceeded).
@@ -150,13 +105,7 @@ public class MockupNetwork implements INetwork {
 		return true;
 	}
 	
-	/**
-	 * Remove offer. 
-	 * @param serviceId
-	 * @param buyerId
-	 * @param sellerId
-	 * @return
-	 */
+	@Override
 	public boolean removeOffer(int serviceId, int buyerId, int sellerId)
 	{
 		return true;
@@ -164,37 +113,36 @@ public class MockupNetwork implements INetwork {
 
 	@Override
 	public void offerRefused(int serviceId, int buyerId) {
-		// TODO Auto-generated method stub
-		
+		this.med.offerRefused(serviceId, buyerId);
 	}
 
 	@Override
 	public void offerAccepted(int serviceId, int buyerId) {
-		// TODO Auto-generated method stub
-		
+		this.med.offerAccepted(serviceId, buyerId);
 	}
 
 	@Override
 	public void offerExceeded(int serviceId, int buyerId, int price) {
-		// TODO Auto-generated method stub
-		
+		this.med.offerExceeded(serviceId, buyerId, price);
 	}
 
 	@Override
 	public void removeExceeded(int serviceId, int buyerId) {
-		// TODO Auto-generated method stub
-		
+		this.med.removeExceeded(serviceId, buyerId);
 	}
 
 	@Override
 	public void offerMade(int serviceId, int sellerId, int price) {
-		// TODO Auto-generated method stub
-		
+		this.med.offerMade(serviceId, sellerId, price);
 	}
 
 	@Override
 	public void offerRemoved(int serviceId, int sellerId) {
-		// TODO Auto-generated method stub
-		
+		this.med.offerRemoved(serviceId, sellerId);
+	}
+
+	@Override
+	public void dropUser(int userId) {
+		this.med.dropUser(userId);
 	}
 }

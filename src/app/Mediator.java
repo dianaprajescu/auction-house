@@ -27,184 +27,99 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	private INetwork network;
 	private IWSClient client;
 	
-	/**
-	 * In GUIMediator. Login an user.
-	 * 
-	 * @param username
-	 * @param password
-	 * @param type
-	 */
+	@Override
 	public int login(String username, String password, UserType type)
 	{
 		return this.client.login(username, password, type);
 	}
 	
-	/**
-	 * Logout user.
-	 * 
-	 * @param userId
-	 * @return
-	 */
+	@Override
 	public boolean logout(int userId)
 	{
 		return this.client.logout(userId);
 	}
 
-	/**
-	 * A buyer has launched an offer request.
-	 *
-	 * @param   int  userType  1 for buyer and 2 for seller.
-	 * @param
-	 */
+	@Override
 	public CellTableModel launchOfferRequest(int serviceId, int userId)
 	{
 		return this.network.launchOfferRequest(serviceId, userId);
 	}
 	
-	/**
-	 * Drop offer request.
-	 * 
-	 * @param serviceId
-	 * @param userId
-	 * @return
-	 */
+	@Override
 	public boolean dropOfferRequest(int serviceId, int userId)
 	{
 		return this.network.dropOfferRequest(serviceId, userId);
 	}
 	
-	/**
-	 * Accept offer. 
-	 * @param serviceId
-	 * @param buyerId
-	 * @param sellerId
-	 * @return
-	 */
+	@Override
 	public boolean acceptOffer(int serviceId, int buyerId, int sellerId)
 	{
 		return this.network.acceptOffer(serviceId, buyerId, sellerId);
 	}
 	
-	/**
-	 * Refuse offer. 
-	 * @param serviceId
-	 * @param buyerId
-	 * @param sellerId
-	 * @return
-	 */
+	@Override
 	public boolean refuseOffer(int serviceId, int buyerId, int sellerId)
 	{
 		return this.network.refuseOffer(serviceId, buyerId, sellerId);
 	}
 	
-	/**
-	 * Make offer.
-	 * 
-	 * @param serviceId
-	 * @param buyerId
-	 * @param sellerId
-	 * @param price
-	 * @return
-	 */
+	@Override
 	public boolean makeOffer(int serviceId, int buyerId, int sellerId, int price)
 	{
 		return this.network.makeOffer(serviceId, buyerId, sellerId, price);
 	}
 	
-	/**
-	 * Remove offer. 
-	 * @param serviceId
-	 * @param buyerId
-	 * @param sellerId
-	 * @return
-	 */
+	@Override
 	public boolean removeOffer(int serviceId, int buyerId, int sellerId)
 	{
 		return this.network.removeOffer(serviceId, buyerId, sellerId);
 	}
 
-	/**
-	 * Update transfer. 
-	 * @param serviceId
-	 * @param userId
-	 * @param progress
-	 */
+	@Override
 	public void updateTransfer(int serviceId, int userId, int progress)
 	{
 		this.gui.updateTransfer(serviceId, userId, progress);
 	}
 
-	/**
-	 * Start transfer.
-	 *  
-	 * @param serviceId
-	 * @param userId
-	 * @param sellerId
-	 */
+	@Override
 	public void startTransfer(int serviceId, int buyerId, int sellerId)
 	{
 		this.network.startTransfer(serviceId, buyerId, sellerId);
 	}
-
-	public void newOnlineUser(int serviceId, int userId)
-	{
-		// Find out which row to update in the main table.
-		MainTableModel mtm = (MainTableModel) ((GUI)this.gui).getTable().getModel();
-		int row = mtm.findRowByServiceId(serviceId);
-
-
-		// Get cell to update model.
-		CellTableModel ct = (CellTableModel)((GUI)this.gui).getTable().getValueAt(row, 1);
-
-		// Add buyer.
-		int buyerId = new Random().nextInt(100);
-		Object[] rowx = {buyerId, "buyer_name" + buyerId, "No Offer", 0};
-		ct.addRow(rowx);
-
-		ct.fireTableDataChanged();
-		((GUI)this.gui).getTable().rebuildTable();
-	}
 	
 	@Override
 	public void offerRefused(int serviceId, int buyerId) {
-		// TODO Auto-generated method stub
-		
+		this.gui.offerRefused(serviceId, buyerId);
 	}
 
 	@Override
 	public void offerAccepted(int serviceId, int buyerId) {
-		// TODO Auto-generated method stub
-		
+		this.gui.offerAccepted(serviceId, buyerId);
 	}
 
 	@Override
 	public void offerExceeded(int serviceId, int buyerId, int price) {
-		// TODO Auto-generated method stub
-		
+		this.gui.offerExceeded(serviceId, buyerId, price);
 	}
 
 	@Override
 	public void removeExceeded(int serviceId, int buyerId) {
-		// TODO Auto-generated method stub
-		
+		this.gui.removeExceeded(serviceId, buyerId);
 	}
 
 	@Override
 	public void offerMade(int serviceId, int sellerId, int price) {
-		// TODO Auto-generated method stub
-		
+		this.gui.offerMade(serviceId, sellerId, price);
 	}
 
 	@Override
 	public void offerRemoved(int serviceId, int sellerId) {
-		// TODO Auto-generated method stub
-		
+		this.offerRemoved(serviceId, sellerId);
 	}
 
 	@Override
-	public void newUser(int serviceId, int userId) {
-		// TODO Auto-generated method stub
-		
+	public void newUser(int serviceId, int userId, String username) {
+		this.gui.newUser(serviceId, userId, username);
 	}
 
 	@Override
@@ -218,5 +133,10 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	@Override
 	public void registerWSClient(IWSClient client) {
 		this.client = client;
+	}
+
+	@Override
+	public void dropUser(int userId) {
+		this.gui.dropUser(userId);
 	}
 }

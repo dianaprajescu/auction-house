@@ -94,4 +94,71 @@ public interface IGUI {
 	 * @return
 	 */
 	public boolean removeOffer(int serviceId, int buyerId, int sellerId);
+	
+	/**
+	 * New user gets online.
+	 * 
+	 * @param serviceId
+	 * @param userId
+	 * @param username
+	 */
+	public void newUser(int serviceId, int userId, String username);
+	
+	/**
+	 * User goes offline.
+	 * 
+	 * @param serviceId
+	 * @param userId
+	 */
+	public void dropUser(int userId);
+	
+	/**
+	 * Offer was refused by the buyer.
+	 * 
+	 * @param serviceId
+	 * @param buyerId
+	 */
+	public void offerRefused(int serviceId, int buyerId);
+	
+	/**
+	 * Offer was accepted by the buyer.
+	 * 
+	 * @param serviceId
+	 * @param buyerId
+	 */
+	public void offerAccepted(int serviceId, int buyerId);
+	
+	/**
+	 * The offer made to buyer was exceeded.
+	 * 
+	 * @param serviceId
+	 * @param buyerId
+	 * @param price
+	 */
+	public void offerExceeded(int serviceId, int buyerId, int price);
+	
+	/**
+	 * Offer is no longer exceeded.
+	 * 
+	 * @param serviceId
+	 * @param buyerId
+	 */
+	public void removeExceeded(int serviceId, int buyerId);
+	
+	/**
+	 * The seller has made an offer.
+	 * 
+	 * @param serviceId
+	 * @param sellerId
+	 * @param price
+	 */
+	public void offerMade(int serviceId, int sellerId, int price);
+	
+	/**
+	 * The seller has removed his offer.
+	 * 
+	 * @param serviceId
+	 * @param sellerId
+	 */
+	public void offerRemoved(int serviceId, int sellerId);
 }

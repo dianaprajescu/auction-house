@@ -162,123 +162,103 @@ public class GUI extends JFrame implements IGUI, ActionListener {
         comd.execute(e.getActionCommand());
 	}
 
-	/**
-	 * Start transfer.
-	 * 
-	 * @param serviceId
-	 * @param buyerId
-	 * @param sellerId
-	 */
+	@Override
 	public void startTransfer(int serviceId, int buyerId, int sellerId)
 	{
 		this.mainMed.startTransfer(serviceId, buyerId, sellerId);
 	}
 	
-	/**
-	 * Update transfer.
-	 * 
-	 * @param serviceId
-	 * @param userId
-	 * @param progress
-	 */
+	@Override
 	public void updateTransfer(int serviceId, int userId, int progress)
 	{
 		this.GUImed.updateTransfer(serviceId, userId, progress);
 	}
 	
-	/**
-	 * Login user.
-	 * 
-	 * @param username
-	 * @param password
-	 * @param type
-	 * @return
-	 */
+	@Override
 	public int login(String username, String password, UserType type)
 	{
 		return this.mainMed.login(username, password, type);
 	}
 	
-	/**
-	 * Logout user.
-	 * 
-	 * @param userId
-	 * @return
-	 */
+	@Override
 	public boolean logout(int userId)
 	{
 		return this.mainMed.logout(userId);
 	}
 	
-	/**
-	 * Launch offer request.
-	 * 
-	 * @param serviceId
-	 * @param userId
-	 */
+	@Override
 	public CellTableModel launchOfferRequest(int serviceId, int userId)
 	{
 		return this.mainMed.launchOfferRequest(serviceId, userId);
 	}
 	
-	/**
-	 * Drop an offer request.
-	 * 
-	 * @param serviceId
-	 * @param userId
-	 */
+	@Override
 	public boolean dropOfferRequest(int serviceId, int userId)
 	{
 		return this.mainMed.dropOfferRequest(serviceId, userId);
 	}
 	
-	/**
-	 * Accept offer. 
-	 * @param serviceId
-	 * @param buyerId
-	 * @param sellerId
-	 * @return
-	 */
+	@Override
 	public boolean acceptOffer(int serviceId, int buyerId, int sellerId)
 	{
 		return this.mainMed.acceptOffer(serviceId, buyerId, sellerId);
 	}
 	
-	/**
-	 * Refuse offer. 
-	 * @param serviceId
-	 * @param buyerId
-	 * @param sellerId
-	 * @return
-	 */
+	@Override
 	public boolean refuseOffer(int serviceId, int buyerId, int sellerId)
 	{
 		return this.mainMed.refuseOffer(serviceId, buyerId, sellerId);
 	}
 	
-	/**
-	 * Make offer.
-	 * 
-	 * @param serviceId
-	 * @param buyerId
-	 * @param sellerId
-	 * @param price
-	 * @return
-	 */
+	@Override
 	public boolean makeOffer(int serviceId, int buyerId, int sellerId, int price)
 	{
 		return this.mainMed.makeOffer(serviceId, buyerId, sellerId, price);
 	}
 	
-	/**
-	 * Remove offer. 
-	 * @param serviceId
-	 * @param buyerId
-	 * @param sellerId
-	 * @return
-	 */
+	@Override
 	public boolean removeOffer(int serviceId, int buyerId, int sellerId)
 	{
 		return this.mainMed.removeOffer(serviceId, buyerId, sellerId);
+	}
+
+	@Override
+	public void newUser(int serviceId, int userId, String username) {
+		this.GUImed.newUser(serviceId, userId, username);
+	}
+	
+	@Override
+	public void dropUser(int userId) {
+		this.GUImed.dropUser(userId);
+	}
+
+	@Override
+	public void offerRefused(int serviceId, int buyerId) {
+		this.GUImed.offerRefused(serviceId, buyerId);
+	}
+
+	@Override
+	public void offerAccepted(int serviceId, int buyerId) {
+		this.GUImed.offerAccepted(serviceId, buyerId);
+	}
+
+	@Override
+	public void offerExceeded(int serviceId, int buyerId, int price) {
+		this.GUImed.offerExceeded(serviceId, buyerId, price);
+	}
+
+	@Override
+	public void removeExceeded(int serviceId, int buyerId) {
+		this.GUImed.removeExceeded(serviceId, buyerId);
+	}
+
+	@Override
+	public void offerMade(int serviceId, int sellerId, int price) {
+		this.GUImed.offerMade(serviceId, sellerId, price);
+	}
+
+	@Override
+	public void offerRemoved(int serviceId, int sellerId) {
+		this.GUImed.offerRemoved(serviceId, sellerId);
 	}
 }

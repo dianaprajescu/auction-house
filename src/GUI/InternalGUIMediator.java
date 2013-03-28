@@ -500,6 +500,97 @@ public class InternalGUIMediator {
 	}
 	
 	/**
+	 * New user gets online.
+	 * 
+	 * @param serviceId
+	 * @param userId
+	 * @param username
+	 */
+	public void newUser(int serviceId, int userId, String username)
+	{
+		//TODO add user to interface with NO OFFER made.
+	}
+	
+	/**
+	 * User goes offline.
+	 * 
+	 * @param userId
+	 */
+	public void dropUser(int userId)
+	{
+		//TODO remove user with the specified id.
+	}
+	
+
+	/**
+	 * Offer was refused by the buyer.
+	 * 
+	 * @param serviceId
+	 * @param buyerId
+	 */
+	public void offerRefused(int serviceId, int buyerId)
+	{
+		//TODO refused offer from buyer if we are seller.
+	}
+	
+	/**
+	 * Offer was accepted by the buyer.
+	 * 
+	 * @param serviceId
+	 * @param buyerId
+	 */
+	public void offerAccepted(int serviceId, int buyerId)
+	{
+		//TODO accepted offer from buyer if we are seller.
+	}
+	
+	/**
+	 * Offer was exceeded.
+	 * 
+	 * @param serviceId
+	 * @param buyerId
+	 * @param price
+	 */
+	public void offerExceeded(int serviceId, int buyerId, int price)
+	{
+		//TODO mark offer as exceeded.
+	}
+	
+	/**
+	 * The offer is no longer exceeded.
+	 * 
+	 * @param serviceId
+	 * @param buyerId
+	 */
+	public void removeExceeded(int serviceId, int buyerId)
+	{
+		//TODO mark offer as no longer exceeded.
+	}
+	
+	/**
+	 * An offer from seller was made.
+	 * 
+	 * @param serviceId
+	 * @param sellerId
+	 * @param price
+	 */
+	public void offerMade(int serviceId, int sellerId, int price)
+	{
+		//TODO show new offer in interface.
+	}
+	
+	/**
+	 * The offer was removed.
+	 * 
+	 * @param serviceId
+	 * @param sellerId
+	 */
+	public void offerRemoved(int serviceId, int sellerId)
+	{
+		//TODO mark offer as removed.
+	}
+	
+	/**
 	 * Transfer update.
 	 * @param serviceId
 	 * @param userId
