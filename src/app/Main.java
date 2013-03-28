@@ -24,8 +24,8 @@ public class Main {
 		MockupWSClient wsClient = new MockupWSClient(med, gui);
 
 		// Comment these 2 lines to stop simulator.
-		//Simulator s = new Simulator(med, gui);
-		//s.execute();
+		Simulator s = new Simulator(med, gui);
+		s.execute();
 	}
 
 }
