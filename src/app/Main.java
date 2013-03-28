@@ -18,7 +18,6 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		Mediator med = new Mediator();
 		GUI gui = new GUI(med);
 		MockupNetwork network = new MockupNetwork(med);

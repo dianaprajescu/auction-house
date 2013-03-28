@@ -532,6 +532,130 @@ public class InternalGUIMediator {
 	}
 
 	/**
+	 * New user gets online.
+	 * 
+	 * @param serviceId
+	 * @param userId
+	 * @param username
+	 */
+	public void newUser(int serviceId, int userId, String username)
+	{
+		MainTable table = ((GUI)this.gui).getTable();
+		MainTableModel mtm = (MainTableModel) table.getModel();
+		
+		// Get the service id.
+		int serviceRow = mtm.findRowByServiceId(serviceId);
+		
+		if (serviceRow >= 0)
+		{
+			// Get the cell table model for service.
+			CellTableModel ctm = (CellTableModel) mtm.getValueAt(serviceRow, 1);
+			
+			// Add new user.
+			Object[] newUser = {username, "No Offer", 0};
+			ctm.addRow(userId, newUser);
+			
+			// Update.
+			ctm.fireTableDataChanged();
+			
+			table.rebuildTable();
+		}
+	}
+	
+	/**
+	 * User goes offline.
+	 * 
+	 * @param userId
+	 */
+	public void dropUser(int userId)
+	{
+		MainTable table = ((GUI)this.gui).getTable();
+		MainTableModel mtm = (MainTableModel) table.getModel();
+		
+		for (int i=0; i<mtm.getRowCount(); i++)
+		{
+			// Get the cell table model for service.
+			CellTableModel ctm = (CellTableModel) mtm.getValueAt(i, 1);
+			
+			// Remove user.
+			ctm.removeRow(userId);
+			
+			// Update.
+			ctm.fireTableDataChanged();
+			table.rebuildTable();
+		}
+	}
+	
+
+	/**
+	 * Offer was refused by the buyer.
+	 * 
+	 * @param serviceId
+	 * @param buyerId
+	 */
+	public void offerRefused(int serviceId, int buyerId)
+	{
+		//TODO refused offer from buyer if we are seller.
+	}
+	
+	/**
+	 * Offer was accepted by the buyer.
+	 * 
+	 * @param serviceId
+	 * @param buyerId
+	 */
+	public void offerAccepted(int serviceId, int buyerId)
+	{
+		//TODO accepted offer from buyer if we are seller.
+	}
+	
+	/**
+	 * Offer was exceeded.
+	 * 
+	 * @param serviceId
+	 * @param buyerId
+	 * @param price
+	 */
+	public void offerExceeded(int serviceId, int buyerId, int price)
+	{
+		//TODO mark offer as exceeded.
+	}
+	
+	/**
+	 * The offer is no longer exceeded.
+	 * 
+	 * @param serviceId
+	 * @param buyerId
+	 */
+	public void removeExceeded(int serviceId, int buyerId)
+	{
+		//TODO mark offer as no longer exceeded.
+	}
+	
+	/**
+	 * An offer from seller was made.
+	 * 
+	 * @param serviceId
+	 * @param sellerId
+	 * @param price
+	 */
+	public void offerMade(int serviceId, int sellerId, int price)
+	{
+		//TODO show new offer in interface.
+	}
+	
+	/**
+	 * The offer was removed.
+	 * 
+	 * @param serviceId
+	 * @param sellerId
+	 */
+	public void offerRemoved(int serviceId, int sellerId)
+	{
+		//TODO mark offer as removed.
+	}
+	
+	/**
 	 * Transfer update.
 	 * @param serviceId
 	 * @param userId
