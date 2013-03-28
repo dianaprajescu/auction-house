@@ -9,6 +9,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Random;
 
+import GUI.components.CellTableModel;
 import app.Mediator;
 
 /**
@@ -59,18 +60,140 @@ public class MockupNetwork implements INetwork {
 		tt.execute();
 	}
 
+	@Override
+	public void newUser(int serviceId, int userId) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	/**
-	 * Buyers are notified when sellers make an offer.
+	 * Sellers are notified when a buyer activates a service.
 	 *
-	 * @param   int  seller_id  The seller that made the offer.
+	 * @param   int  buyer_id    The buyer that activated the service.
+	 * @param   int  service_id  The active service.
 	 */
-	public void offerMade(int seller_id)
+	public CellTableModel launchOfferRequest(int serviceId, int userId)
 	{
+		// Populate model with a random number of sellers.
+		int noSellers = new Random().nextInt(6) + 1;
+		
+		// Create a new CellTableModel.
+		CellTableModel ct = new CellTableModel();
 
+		for (int i = 0; i < noSellers; i++)
+		{
+			// Create sellers.
+			// TODO must be unique.
+			int sellerId = (new Random().nextInt(3)) + i * 3;
+			Object[] rowx = {sellerId, "seller_name" + sellerId, "No Offer", 0};
+			ct.addRow(rowx);
+		}
+		
+		return ct;
+	}
+	
+	/**
+	 * Drop offer request.
+	 * 
+	 * @param serviceId
+	 * @param userId
+	 * @return
+	 */
+	public boolean dropOfferRequest(int serviceId, int userId)
+	{
+		//TODO send refuse offer to all sellers.
+		
+		return true;
+	}
+	
+	/**
+	 * Accept offer. 
+	 * @param serviceId
+	 * @param buyerId
+	 * @param sellerId
+	 * @return
+	 */
+	public boolean acceptOffer(int serviceId, int buyerId, int sellerId)
+	{
+		//TODO send refuse offer to all sellers.
+		
+		return true;
+	}
+	
+	/**
+	 * Refuse offer. 
+	 * @param serviceId
+	 * @param buyerId
+	 * @param sellerId
+	 * @return
+	 */
+	public boolean refuseOffer(int serviceId, int buyerId, int sellerId)
+	{
+		//TODO send refuse the selers offer.
+		
+		return true;
+	}
+	
+	/**
+	 * Make offer.
+	 * 
+	 * @param serviceId
+	 * @param buyerId
+	 * @param sellerId
+	 * @param price
+	 * @return
+	 */
+	public boolean makeOffer(int serviceId, int buyerId, int sellerId, int price)
+	{
+		//TODO send offer to the buyer. Update other offers (offer exceeded).
+		
+		return true;
+	}
+	
+	/**
+	 * Remove offer. 
+	 * @param serviceId
+	 * @param buyerId
+	 * @param sellerId
+	 * @return
+	 */
+	public boolean removeOffer(int serviceId, int buyerId, int sellerId)
+	{
+		return true;
 	}
 
 	@Override
-	public void newUser(int serviceId, int userId) {
+	public void offerRefused(int serviceId, int buyerId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void offerAccepted(int serviceId, int buyerId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void offerExceeded(int serviceId, int buyerId, int price) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeExceeded(int serviceId, int buyerId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void offerMade(int serviceId, int sellerId, int price) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void offerRemoved(int serviceId, int sellerId) {
 		// TODO Auto-generated method stub
 		
 	}
