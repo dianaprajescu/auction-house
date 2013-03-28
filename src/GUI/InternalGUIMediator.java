@@ -601,7 +601,25 @@ public class InternalGUIMediator {
 	 */
 	public void offerRefused(int serviceId, int buyerId)
 	{
-		//TODO refused offer from buyer if we are seller.
+		MainTable table = ((GUI)this.gui).getTable();
+		MainTableModel mtm = (MainTableModel) table.getModel();
+		
+		// Get the service id.
+		int serviceRow = mtm.findRowByServiceId(serviceId);
+		
+		if (serviceRow >= 0)
+		{
+			// Get the cell table model for service.
+			CellTableModel ctm = (CellTableModel) mtm.getValueAt(serviceRow, 1);
+			
+			// Get the buyer row.
+			int buyerRow = ctm.findRowByUserId(buyerId);
+			
+			if (buyerRow >= 0)
+			{
+				ctm.setValueAt("Offer Refused", buyerRow, 1);
+			}
+		}
 	}
 
 	/**
@@ -612,7 +630,29 @@ public class InternalGUIMediator {
 	 */
 	public void offerAccepted(int serviceId, int buyerId)
 	{
-		//TODO accepted offer from buyer if we are seller.
+		MainTable table = ((GUI)this.gui).getTable();
+		MainTableModel mtm = (MainTableModel) table.getModel();
+		
+		// Get the service id.
+		int serviceRow = mtm.findRowByServiceId(serviceId);
+		
+		if (serviceRow >= 0)
+		{
+			// Get the cell table model for service.
+			CellTableModel ctm = (CellTableModel) mtm.getValueAt(serviceRow, 1);
+			
+			// Get the buyer row.
+			int buyerRow = ctm.findRowByUserId(buyerId);
+			
+			if (buyerRow >= 0)
+			{
+				// Mark offer as accepted.
+				ctm.setValueAt("Offer Accepted", buyerRow, 1);
+				
+				//TODO Start transfer. Review should be set in network probably.
+				this.gui.startTransfer(serviceId, buyerId, username.getId());
+			}
+		}
 	}
 
 	/**
@@ -624,7 +664,27 @@ public class InternalGUIMediator {
 	 */
 	public void offerExceeded(int serviceId, int buyerId, int price)
 	{
-		//TODO mark offer as exceeded.
+		MainTable table = ((GUI)this.gui).getTable();
+		MainTableModel mtm = (MainTableModel) table.getModel();
+		
+		// Get the service id.
+		int serviceRow = mtm.findRowByServiceId(serviceId);
+		
+		if (serviceRow >= 0)
+		{
+			// Get the cell table model for service.
+			CellTableModel ctm = (CellTableModel) mtm.getValueAt(serviceRow, 1);
+			
+			// Get the buyer row.
+			int buyerRow = ctm.findRowByUserId(buyerId);
+			
+			if (buyerRow >= 0)
+			{
+				ctm.setValueAt("Offer Exceeded", buyerRow, 1);
+				
+				//TODO show the new price.
+			}
+		}
 	}
 
 	/**
@@ -635,7 +695,28 @@ public class InternalGUIMediator {
 	 */
 	public void removeExceeded(int serviceId, int buyerId)
 	{
-		//TODO mark offer as no longer exceeded.
+		MainTable table = ((GUI)this.gui).getTable();
+		MainTableModel mtm = (MainTableModel) table.getModel();
+		
+		// Get the service id.
+		int serviceRow = mtm.findRowByServiceId(serviceId);
+		
+		if (serviceRow >= 0)
+		{
+			// Get the cell table model for service.
+			CellTableModel ctm = (CellTableModel) mtm.getValueAt(serviceRow, 1);
+			
+			// Get the buyer row.
+			int buyerRow = ctm.findRowByUserId(buyerId);
+			
+			if (buyerRow >= 0)
+			{
+				// Mark offer as accepted.
+				ctm.setValueAt("Offer Made", buyerRow, 1);
+				
+				//TODO update max price.
+			}
+		}
 	}
 
 	/**
@@ -647,7 +728,27 @@ public class InternalGUIMediator {
 	 */
 	public void offerMade(int serviceId, int sellerId, int price)
 	{
-		//TODO show new offer in interface.
+		MainTable table = ((GUI)this.gui).getTable();
+		MainTableModel mtm = (MainTableModel) table.getModel();
+		
+		// Get the service id.
+		int serviceRow = mtm.findRowByServiceId(serviceId);
+		
+		if (serviceRow >= 0)
+		{
+			// Get the cell table model for service.
+			CellTableModel ctm = (CellTableModel) mtm.getValueAt(serviceRow, 1);
+			
+			// Get the seller row.
+			int sellerRow = ctm.findRowByUserId(sellerId);
+			
+			if (sellerRow >= 0)
+			{
+				ctm.setValueAt("Offer Made", sellerRow, 1);
+				
+				//TODO show the new price.
+			}
+		}
 	}
 
 	/**
@@ -658,7 +759,27 @@ public class InternalGUIMediator {
 	 */
 	public void offerRemoved(int serviceId, int sellerId)
 	{
-		//TODO mark offer as removed.
+		MainTable table = ((GUI)this.gui).getTable();
+		MainTableModel mtm = (MainTableModel) table.getModel();
+		
+		// Get the service id.
+		int serviceRow = mtm.findRowByServiceId(serviceId);
+		
+		if (serviceRow >= 0)
+		{
+			// Get the cell table model for service.
+			CellTableModel ctm = (CellTableModel) mtm.getValueAt(serviceRow, 1);
+			
+			// Get the seller row.
+			int sellerRow = ctm.findRowByUserId(sellerId);
+			
+			if (sellerRow >= 0)
+			{
+				ctm.setValueAt("No Offer", sellerRow, 1);
+				
+				//TODO show the new price.
+			}
+		}
 	}
 
 	/**
