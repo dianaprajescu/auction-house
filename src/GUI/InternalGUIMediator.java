@@ -545,6 +545,12 @@ public class InternalGUIMediator {
 			// Get the cell table model for service.
 			CellTableModel ctm = (CellTableModel) mtm.getValueAt(i, 1);
 			
+			// Remove user.
+			ctm.removeRow(userId);
+			
+			// Update.
+			ctm.fireTableDataChanged();
+			table.rebuildTable();
 		}
 	}
 	
