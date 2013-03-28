@@ -81,6 +81,11 @@ public class CellTableModel extends AbstractTableModel{
 		entryIds.add(row, id);
 		entryIds.remove(row);
 	}
+	
+	public int getPriceAt(int row)
+	{
+		return (Integer) data.get(row)[2];
+	}
 
 	public String getStatusAt(int row)
 	{

@@ -350,14 +350,34 @@ public class InternalGUIMediator {
 	{
 		MainTable table = this.gui.getTable();
 		MainTableModel mtm = (MainTableModel) table.getModel();
+		CellTableModel ctm = (CellTableModel) mtm.getValueAt(row, 1);
 		
 		// Remove timer.
-		mtm.setTimerAt("-", row);
+		mtm.setTimerAt("Expired", row);
 		mtm.fireTableCellUpdated(row, 3);
 		
-		//TODO Check if there are offers.
+		Integer min = null;
+		int rowAccepted = -1;
 		
-		//TODO Accept the best offer and refuse the other ones.
+		//Check if there are offers.
+		for (int userRow = 0; userRow < ctm.getRowCount(); userRow++)
+		{			
+			int status = this.getIntStatus(ctm.getStatusAt(userRow));
+			if (status == 2)
+			{
+				if (min == null || ctm.getPriceAt(userRow) < min)
+				{
+					min = ctm.getPriceAt(userRow);
+					rowAccepted = userRow;
+				}
+			}
+		}
+		
+		// If there were offers.
+		if (min != null)
+		{
+			this.acceptOffer(row, rowAccepted);
+		}
 	}
 	
 	/**

@@ -17,7 +17,7 @@ public class AuctionTimer extends Timer {
 		this.mtm = model;
 		this.row = r;
 		this.mediator = med;
-		left = 10;
+		left = 15;
 		
 		timer = this;
 		
