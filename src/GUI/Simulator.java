@@ -80,8 +80,9 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 
 	/**
 	 * Simulate login.
+	 * @throws InterruptedException
 	 */
-	private void simulateLogin()
+	private void simulateLogin() throws InterruptedException
 	{
 		// Set valid or invalid login data.
 		Random rand = new Random();
@@ -95,7 +96,7 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 		else
 		{
 			gui.GUImed.setUsername("diana");
-			gui.GUImed.setPassword("lala");
+			gui.GUImed.setPassword("la");
 		}
 
 		// Set user type random.
@@ -107,6 +108,10 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 		{
 			gui.GUImed.setType(UserType.SELLER);
 		}
+
+		// Show entered data.
+		gui.GUImed.login.repaint();
+		Thread.sleep(DELAY);
 
 		gui.GUImed.login();
 	}
@@ -134,21 +139,28 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 		int i = 0;
 		while (i < noServices)
 		{
-			Thread.sleep(DELAY);
-
-			// Select random service.
-			int service = rand.nextInt(gui.getTable().getRowCount());
-
-			// Launch or drop offer.
-			if (((String) gui.getTable().getValueAt(service, 2)).compareToIgnoreCase("inactive") == 0)
+			if (gui.isActive() == true)
 			{
-				gui.GUImed.userAction("launch offer request", service, 0);
+				Thread.sleep(5 * DELAY);
+
+				// Select random service.
+				int service = rand.nextInt(gui.getTable().getRowCount());
+
+				// Launch or drop offer.
+				if (((String) gui.getTable().getValueAt(service, 2)).compareToIgnoreCase("inactive") == 0)
+				{
+					gui.GUImed.userAction("launch offer request", service, 0);
+				}
+				else
+				{
+					gui.GUImed.userAction("drop offer request", service, 0);
+				}
+				i++;
 			}
 			else
 			{
-				gui.GUImed.userAction("drop offer request", service, 0);
+				return;
 			}
-			i++;
 		}
 	}
 

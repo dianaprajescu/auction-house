@@ -26,7 +26,7 @@ import app.UserType;
  */
 public class InternalGUIMediator {
 	private GUI gui;
-	private Login login;
+	public Login login;
 	private UsernameField username;
 	private PasswordField password;
 	private BuyerType buyer;
@@ -37,7 +37,6 @@ public class InternalGUIMediator {
 	 */
 	public void setUsername(String text)
 	{
-		username = new UsernameField(this);
 		username.setText(text);
 	}
 
@@ -46,7 +45,6 @@ public class InternalGUIMediator {
 	 */
 	public void setPassword(String text)
 	{
-		password = new PasswordField(this);
 		password.setText(text);
 	}
 
@@ -57,12 +55,12 @@ public class InternalGUIMediator {
 	{
 		if (type == UserType.BUYER)
 		{
-			buyer = new BuyerType(this);
 			buyer.setSelected(true);
+			seller.setSelected(false);
 		}
 		else
 		{
-			seller = new SellerType(this);
+			buyer.setSelected(false);
 			seller.setSelected(true);
 		}
 	}
@@ -533,63 +531,63 @@ public class InternalGUIMediator {
 
 	/**
 	 * New user gets online.
-	 * 
+	 *
 	 * @param serviceId
 	 * @param userId
 	 * @param username
 	 */
 	public void newUser(int serviceId, int userId, String username)
 	{
-		MainTable table = ((GUI)this.gui).getTable();
+		MainTable table = this.gui.getTable();
 		MainTableModel mtm = (MainTableModel) table.getModel();
-		
+
 		// Get the service id.
 		int serviceRow = mtm.findRowByServiceId(serviceId);
-		
+
 		if (serviceRow >= 0)
 		{
 			// Get the cell table model for service.
 			CellTableModel ctm = (CellTableModel) mtm.getValueAt(serviceRow, 1);
-			
+
 			// Add new user.
 			Object[] newUser = {username, "No Offer", 0};
 			ctm.addRow(userId, newUser);
-			
+
 			// Update.
 			ctm.fireTableDataChanged();
-			
+
 			table.rebuildTable();
 		}
 	}
-	
+
 	/**
 	 * User goes offline.
-	 * 
+	 *
 	 * @param userId
 	 */
 	public void dropUser(int userId)
 	{
-		MainTable table = ((GUI)this.gui).getTable();
+		MainTable table = this.gui.getTable();
 		MainTableModel mtm = (MainTableModel) table.getModel();
-		
+
 		for (int i=0; i<mtm.getRowCount(); i++)
 		{
 			// Get the cell table model for service.
 			CellTableModel ctm = (CellTableModel) mtm.getValueAt(i, 1);
-			
+
 			// Remove user.
 			ctm.removeRow(userId);
-			
+
 			// Update.
 			ctm.fireTableDataChanged();
 			table.rebuildTable();
 		}
 	}
-	
+
 
 	/**
 	 * Offer was refused by the buyer.
-	 * 
+	 *
 	 * @param serviceId
 	 * @param buyerId
 	 */
@@ -615,10 +613,10 @@ public class InternalGUIMediator {
 			}
 		}
 	}
-	
+
 	/**
 	 * Offer was accepted by the buyer.
-	 * 
+	 *
 	 * @param serviceId
 	 * @param buyerId
 	 */
@@ -648,10 +646,10 @@ public class InternalGUIMediator {
 			}
 		}
 	}
-	
+
 	/**
 	 * Offer was exceeded.
-	 * 
+	 *
 	 * @param serviceId
 	 * @param buyerId
 	 * @param price
@@ -680,10 +678,10 @@ public class InternalGUIMediator {
 			}
 		}
 	}
-	
+
 	/**
 	 * The offer is no longer exceeded.
-	 * 
+	 *
 	 * @param serviceId
 	 * @param buyerId
 	 */
@@ -712,10 +710,10 @@ public class InternalGUIMediator {
 			}
 		}
 	}
-	
+
 	/**
 	 * An offer from seller was made.
-	 * 
+	 *
 	 * @param serviceId
 	 * @param sellerId
 	 * @param price
@@ -744,10 +742,10 @@ public class InternalGUIMediator {
 			}
 		}
 	}
-	
+
 	/**
 	 * The offer was removed.
-	 * 
+	 *
 	 * @param serviceId
 	 * @param sellerId
 	 */
@@ -775,7 +773,7 @@ public class InternalGUIMediator {
 			}
 		}
 	}
-	
+
 	/**
 	 * Transfer update.
 	 * @param serviceId
