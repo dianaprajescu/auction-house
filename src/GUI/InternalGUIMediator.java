@@ -65,13 +65,21 @@ public class InternalGUIMediator {
 		if (type == UserType.BUYER)
 		{
 			buyer.setSelected(true);
-			seller.setSelected(false);
+			//seller.setSelected(false);
 		}
 		else
 		{
-			buyer.setSelected(false);
+			//buyer.setSelected(false);
 			seller.setSelected(true);
 		}
+	}
+
+	/**
+	 * Only used for simulation. TODO: delete
+	 */
+	public UserType getType()
+	{
+		return username.getType();
 	}
 
 	/**
