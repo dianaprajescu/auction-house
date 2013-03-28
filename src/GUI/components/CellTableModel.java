@@ -51,6 +51,7 @@ public class CellTableModel extends AbstractTableModel{
 	public void removeRow(int row)
 	{
 		this.data.remove(row);
+		this.entryIds.remove(row);
 	}
 
 	@Override

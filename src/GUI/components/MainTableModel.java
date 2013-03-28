@@ -13,14 +13,16 @@ public class MainTableModel extends AbstractTableModel {
 	 */
 	private static final long serialVersionUID = 2408010632632242026L;
 
-	private String[] columnNames = {"Service", "User List", "Status"};;
+	private String[] columnNames = {"Service", "User List", "Status", "Time Left"};
 	private ArrayList<Object[]> data;
 	private ArrayList<Integer> entryIds;
+	private ArrayList<AuctionTimer> timers;
 
 	public MainTableModel()
 	{
 		this.data = new ArrayList<Object[]>();
 		this.entryIds = new ArrayList<Integer>();
+		this.timers = new ArrayList<AuctionTimer>();
 	}
 
 	public MainTableModel(Object[][] data, Integer[] entryIds)
@@ -33,6 +35,7 @@ public class MainTableModel extends AbstractTableModel {
 		for (Integer entry : entryIds)
 		{
 			this.entryIds.add(entry);
+			this.timers.add(null);
 		}
 	}
 	
@@ -76,6 +79,21 @@ public class MainTableModel extends AbstractTableModel {
 	{
 		this.data.get(row)[2] = status;
 	}
+	
+	public void setTimerAt(String timer, int row)
+	{
+		this.data.get(row)[3] = timer;
+	}
+	
+	public void setTimerObjectAt(AuctionTimer timer, int row)
+	{
+		this.timers.set(row, timer);
+	}
+	
+	public AuctionTimer getTimerObjectAt(int row)
+	{
+		return this.timers.get(row);
+	}
 
 	public String getServiceAt(int row)
 	{
@@ -92,11 +110,14 @@ public class MainTableModel extends AbstractTableModel {
 	{
 		this.data.add(new_object);
 		this.entryIds.add(id);
+		this.timers.add(null);
 	}
 	
 	public void removeRow(int row)
 	{
 		this.data.remove(row);
+		this.entryIds.remove(row);
+		this.timers.remove(row);
 	}
 
     /*

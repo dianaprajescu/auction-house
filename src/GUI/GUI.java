@@ -88,7 +88,7 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 		try {
 			while (rs.next())
 			{
-				Object[] row = {rs.getString("name"), new CellTableModel(), "Inactive"};
+				Object[] row = {rs.getString("name"), new CellTableModel(), "Inactive", "-"};
 				model.addRow(rs.getInt("id"), row);
 			}
 		} catch (SQLException e1) {

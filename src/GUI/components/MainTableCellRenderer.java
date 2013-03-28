@@ -21,6 +21,12 @@ public class MainTableCellRenderer extends DefaultTableCellRenderer{
 			
 			return tableX;
 		}
+		if (column == 3)
+		{
+			JLabel l = new JLabel(value.toString());
+			
+			return l;
+		}
 		else
 		{
 			return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);

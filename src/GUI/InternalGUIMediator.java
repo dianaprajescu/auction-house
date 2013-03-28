@@ -9,6 +9,8 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -18,6 +20,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 
+import GUI.components.AuctionTimer;
 import GUI.components.BuyerType;
 import GUI.components.CellTable;
 import GUI.components.CellTableModel;
@@ -339,6 +342,25 @@ public class InternalGUIMediator {
 	}
 
 	/**
+	 * Auction time has finished.
+	 * 
+	 * @param row
+	 */
+	public void auctionExpired(int row)
+	{
+		MainTable table = this.gui.getTable();
+		MainTableModel mtm = (MainTableModel) table.getModel();
+		
+		// Remove timer.
+		mtm.setTimerAt("-", row);
+		mtm.fireTableCellUpdated(row, 3);
+		
+		//TODO Check if there are offers.
+		
+		//TODO Accept the best offer and refuse the other ones.
+	}
+	
+	/**
 	 * Launch offer request.
 	 *
 	 * @param mainRow
@@ -367,6 +389,8 @@ public class InternalGUIMediator {
 
 			table.setValueAt(ctm, mainRow, 1);
 			this.gui.getTable().rebuildTable();
+			
+			mtm.setTimerObjectAt(new AuctionTimer(this, mtm, mainRow), mainRow);
 		}
 	}
 
@@ -393,6 +417,10 @@ public class InternalGUIMediator {
 		{
 			// Deactivate service.
 			mtm.setStatusAt("Inactive", mainRow);
+			
+			// Cancel timer.
+			mtm.setTimerAt("-", mainRow);
+			mtm.getTimerObjectAt(mainRow).cancel();
 
 			// Clear user list.
 			mtm.setValueAt(new CellTableModel(), mainRow, 1);
@@ -805,7 +833,7 @@ public class InternalGUIMediator {
 				}
 				ctm.setValueAt(progress, userRow, 3);
 
-				ctm.fireTableDataChanged();
+				ctm.fireTableCellUpdated(userRow, 3);
 				table.rebuildTable();
 			}
 		}
