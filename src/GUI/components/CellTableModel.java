@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 
 public class CellTableModel extends AbstractTableModel{
-	private String[] columnNames = {"User", "Status", "Progress"};
+	private String[] columnNames = {"User", "Status", "Progress", "Price"};
 	private ArrayList<Object[]> data;
 	private ArrayList<Integer> entryIds;
 
@@ -51,6 +51,7 @@ public class CellTableModel extends AbstractTableModel{
 	public void removeRow(int row)
 	{
 		this.data.remove(row);
+		this.entryIds.remove(row);
 	}
 
 	@Override
@@ -79,6 +80,11 @@ public class CellTableModel extends AbstractTableModel{
 	{
 		entryIds.add(row, id);
 		entryIds.remove(row);
+	}
+	
+	public int getPriceAt(int row)
+	{
+		return (Integer) data.get(row)[2];
 	}
 
 	public String getStatusAt(int row)

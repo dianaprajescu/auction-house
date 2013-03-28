@@ -18,7 +18,7 @@ public class CellTableRenderer extends DefaultTableCellRenderer{
 	public Component getTableCellRendererComponent(JTable table, Object value,
     		boolean isSelected, boolean hasFocus, int row, int column) {
 		
-		if (column == 2)
+		if (column == 3)
 		{
 			JProgressBar progress = new JProgressBar(0, 100);
 			

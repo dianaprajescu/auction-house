@@ -3,12 +3,24 @@
  */
 package GUI;
 
+import java.awt.Dialog;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
+import javax.swing.JTextField;
 
+import GUI.components.AuctionTimer;
 import GUI.components.BuyerType;
 import GUI.components.CellTable;
 import GUI.components.CellTableModel;
@@ -330,6 +342,45 @@ public class InternalGUIMediator {
 	}
 
 	/**
+	 * Auction time has finished.
+	 * 
+	 * @param row
+	 */
+	public void auctionExpired(int row)
+	{
+		MainTable table = this.gui.getTable();
+		MainTableModel mtm = (MainTableModel) table.getModel();
+		CellTableModel ctm = (CellTableModel) mtm.getValueAt(row, 1);
+		
+		// Remove timer.
+		mtm.setTimerAt("Expired", row);
+		mtm.fireTableCellUpdated(row, 3);
+		
+		Integer min = null;
+		int rowAccepted = -1;
+		
+		//Check if there are offers.
+		for (int userRow = 0; userRow < ctm.getRowCount(); userRow++)
+		{			
+			int status = this.getIntStatus(ctm.getStatusAt(userRow));
+			if (status == 2)
+			{
+				if (min == null || ctm.getPriceAt(userRow) < min)
+				{
+					min = ctm.getPriceAt(userRow);
+					rowAccepted = userRow;
+				}
+			}
+		}
+		
+		// If there were offers.
+		if (min != null)
+		{
+			this.acceptOffer(row, rowAccepted);
+		}
+	}
+	
+	/**
 	 * Launch offer request.
 	 *
 	 * @param mainRow
@@ -358,6 +409,8 @@ public class InternalGUIMediator {
 
 			table.setValueAt(ctm, mainRow, 1);
 			this.gui.getTable().rebuildTable();
+			
+			mtm.setTimerObjectAt(new AuctionTimer(this, mtm, mainRow), mainRow);
 		}
 	}
 
@@ -384,6 +437,10 @@ public class InternalGUIMediator {
 		{
 			// Deactivate service.
 			mtm.setStatusAt("Inactive", mainRow);
+			
+			// Cancel timer.
+			mtm.setTimerAt("-", mainRow);
+			mtm.getTimerObjectAt(mainRow).cancel();
 
 			// Clear user list.
 			mtm.setValueAt(new CellTableModel(), mainRow, 1);
@@ -490,19 +547,8 @@ public class InternalGUIMediator {
 		int buyerId = ctm.getIdAt(cellRow);
 
 		//TODO show a price input.
-		int price = 0;
-		boolean makeOfferRequest = gui.makeOffer(serviceId, buyerId, this.username.getId(), price);
-
-		// Request failed.
-		if (!makeOfferRequest)
-		{
-			JOptionPane.showMessageDialog(null, "Could not make offer.");
-		}
-		else
-		{
-			// Update offer in GUI.
-			ctm.setValueAt("Offer Made", cellRow, 1);
-		}
+		
+		new PriceDialogBox(ctm, serviceId, buyerId);
 	}
 
 	/**
@@ -534,6 +580,7 @@ public class InternalGUIMediator {
 		{
 			// Update offer in GUI.
 			ctm.setValueAt("No Offer", cellRow, 1);
+			ctm.setValueAt("-", cellRow, 2);
 		}
 	}
 
@@ -681,8 +728,6 @@ public class InternalGUIMediator {
 			if (buyerRow >= 0)
 			{
 				ctm.setValueAt("Offer Exceeded", buyerRow, 1);
-				
-				//TODO show the new price.
 			}
 		}
 	}
@@ -713,8 +758,6 @@ public class InternalGUIMediator {
 			{
 				// Mark offer as accepted.
 				ctm.setValueAt("Offer Made", buyerRow, 1);
-				
-				//TODO update max price.
 			}
 		}
 	}
@@ -745,8 +788,7 @@ public class InternalGUIMediator {
 			if (sellerRow >= 0)
 			{
 				ctm.setValueAt("Offer Made", sellerRow, 1);
-				
-				//TODO show the new price.
+				ctm.setValueAt(price, sellerRow, 2);
 			}
 		}
 	}
@@ -776,8 +818,7 @@ public class InternalGUIMediator {
 			if (sellerRow >= 0)
 			{
 				ctm.setValueAt("No Offer", sellerRow, 1);
-				
-				//TODO show the new price.
+				ctm.setValueAt("-", sellerRow, 2);
 			}
 		}
 	}
@@ -810,9 +851,9 @@ public class InternalGUIMediator {
 				{
 					ctm.setValueAt("Transfer Completed", userRow, 1);
 				}
-				ctm.setValueAt(progress, userRow, 2);
+				ctm.setValueAt(progress, userRow, 3);
 
-				ctm.fireTableDataChanged();
+				ctm.fireTableCellUpdated(userRow, 3);
 				table.rebuildTable();
 			}
 		}
@@ -864,5 +905,83 @@ public class InternalGUIMediator {
 
 	public void registerSellerType(SellerType seller) {
 		this.seller = seller;
+	}
+	
+	private class PriceDialogBox extends JDialog implements ActionListener{
+		
+		JTextField price;
+		JButton offer;
+		CellTableModel ctm;
+		int serviceId;
+		int buyerId;
+		JDialog dialog;
+		
+		public PriceDialogBox(CellTableModel ctm, int serviceId, int buyerId)
+		{
+			super();
+			
+			dialog = this;
+			
+			this.ctm = ctm;
+			this.serviceId = serviceId;
+			this.buyerId = buyerId;
+
+			this.init();
+		}
+		
+		public void init()
+		{
+			this.setTitle("Make Offer");
+			this.setModal(true);
+			
+			this.getContentPane().setLayout(new FlowLayout());
+			this.setLocationRelativeTo(gui);
+			
+			price = new JTextField();
+			price.setPreferredSize(new Dimension(150, 25));
+			this.add(price);
+			
+			offer = new JButton("Submit");
+			offer.setPreferredSize(new Dimension(75, 25));
+			offer.addActionListener(this);
+			this.add(offer);
+			
+			this.pack();
+			
+			this.setVisible(true);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			
+			try
+			{
+				int priceOffered = Integer.parseInt(price.getText());
+				
+				if (priceOffered <= 0)
+				{
+					throw new Exception();
+				}
+				
+				boolean makeOfferRequest = gui.makeOffer(serviceId, buyerId, username.getId(), priceOffered);
+	
+				// Request failed.
+				if (!makeOfferRequest)
+				{
+					JOptionPane.showMessageDialog(null, "Could not make offer.");
+				}
+				else
+				{
+					// Update offer in GUI.
+					ctm.setValueAt("Offer Made", ctm.findRowByUserId(buyerId), 1);
+					ctm.setValueAt(priceOffered, ctm.findRowByUserId(buyerId), 2);
+					this.dispose();
+				}
+			}
+			catch(Exception e)
+			{
+				JOptionPane.showMessageDialog(null, "Offer should be a positive number.");
+			}
+		}
 	}
 }
