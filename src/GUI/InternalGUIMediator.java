@@ -520,8 +520,8 @@ public class InternalGUIMediator {
 			CellTableModel ctm = (CellTableModel) mtm.getValueAt(serviceRow, 1);
 			
 			// Add new user.
-			Object[] newUser = {userId, username, "No Offer", 0};
-			ctm.addRow(newUser);
+			Object[] newUser = {username, "No Offer", 0};
+			ctm.addRow(userId, newUser);
 			
 			// Update.
 			ctm.fireTableDataChanged();
@@ -537,7 +537,15 @@ public class InternalGUIMediator {
 	 */
 	public void dropUser(int userId)
 	{
-		//TODO remove user with the specified id.
+		MainTable table = ((GUI)this.gui).getTable();
+		MainTableModel mtm = (MainTableModel) table.getModel();
+		
+		for (int i=0; i<mtm.getRowCount(); i++)
+		{
+			// Get the cell table model for service.
+			CellTableModel ctm = (CellTableModel) mtm.getValueAt(i, 1);
+			
+		}
 	}
 	
 

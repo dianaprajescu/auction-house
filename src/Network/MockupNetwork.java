@@ -66,8 +66,8 @@ public class MockupNetwork implements INetwork {
 			// Create sellers.
 			// TODO must be unique.
 			int sellerId = (new Random().nextInt(3)) + i * 3;
-			Object[] rowx = {sellerId, "seller_name" + sellerId, "No Offer", 0};
-			ct.addRow(rowx);
+			Object[] rowx = {"seller_name" + sellerId, "No Offer", 0};
+			ct.addRow(sellerId, rowx);
 		}
 		
 		return ct;

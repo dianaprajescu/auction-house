@@ -1,22 +1,31 @@
 package GUI.components;
 
+import java.util.ArrayList;
+
 import javax.swing.table.AbstractTableModel;
 
 public class CellTableModel extends AbstractTableModel{
 	private String[] columnNames = {"User", "Status", "Progress"};
-	private Object[][] data;
-	private Integer[] entryIds;
+	private ArrayList<Object[]> data;
+	private ArrayList<Integer> entryIds;
 
 	public CellTableModel()
 	{
-		this.data = null;
-		this.entryIds = null;
+		this.data = new ArrayList<Object[]>();
+		this.entryIds = new ArrayList<Integer>();
 	}
 
 	public CellTableModel(Object[][] data, Integer[] entryIds)
 	{
-		this.data = data;
-		this.entryIds = entryIds;
+		for (Object[] object : data)
+		{
+			this.data.add(object);
+		}
+		
+		for (Integer entry : entryIds)
+		{
+			this.entryIds.add(entry);
+		}
 	}
 
 	public int getColumnCount()
@@ -30,43 +39,18 @@ public class CellTableModel extends AbstractTableModel{
 
 	public int getRowCount()
 	{
-		if (this.data != null)
-		{
-			return data.length;
-		}
-		return 0;
+		return data.size();
 	}
 
-	public void addRow(Object[] new_object)
+	public void addRow(Integer id, Object[] new_object)
 	{
-		Object[][] x = new Object[this.getRowCount() + 1][this.getColumnCount()];
-		Integer[] e = new Integer[this.getRowCount() + 1];
-		if (this.data != null)
-		{
-			System.arraycopy(this.data, 0, x, 0, this.getRowCount());
-			System.arraycopy(new_object, 1, x[this.getRowCount()], 0, new_object.length-1);
-
-			System.arraycopy(this.entryIds, 0, e, 0, this.getRowCount());
-			e[this.getRowCount()] = (Integer) new_object[0];
-		}
-		else
-		{
-			System.arraycopy(new_object, 1, x[this.getRowCount()], 0, new_object.length-1);
-			e[this.getRowCount()] = (Integer) new_object[0];
-		}
-
-		this.data = x;
-		this.entryIds = e;
+		this.data.add(new_object);
+		this.entryIds.add(id);
 	}
-
-	public void setColumnNames(String[] columns)
+	
+	public void removeRow(int row)
 	{
-		this.columnNames = columns;
-	}
-
-	public void setEntryIds(Integer[] ids)
-	{
-		this.entryIds = ids;
+		this.data.remove(row);
 	}
 
 	@Override
@@ -77,33 +61,34 @@ public class CellTableModel extends AbstractTableModel{
 
 	public Object getValueAt(int row, int col)
 	{
-		return data[row][col];
+		return data.get(row)[col];
 	}
 
 	@Override
 	public void setValueAt(Object value, int row, int col)
 	{
-		this.data[row][col] = value;
+		this.data.get(row)[col] = value;
 	}
 
 	public Integer getIdAt(int row)
 	{
-		return entryIds[row];
+		return entryIds.get(row);
 	}
 
 	public void setIdAt(Integer id, int row)
 	{
-		this.entryIds[row] = id;
+		entryIds.add(row, id);
+		entryIds.remove(row);
 	}
 
 	public String getStatusAt(int row)
 	{
-		return (String) data[row][1];
+		return (String) data.get(row)[1];
 	}
 
 	public void setStatusAt(String status, int row)
 	{
-		data[row][2] = status;
+		this.data.get(row)[2] = status;
 	}
 
     /*
@@ -128,9 +113,9 @@ public class CellTableModel extends AbstractTableModel{
 	
 	public int findRowByUserId(int userId)
 	{
-		for (int i = 0; i < entryIds.length; i++)
+		for (int i = 0; i < entryIds.size(); i++)
 		{
-			if (userId == entryIds[i])
+			if (userId == entryIds.get(i))
 			{
 				return i;
 			}
