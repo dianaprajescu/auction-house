@@ -15,11 +15,12 @@ public class MainTable extends JTable
 	public MainTable(MainTableModel model, InternalGUIMediator gui)
 	{
 		super(model);
+		this.getColumnModel().getColumn(1).setPreferredWidth(500);
 		this.gui = gui;
 	}
 
 	public void rebuildTable()
-	{
+	{	
 		try {
 		    for (int row=0; row < this.getRowCount(); row++) {
 		        int rowHeight = this.getRowHeight();
