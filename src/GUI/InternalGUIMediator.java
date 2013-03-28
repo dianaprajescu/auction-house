@@ -508,7 +508,26 @@ public class InternalGUIMediator {
 	 */
 	public void newUser(int serviceId, int userId, String username)
 	{
-		//TODO add user to interface with NO OFFER made.
+		MainTable table = ((GUI)this.gui).getTable();
+		MainTableModel mtm = (MainTableModel) table.getModel();
+		
+		// Get the service id.
+		int serviceRow = mtm.findRowByServiceId(serviceId);
+		
+		if (serviceRow >= 0)
+		{
+			// Get the cell table model for service.
+			CellTableModel ctm = (CellTableModel) mtm.getValueAt(serviceRow, 1);
+			
+			// Add new user.
+			Object[] newUser = {userId, username, "No Offer", 0};
+			ctm.addRow(newUser);
+			
+			// Update.
+			ctm.fireTableDataChanged();
+			
+			table.rebuildTable();
+		}
 	}
 	
 	/**
