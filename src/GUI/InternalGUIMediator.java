@@ -8,6 +8,7 @@ import java.util.HashMap;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
+import javax.swing.JTextField;
 
 import GUI.components.AuctionTimer;
 import GUI.components.BuyerType;
@@ -34,8 +35,8 @@ public class InternalGUIMediator {
 	private PasswordField password;
 	private BuyerType buyer;
 	private SellerType seller;
-	private PriceField price;
-	private PriceDialogBox pdb;
+	private JTextField price = new JTextField();
+	public PriceDialogBox pdb;
 
 	/**
 	 * Only used for simulation. TODO: delete
@@ -76,6 +77,14 @@ public class InternalGUIMediator {
 	public UserType getType()
 	{
 		return username.getType();
+	}
+
+	/**
+	 * Only used for simulation. TODO: delete
+	 */
+	public void setPrice(int price)
+	{
+		this.price.setText((new Integer(price)).toString());
 	}
 
 	/**
@@ -914,15 +923,22 @@ public class InternalGUIMediator {
 	 */
 	public void submitPrice(CellTableModel ctm, int serviceId, int buyerId)
 	{
+		int priceOffered = -1;
 		try
 		{
-			int priceOffered = Integer.parseInt(price.getText());
+			priceOffered = Integer.valueOf(this.price.getText());
 
 			if (priceOffered <= 0)
 			{
 				throw new Exception();
 			}
+		}
+		catch(Exception e)
+		{
+			JOptionPane.showMessageDialog(null, "Offer should be a positive number.");
+		}
 
+		try{
 			boolean makeOfferRequest = gui.makeOffer(serviceId, buyerId, username.getId(), priceOffered);
 
 			// Request failed.
@@ -940,7 +956,8 @@ public class InternalGUIMediator {
 		}
 		catch(Exception e)
 		{
-			JOptionPane.showMessageDialog(null, "Offer should be a positive number.");
+
 		}
+
 	}
 }

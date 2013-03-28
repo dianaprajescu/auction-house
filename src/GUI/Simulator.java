@@ -13,6 +13,7 @@ import java.util.Set;
 import javax.swing.SwingWorker;
 
 import GUI.components.CellTableModel;
+import GUI.components.MainTableModel;
 import app.Mediator;
 import app.UserType;
 
@@ -163,10 +164,8 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 
 				for (j = 0; j < ctm.getRowCount(); j++)
 				{
-					System.out.println(ctm.getValueAt(j, 1));
 					if (((String) ctm.getValueAt(j, 1)).compareToIgnoreCase("transfer in progress") == 0)
 					{
-						System.out.println("dfgfdg");
 						transfer = true;
 
 						// Transfer may take a while. Sleep.
@@ -200,7 +199,7 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 		int i = 0;
 		while (i < noServices)
 		{
-			Thread.sleep(5 * DELAY);
+			Thread.sleep(3 * DELAY);
 
 			if (gui.isActive() == true && gui.GUImed.getType() == UserType.BUYER)
 			{
@@ -234,8 +233,9 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 	 */
 	private void simulateMakeOffer() throws InterruptedException
 	{
-		// Select random active service.
 		Random rand = new Random();
+
+		// Get active services.
 		ArrayList<Integer> mainRows = new ArrayList<Integer>();
 		int i;
 
@@ -247,21 +247,38 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 			}
 		}
 
+		// No active services.
 		if (mainRows.size() == 0)
 		{
 			// No offer to make.
 			return;
 		}
 
-		int service = mainRows.get(rand.nextInt(mainRows.size()));
+		// Generate random no of offers.
+		int noOffers = rand.nextInt(mainRows.size()) + 1;
 
-		// Select random cell.
-		CellTableModel ctm = (CellTableModel) gui.getTable().getValueAt(service, 1);
-		int cellRow = rand.nextInt(ctm.getRowCount());
+		for (i = 0; i < noOffers; i++)
+		{
+			// Select random active service.
+			int service = mainRows.get(rand.nextInt(mainRows.size()));
 
-		// Make offer.
-		gui.GUImed.userAction("make offer", service, cellRow);
-		Thread.sleep(5 * DELAY);
+			// Select random cell.
+			CellTableModel ctm = (CellTableModel) gui.getTable().getValueAt(service, 1);
+			int cellRow = rand.nextInt(ctm.getRowCount());
+
+			if (((String) ctm.getValueAt(cellRow, 1)).compareToIgnoreCase("offer made") != 0)
+			{
+				// Make offer.
+				//gui.GUImed.userAction("make offer", service, cellRow);
+
+				gui.GUImed.setPrice(rand.nextInt(150) + 1);
+
+				//gui.GUImed.pdb.repaint();
+				gui.GUImed.submitPrice(ctm, ((MainTableModel)gui.getTable().getModel()).getIdAt(service), ctm.getIdAt(cellRow));
+
+				Thread.sleep(2 * DELAY);
+			}
+		}
 	}
 
 	/**
