@@ -1,4 +1,6 @@
 package GUI.components;
+import java.util.ArrayList;
+
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -12,60 +14,28 @@ public class MainTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 2408010632632242026L;
 
 	private String[] columnNames = {"Service", "User List", "Status"};;
-	private Object[][] data;
-	private Integer[] entryIds;
-
-	public MainTableModel(Object[][] data, Integer[] entryIds)
-	{
-		this.data = data;
-		this.entryIds = entryIds;
-	}
+	private ArrayList<Object[]> data;
+	private ArrayList<Integer> entryIds;
 
 	public MainTableModel()
 	{
-		this.data = null;
-		this.entryIds = null;
+		this.data = new ArrayList<Object[]>();
+		this.entryIds = new ArrayList<Integer>();
 	}
 
-	@Override
-	public String getColumnName(int col)
+	public MainTableModel(Object[][] data, Integer[] entryIds)
 	{
-		return columnNames[col];
+		for (Object[] object : data)
+		{
+			this.data.add(object);
+		}
+		
+		for (Integer entry : entryIds)
+		{
+			this.entryIds.add(entry);
+		}
 	}
-
-	@Override
-	public Object getValueAt(int row, int col)
-	{
-		return data[row][col];
-	}
-
-	@Override
-	public void setValueAt(Object obj, int row, int column)
-	{
-		data[row][column] = obj;
-	}
-
-	public Integer getIdAt(int row)
-	{
-		return entryIds[row];
-	}
-
-	public String getStatusAt(int row)
-	{
-		return (String) data[row][2];
-	}
-
-	public void setStatusAt(String status, int row)
-	{
-		data[row][2] = status;
-	}
-
-	public String getServiceAt(int row)
-	{
-		return (String) data[row][0];
-	}
-
-	@Override
+	
 	public int getColumnCount()
 	{
 		if (this.columnNames != null)
@@ -76,35 +46,57 @@ public class MainTableModel extends AbstractTableModel {
 	}
 
 	@Override
-	public int getRowCount()
+	public String getColumnName(int col)
 	{
-		if (this.data != null)
-		{
-			return data.length;
-		}
-		return 0;
+		return columnNames[col];
 	}
 
-	public void addRow(Object[] new_object)
+	public Object getValueAt(int row, int col)
 	{
-		Object[][] x = new Object[this.getRowCount() + 1][this.getColumnCount()];
-		Integer[] e = new Integer[this.getRowCount() + 1];
-		if (this.data != null)
-		{
-			System.arraycopy(this.data, 0, x, 0, this.getRowCount());
-			System.arraycopy(new_object, 1, x[this.getRowCount()], 0, new_object.length-1);
+		return data.get(row)[col];
+	}
 
-			System.arraycopy(this.entryIds, 0, e, 0, this.getRowCount());
-			e[this.getRowCount()] = (Integer) new_object[0];
-		}
-		else
-		{
-			System.arraycopy(new_object, 1, x[this.getRowCount()], 0, new_object.length-1);
-			e[this.getRowCount()] = (Integer) new_object[0];
-		}
+	@Override
+	public void setValueAt(Object value, int row, int col)
+	{
+		this.data.get(row)[col] = value;
+	}
 
-		this.data = x;
-		this.entryIds = e;
+	public Integer getIdAt(int row)
+	{
+		return entryIds.get(row);
+	}
+
+	public String getStatusAt(int row)
+	{
+		return (String) data.get(row)[2];
+	}
+
+	public void setStatusAt(String status, int row)
+	{
+		this.data.get(row)[2] = status;
+	}
+
+	public String getServiceAt(int row)
+	{
+		return (String) data.get(row)[0];
+	}
+
+	@Override
+	public int getRowCount()
+	{
+		return this.data.size();
+	}
+
+	public void addRow(Integer id, Object[] new_object)
+	{
+		this.data.add(new_object);
+		this.entryIds.add(id);
+	}
+	
+	public void removeRow(int row)
+	{
+		this.data.remove(row);
 	}
 
     /*
@@ -130,17 +122,23 @@ public class MainTableModel extends AbstractTableModel {
 		}
 		return false;
 	}
-
+	
+	/**
+	 * Return the row with the specified service id.
+	 * 
+	 * @param serviceId
+	 * @return
+	 */
 	public int findRowByServiceId(int serviceId)
 	{
-		for (int i = 0; i < entryIds.length; i++)
+		for (int i = 0; i < entryIds.size(); i++)
 		{
-			if (serviceId == entryIds[i])
+			if (serviceId == entryIds.get(i))
 			{
 				return i;
 			}
 		}
-
+		
 		return -1;
 	}
 }
