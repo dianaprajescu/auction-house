@@ -8,7 +8,6 @@ import java.util.Random;
 
 import javax.swing.SwingWorker;
 
-import Network.MockupNetwork;
 import app.Mediator;
 import app.UserType;
 
@@ -38,7 +37,9 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 
 			if (gui.isActive() == true)
 			{
-				//break;
+				simulateLaunchDropOffer();
+
+				Thread.sleep(DELAY);
 				simulateLogout();
 			}
 			else
@@ -66,8 +67,8 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 	@Override
 	protected void process(List<Integer> chunks) {
 		// TODO 3.3 - print values received
-		MockupNetwork mock = new MockupNetwork(med);
-		mock.newOnlineUser(null, null);
+		//MockupNetwork mock = new MockupNetwork(med);
+		//mock.newOnlineUser(null, null);
 		//System.out.println(chunks);
 	}
 
@@ -110,9 +111,45 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 		gui.GUImed.login();
 	}
 
+	/**
+	 * Simulate logout.
+	 */
 	private void simulateLogout()
 	{
 		gui.GUImed.logout();
+	}
+
+	/**
+	 * Simulate launch offer.
+	 * @throws InterruptedException
+	 */
+	private void simulateLaunchDropOffer() throws InterruptedException
+	{
+		// Do everything random.
+		Random rand = new Random();
+
+		// How many services to activate?
+		int noServices = rand.nextInt(gui.getTable().getRowCount());
+
+		int i = 0;
+		while (i < noServices)
+		{
+			Thread.sleep(DELAY);
+
+			// Select random service.
+			int service = rand.nextInt(gui.getTable().getRowCount());
+
+			// Launch or drop offer.
+			if (((String) gui.getTable().getValueAt(service, 2)).compareToIgnoreCase("inactive") == 0)
+			{
+				gui.GUImed.userAction("launch offer request", service, 0);
+			}
+			else
+			{
+				gui.GUImed.userAction("drop offer request", service, 0);
+			}
+			i++;
+		}
 	}
 
 }

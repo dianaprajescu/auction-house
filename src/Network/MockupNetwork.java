@@ -38,15 +38,16 @@ public class MockupNetwork implements INetwork {
 
 	/**
 	 * Start transfer from seller to buyer.
-	 * 
+	 *
 	 * @param serviceId
 	 * @param buyerId
 	 * @param sellerId
 	 */
+	@Override
 	public void startTransfer(final int serviceId, final int buyerId, final int sellerId)
 	{
 		TransferTask tt = new TransferTask( 20 + (new Random()).nextInt(61));
-		
+
 		tt.addPropertyChangeListener(new PropertyChangeListener(){
 			@Override
 			public void propertyChange(PropertyChangeEvent pce) {
@@ -63,20 +64,21 @@ public class MockupNetwork implements INetwork {
 	@Override
 	public void newUser(int serviceId, int userId) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	/**
 	 * Sellers are notified when a buyer activates a service.
 	 *
 	 * @param   int  buyer_id    The buyer that activated the service.
 	 * @param   int  service_id  The active service.
 	 */
+	@Override
 	public CellTableModel launchOfferRequest(int serviceId, int userId)
 	{
 		// Populate model with a random number of sellers.
 		int noSellers = new Random().nextInt(6) + 1;
-		
+
 		// Create a new CellTableModel.
 		CellTableModel ct = new CellTableModel();
 
@@ -88,75 +90,80 @@ public class MockupNetwork implements INetwork {
 			Object[] rowx = {sellerId, "seller_name" + sellerId, "No Offer", 0};
 			ct.addRow(rowx);
 		}
-		
+
 		return ct;
 	}
-	
+
 	/**
 	 * Drop offer request.
-	 * 
+	 *
 	 * @param serviceId
 	 * @param userId
 	 * @return
 	 */
+	@Override
 	public boolean dropOfferRequest(int serviceId, int userId)
 	{
 		//TODO send refuse offer to all sellers.
-		
+
 		return true;
 	}
-	
+
 	/**
-	 * Accept offer. 
+	 * Accept offer.
 	 * @param serviceId
 	 * @param buyerId
 	 * @param sellerId
 	 * @return
 	 */
+	@Override
 	public boolean acceptOffer(int serviceId, int buyerId, int sellerId)
 	{
 		//TODO send refuse offer to all sellers.
-		
+
 		return true;
 	}
-	
+
 	/**
-	 * Refuse offer. 
+	 * Refuse offer.
 	 * @param serviceId
 	 * @param buyerId
 	 * @param sellerId
 	 * @return
 	 */
+	@Override
 	public boolean refuseOffer(int serviceId, int buyerId, int sellerId)
 	{
 		//TODO send refuse the selers offer.
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Make offer.
-	 * 
+	 *
 	 * @param serviceId
 	 * @param buyerId
 	 * @param sellerId
 	 * @param price
 	 * @return
 	 */
+	@Override
 	public boolean makeOffer(int serviceId, int buyerId, int sellerId, int price)
 	{
 		//TODO send offer to the buyer. Update other offers (offer exceeded).
-		
+
 		return true;
 	}
-	
+
 	/**
-	 * Remove offer. 
+	 * Remove offer.
 	 * @param serviceId
 	 * @param buyerId
 	 * @param sellerId
 	 * @return
 	 */
+	@Override
 	public boolean removeOffer(int serviceId, int buyerId, int sellerId)
 	{
 		return true;
@@ -165,36 +172,36 @@ public class MockupNetwork implements INetwork {
 	@Override
 	public void offerRefused(int serviceId, int buyerId) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void offerAccepted(int serviceId, int buyerId) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void offerExceeded(int serviceId, int buyerId, int price) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void removeExceeded(int serviceId, int buyerId) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void offerMade(int serviceId, int sellerId, int price) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void offerRemoved(int serviceId, int sellerId) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

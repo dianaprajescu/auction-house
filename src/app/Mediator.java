@@ -14,9 +14,7 @@ import java.util.Random;
 
 import GUI.GUI;
 import GUI.components.CellTableModel;
-import GUI.components.MainTable;
 import GUI.components.MainTableModel;
-import Network.MockupNetwork;
 
 /**
  * @author Stedy
@@ -26,25 +24,27 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	private IGUI gui;
 	private INetwork network;
 	private IWSClient client;
-	
+
 	/**
 	 * In GUIMediator. Login an user.
-	 * 
+	 *
 	 * @param username
 	 * @param password
 	 * @param type
 	 */
+	@Override
 	public int login(String username, String password, UserType type)
 	{
 		return this.client.login(username, password, type);
 	}
-	
+
 	/**
 	 * Logout user.
-	 * 
+	 *
 	 * @param userId
 	 * @return
 	 */
+	@Override
 	public boolean logout(int userId)
 	{
 		return this.client.logout(userId);
@@ -56,79 +56,86 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	 * @param   int  userType  1 for buyer and 2 for seller.
 	 * @param
 	 */
+	@Override
 	public CellTableModel launchOfferRequest(int serviceId, int userId)
 	{
 		return this.network.launchOfferRequest(serviceId, userId);
 	}
-	
+
 	/**
 	 * Drop offer request.
-	 * 
+	 *
 	 * @param serviceId
 	 * @param userId
 	 * @return
 	 */
+	@Override
 	public boolean dropOfferRequest(int serviceId, int userId)
 	{
 		return this.network.dropOfferRequest(serviceId, userId);
 	}
-	
+
 	/**
-	 * Accept offer. 
+	 * Accept offer.
 	 * @param serviceId
 	 * @param buyerId
 	 * @param sellerId
 	 * @return
 	 */
+	@Override
 	public boolean acceptOffer(int serviceId, int buyerId, int sellerId)
 	{
 		return this.network.acceptOffer(serviceId, buyerId, sellerId);
 	}
-	
+
 	/**
-	 * Refuse offer. 
+	 * Refuse offer.
 	 * @param serviceId
 	 * @param buyerId
 	 * @param sellerId
 	 * @return
 	 */
+	@Override
 	public boolean refuseOffer(int serviceId, int buyerId, int sellerId)
 	{
 		return this.network.refuseOffer(serviceId, buyerId, sellerId);
 	}
-	
+
 	/**
 	 * Make offer.
-	 * 
+	 *
 	 * @param serviceId
 	 * @param buyerId
 	 * @param sellerId
 	 * @param price
 	 * @return
 	 */
+	@Override
 	public boolean makeOffer(int serviceId, int buyerId, int sellerId, int price)
 	{
 		return this.network.makeOffer(serviceId, buyerId, sellerId, price);
 	}
-	
+
 	/**
-	 * Remove offer. 
+	 * Remove offer.
 	 * @param serviceId
 	 * @param buyerId
 	 * @param sellerId
 	 * @return
 	 */
+	@Override
 	public boolean removeOffer(int serviceId, int buyerId, int sellerId)
 	{
 		return this.network.removeOffer(serviceId, buyerId, sellerId);
 	}
 
 	/**
-	 * Update transfer. 
+	 * Update transfer.
 	 * @param serviceId
 	 * @param userId
 	 * @param progress
 	 */
+	@Override
 	public void updateTransfer(int serviceId, int userId, int progress)
 	{
 		this.gui.updateTransfer(serviceId, userId, progress);
@@ -136,11 +143,12 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 
 	/**
 	 * Start transfer.
-	 *  
+	 *
 	 * @param serviceId
 	 * @param userId
 	 * @param sellerId
 	 */
+	@Override
 	public void startTransfer(int serviceId, int buyerId, int sellerId)
 	{
 		this.network.startTransfer(serviceId, buyerId, sellerId);
@@ -164,47 +172,47 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 		ct.fireTableDataChanged();
 		((GUI)this.gui).getTable().rebuildTable();
 	}
-	
+
 	@Override
 	public void offerRefused(int serviceId, int buyerId) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void offerAccepted(int serviceId, int buyerId) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void offerExceeded(int serviceId, int buyerId, int price) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void removeExceeded(int serviceId, int buyerId) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void offerMade(int serviceId, int sellerId, int price) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void offerRemoved(int serviceId, int sellerId) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void newUser(int serviceId, int userId) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
