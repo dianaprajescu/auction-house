@@ -9,7 +9,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Random;
 
-import GUI.GUI;
 import GUI.components.CellTableModel;
 import app.Mediator;
 
@@ -33,7 +32,7 @@ public class MockupNetwork implements INetwork {
 	public void startTransfer(final int serviceId, final int buyerId, final int sellerId)
 	{
 		TransferTask tt = new TransferTask( 20 + (new Random()).nextInt(61));
-		
+
 		tt.addPropertyChangeListener(new PropertyChangeListener(){
 			@Override
 			public void propertyChange(PropertyChangeEvent pce) {
@@ -51,13 +50,13 @@ public class MockupNetwork implements INetwork {
 	public void newUser(int serviceId, int userId, String username) {
 		this.med.newUser(serviceId, userId, username);
 	}
-	
+
 	@Override
 	public CellTableModel launchOfferRequest(int serviceId, int userId)
 	{
 		// Populate model with a random number of sellers.
 		int noSellers = new Random().nextInt(6) + 1;
-		
+
 		// Create a new CellTableModel.
 		CellTableModel ct = new CellTableModel();
 
@@ -69,42 +68,42 @@ public class MockupNetwork implements INetwork {
 			Object[] rowx = {"seller_name" + sellerId, "No Offer", 0};
 			ct.addRow(sellerId, rowx);
 		}
-		
+
 		return ct;
 	}
-	
+
 	@Override
 	public boolean dropOfferRequest(int serviceId, int userId)
 	{
 		//TODO send refuse offer to all sellers.
-		
+
 		return true;
 	}
-	
+
 	@Override
 	public boolean acceptOffer(int serviceId, int buyerId, int sellerId)
 	{
 		//TODO send refuse offer to all sellers.
-		
+
 		return true;
 	}
-	
+
 	@Override
 	public boolean refuseOffer(int serviceId, int buyerId, int sellerId)
 	{
 		//TODO send refuse the selers offer.
-		
+
 		return true;
 	}
-	
+
 	@Override
 	public boolean makeOffer(int serviceId, int buyerId, int sellerId, int price)
 	{
 		//TODO send offer to the buyer. Update other offers (offer exceeded).
-		
+
 		return true;
 	}
-	
+
 	@Override
 	public boolean removeOffer(int serviceId, int buyerId, int sellerId)
 	{
@@ -128,12 +127,15 @@ public class MockupNetwork implements INetwork {
 
 	@Override
 	public void removeExceeded(int serviceId, int buyerId) {
+
 		this.med.removeExceeded(serviceId, buyerId);
 	}
 
 	@Override
 	public void offerMade(int serviceId, int sellerId, int price) {
+
 		this.med.offerMade(serviceId, sellerId, price);
+
 	}
 
 	@Override

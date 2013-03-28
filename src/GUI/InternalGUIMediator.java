@@ -3,8 +3,6 @@
  */
 package GUI;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 
 import javax.swing.JLabel;
@@ -20,11 +18,10 @@ import GUI.components.PasswordField;
 import GUI.components.PopupMenuItem;
 import GUI.components.SellerType;
 import GUI.components.UsernameField;
-import app.Database;
 import app.UserType;
 
 /**
- * @author diana
+ * @author Stedy
  *
  */
 public class InternalGUIMediator {
@@ -36,19 +33,54 @@ public class InternalGUIMediator {
 	private SellerType seller;
 
 	/**
+	 * Only used for simulation. TODO: delete
+	 */
+	public void setUsername(String text)
+	{
+		username = new UsernameField(this);
+		username.setText(text);
+	}
+
+	/**
+	 * Only used for simulation. TODO: delete
+	 */
+	public void setPassword(String text)
+	{
+		password = new PasswordField(this);
+		password.setText(text);
+	}
+
+	/**
+	 * Only used for simulation. TODO: delete
+	 */
+	public void setType(UserType type)
+	{
+		if (type == UserType.BUYER)
+		{
+			buyer = new BuyerType(this);
+			buyer.setSelected(true);
+		}
+		else
+		{
+			seller = new SellerType(this);
+			seller.setSelected(true);
+		}
+	}
+
+	/**
 	 * Login.
 	 */
 	public void login() {
-		
+
 		int logged = -1;
-		
+
 		UserType type;
-		
+
 		// User is buyer.
 		if (buyer.isSelected())
 		{
 			type = UserType.BUYER;
-			
+
 		}
 		// User is seller.
 		else if (seller.isSelected())
@@ -60,16 +92,16 @@ public class InternalGUIMediator {
 			JOptionPane.showMessageDialog(null, "No User Type was selected.");
 			return;
 		}
-		
+
 		logged = this.gui.login(username.getText(), password.getText(), type);
-		
+
 		// Could not login.
 		if (logged == -1)
 		{
 			JOptionPane.showMessageDialog(null, "Invalid login data.");
 			return;
 		}
-		
+
 		// Login user with the ID got.
 		else
 		{
@@ -78,10 +110,10 @@ public class InternalGUIMediator {
 
 			// Set the logged in userID;
 			username.setId(logged);
-			
+
 			// Set the logged userType.
 			username.setType(type);
-			
+
 			// Add username label in main frame.
 			JLabel welcome = gui.getWelcomeLabel();
 			welcome.setText("Welcome to Auction House, " + username.getText() + "!");
@@ -89,14 +121,14 @@ public class InternalGUIMediator {
 			// Set gui frame visible.
 			gui.setVisible(true);
 		}
-		
+
 	}
 
 	/**
 	 * Logout.
 	 */
 	public void logout() {
-		
+
 		if (this.gui.logout(username.getId()))
 		{
 			gui.dispose();
@@ -238,32 +270,32 @@ public class InternalGUIMediator {
 	 */
 	public void userAction(String command, int mainRow, int cellRow)
 	{
-		MainTable table = ((GUI)this.gui).getTable();
+		MainTable table = this.gui.getTable();
 		MainTableModel mtm = (MainTableModel) table.getModel();
 		CellTableModel ctm;
-		
+
 		switch (command.toLowerCase())
 		{
 			case "launch offer request":
-				
+
 				this.launchOfferRequest(mainRow);
-				
+
 				break;
 
 			case "drop offer request":
-				
+
 				this.dropOfferRequest(mainRow);
 
 				break;
 
 			case "accept offer":
-				
+
 				this.acceptOffer(mainRow, cellRow);
 
 				break;
 
 			case "refuse offer":
-				
+
 				this.refuseOffer(mainRow, cellRow);
 
 				break;
@@ -271,11 +303,11 @@ public class InternalGUIMediator {
 			case "make offer":
 
 				this.makeOffer(mainRow, cellRow);
-				
+
 				break;
 
 			case "remove offer":
-				
+
 				this.removeOffer(mainRow, cellRow);
 
 				break;
@@ -290,24 +322,24 @@ public class InternalGUIMediator {
 		((MainTableModel)gui.getTable().getModel()).fireTableDataChanged();
 		gui.getTable().rebuildTable();
 	}
-	
+
 	/**
 	 * Launch offer request.
-	 * 
+	 *
 	 * @param mainRow
 	 */
 	private void launchOfferRequest(int mainRow)
 	{
-		MainTable table = ((GUI)this.gui).getTable();
+		MainTable table = this.gui.getTable();
 		MainTableModel mtm = (MainTableModel) table.getModel();
 		CellTableModel ctm;
-		
+
 		// Get the service id.
 		int serviceId = ((MainTableModel)gui.getTable().getModel()).getIdAt(mainRow);
-		
+
 		// Launch offer request in the sistem.
 		ctm = gui.launchOfferRequest(serviceId, this.username.getId());
-		
+
 		// Could not do the action.
 		if (ctm == null)
 		{
@@ -317,59 +349,59 @@ public class InternalGUIMediator {
 		{
 			// Activate service.
 			mtm.setStatusAt("Active", mainRow);
-			
+
 			table.setValueAt(ctm, mainRow, 1);
-			((GUI)this.gui).getTable().rebuildTable();
+			this.gui.getTable().rebuildTable();
 		}
 	}
-	
+
 	/**
 	 * Drop offer request.
-	 * 
+	 *
 	 * @param mainRow
 	 */
 	private void dropOfferRequest(int mainRow)
 	{
-		MainTable table = ((GUI)this.gui).getTable();
+		MainTable table = this.gui.getTable();
 		MainTableModel mtm = (MainTableModel) table.getModel();
-		
+
 		// Get the service id.
 		int serviceId = mtm.getIdAt(mainRow);
-		
+
 		boolean dropRequest = gui.dropOfferRequest(serviceId, this.username.getId());
-		
-		if (!dropRequest) 
+
+		if (!dropRequest)
 		{
 			JOptionPane.showMessageDialog(null, "Dropping offer request failed.");
 		}
-		else 
+		else
 		{
 			// Deactivate service.
 			mtm.setStatusAt("Inactive", mainRow);
-	
+
 			// Clear user list.
 			mtm.setValueAt(new CellTableModel(), mainRow, 1);
 		}
 	}
-	
+
 	/**
 	 * Accept offer.
-	 * 
+	 *
 	 * @param mainRow
 	 * @param cellRow
 	 */
 	private void acceptOffer(int mainRow, int cellRow)
 	{
-		MainTable table = ((GUI)this.gui).getTable();
+		MainTable table = this.gui.getTable();
 		MainTableModel mtm = (MainTableModel) table.getModel();
 		CellTableModel ctm = (CellTableModel) table.getValueAt(mainRow, 1);
-		
+
 		// Get the service id.
 		int serviceId = mtm.getIdAt(mainRow);
-		
+
 		// Get the accepted offer id. Seller id.
 		int sellerId = ctm.getIdAt(cellRow);
-		
+
 		boolean acceptRequest = gui.acceptOffer(serviceId, this.username.getId(), sellerId);
 
 		if (!acceptRequest)
@@ -386,7 +418,7 @@ public class InternalGUIMediator {
 				{
 					String status = ctm.getStatusAt(i);
 					int intStatus = this.getIntStatus(status);
-	
+
 					if (intStatus == 2)
 					{
 						ctm.setValueAt("Offer Refused", i, 1);
@@ -400,25 +432,25 @@ public class InternalGUIMediator {
 			}
 		}
 	}
-	
+
 	/**
 	 * Refuse offer.
-	 * 
+	 *
 	 * @param mainRow
 	 * @param cellRow
 	 */
 	private void refuseOffer(int mainRow, int cellRow)
 	{
-		MainTable table = ((GUI)this.gui).getTable();
+		MainTable table = this.gui.getTable();
 		MainTableModel mtm = (MainTableModel) table.getModel();
 		CellTableModel ctm = (CellTableModel) table.getValueAt(mainRow, 1);
-		
+
 		// Get the service id.
 		int serviceId = mtm.getIdAt(mainRow);
-		
+
 		// Get the accepted offer id. Seller id.
 		int sellerId = ctm.getIdAt(cellRow);
-		
+
 		boolean refuseRequest = gui.refuseOffer(serviceId, this.username.getId(), sellerId);
 
 		// Request failed.
@@ -432,25 +464,25 @@ public class InternalGUIMediator {
 			ctm.setValueAt("Offer Refused", cellRow, 1);
 		}
 	}
-	
+
 	/**
 	 * Make offer.
-	 * 
+	 *
 	 * @param mainRow
 	 * @param cellRow
 	 */
 	private void makeOffer(int mainRow, int cellRow)
 	{
-		MainTable table = ((GUI)this.gui).getTable();
+		MainTable table = this.gui.getTable();
 		MainTableModel mtm = (MainTableModel) table.getModel();
 		CellTableModel ctm = (CellTableModel) table.getValueAt(mainRow, 1);
-		
+
 		// Get the service id.
 		int serviceId = mtm.getIdAt(mainRow);
-		
+
 		// Get the accepted offer id. Seller id.
 		int buyerId = ctm.getIdAt(cellRow);
-		
+
 		//TODO show a price input.
 		int price = 0;
 		boolean makeOfferRequest = gui.makeOffer(serviceId, buyerId, this.username.getId(), price);
@@ -466,25 +498,25 @@ public class InternalGUIMediator {
 			ctm.setValueAt("Offer Made", cellRow, 1);
 		}
 	}
-	
+
 	/**
 	 * Refuse offer.
-	 * 
+	 *
 	 * @param mainRow
 	 * @param cellRow
 	 */
 	private void removeOffer(int mainRow, int cellRow)
 	{
-		MainTable table = ((GUI)this.gui).getTable();
+		MainTable table = this.gui.getTable();
 		MainTableModel mtm = (MainTableModel) table.getModel();
 		CellTableModel ctm = (CellTableModel) table.getValueAt(mainRow, 1);
-		
+
 		// Get the service id.
 		int serviceId = mtm.getIdAt(mainRow);
-		
+
 		// Get the accepted offer id. Seller id.
 		int buyerId = ctm.getIdAt(cellRow);
-		
+
 		boolean removeRequest = gui.removeOffer(serviceId, buyerId, this.username.getId());
 
 		// Request failed.
@@ -498,7 +530,7 @@ public class InternalGUIMediator {
 			ctm.setValueAt("No Offer", cellRow, 1);
 		}
 	}
-	
+
 	/**
 	 * New user gets online.
 	 * 
@@ -634,15 +666,15 @@ public class InternalGUIMediator {
 		// Cannot simulate both buyer and seller at the same time.
 		if (this.username.getId() != userId)
 		{
-			MainTable table = ((GUI)this.gui).getTable();
+			MainTable table = this.gui.getTable();
 			MainTableModel mtm = (MainTableModel) table.getModel();
-	
+
 			int serviceRow = mtm.findRowByServiceId(serviceId);
 			if (serviceRow >= 0)
 			{
 				CellTableModel ctm = (CellTableModel) table.getValueAt(serviceRow, 1);
 				int userRow = ctm.findRowByUserId(userId);
-	
+
 				if (progress != 100)
 				{
 					ctm.setValueAt("Transfer in Progress", userRow, 1);
@@ -652,7 +684,7 @@ public class InternalGUIMediator {
 					ctm.setValueAt("Transfer Completed", userRow, 1);
 				}
 				ctm.setValueAt(progress, userRow, 2);
-	
+
 				ctm.fireTableDataChanged();
 				table.rebuildTable();
 			}

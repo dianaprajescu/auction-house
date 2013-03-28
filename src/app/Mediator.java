@@ -9,14 +9,7 @@ import interfaces.INetwork;
 import interfaces.INetworkMediator;
 import interfaces.IWSClient;
 import interfaces.IWSClientMediator;
-
-import java.util.Random;
-
-import GUI.GUI;
 import GUI.components.CellTableModel;
-import GUI.components.MainTable;
-import GUI.components.MainTableModel;
-import Network.MockupNetwork;
 
 /**
  * @author Stedy
@@ -26,49 +19,52 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	private IGUI gui;
 	private INetwork network;
 	private IWSClient client;
-	
+
+
 	@Override
 	public int login(String username, String password, UserType type)
 	{
 		return this.client.login(username, password, type);
 	}
-	
+
 	@Override
 	public boolean logout(int userId)
 	{
 		return this.client.logout(userId);
 	}
 
+
 	@Override
 	public CellTableModel launchOfferRequest(int serviceId, int userId)
 	{
 		return this.network.launchOfferRequest(serviceId, userId);
 	}
-	
+
+
 	@Override
 	public boolean dropOfferRequest(int serviceId, int userId)
 	{
 		return this.network.dropOfferRequest(serviceId, userId);
 	}
-	
+
 	@Override
 	public boolean acceptOffer(int serviceId, int buyerId, int sellerId)
 	{
 		return this.network.acceptOffer(serviceId, buyerId, sellerId);
 	}
-	
+
 	@Override
 	public boolean refuseOffer(int serviceId, int buyerId, int sellerId)
 	{
 		return this.network.refuseOffer(serviceId, buyerId, sellerId);
 	}
-	
+
 	@Override
 	public boolean makeOffer(int serviceId, int buyerId, int sellerId, int price)
 	{
 		return this.network.makeOffer(serviceId, buyerId, sellerId, price);
 	}
-	
+
 	@Override
 	public boolean removeOffer(int serviceId, int buyerId, int sellerId)
 	{
@@ -86,7 +82,7 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	{
 		this.network.startTransfer(serviceId, buyerId, sellerId);
 	}
-	
+
 	@Override
 	public void offerRefused(int serviceId, int buyerId) {
 		this.gui.offerRefused(serviceId, buyerId);
