@@ -4,18 +4,20 @@
 package GUI;
 
 import java.util.List;
+import java.util.Random;
 
 import javax.swing.SwingWorker;
 
 import Network.MockupNetwork;
 import app.Mediator;
+import app.UserType;
 
 /**
  * @author Stedy
  *
  */
 public class Simulator extends SwingWorker<Integer, Integer> {
-
+	private static final int DELAY = 1000;
 	private GUI gui;
 	private Mediator med;
 
@@ -32,18 +34,23 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 	protected Integer doInBackground() throws Exception {
 		while (true)
 		{
-			// System.out.println("aaa");
+			Thread.sleep(DELAY);
+
 			if (gui.isActive() == true)
 			{
-				System.out.println("dfsdfsdfsdf");
-				break;
+				//break;
+				simulateLogout();
+			}
+			else
+			{
+				simulateLogin();
 			}
 		}
-		System.out.println("dfsdfsdfsdf");
 
-		int i = 0;
+		/*int i = 0;
 		while (i < 10)
 		{
+			Thread.sleep(DELAY);
 			i++;
 			System.out.println("in while");
 			if (i % 2 == 0)
@@ -51,9 +58,9 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 				System.out.println("in if");
 				publish(i);
 			}
-		}
+		}*/
 
-		return new Integer(0);
+		//return new Integer(0);
 	}
 
 	@Override
@@ -68,6 +75,44 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 	public void done()
 	{
 		System.out.println("done");
+	}
+
+	/**
+	 * Simulate login.
+	 */
+	private void simulateLogin()
+	{
+		// Set valid or invalid login data.
+		Random rand = new Random();
+		int valid = rand.nextInt(2);
+
+		if (valid % 2 == 1)
+		{
+			gui.GUImed.setUsername("diana");
+			gui.GUImed.setPassword("test");
+		}
+		else
+		{
+			gui.GUImed.setUsername("diana");
+			gui.GUImed.setPassword("lala");
+		}
+
+		// Set user type random.
+		if (valid % 2 == 1)
+		{
+			gui.GUImed.setType(UserType.BUYER);
+		}
+		else
+		{
+			gui.GUImed.setType(UserType.SELLER);
+		}
+
+		gui.GUImed.login();
+	}
+
+	private void simulateLogout()
+	{
+		gui.GUImed.logout();
 	}
 
 }

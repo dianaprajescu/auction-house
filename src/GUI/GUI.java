@@ -1,7 +1,6 @@
 package GUI;
 import interfaces.IGUI;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -13,6 +12,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
 
 import GUI.components.CellTableModel;
 import GUI.components.LogoutButton;
@@ -24,19 +25,19 @@ import app.Database;
 import app.Mediator;
 import app.UserType;
 
-import javax.swing.SwingConstants;
-import javax.swing.JSeparator;
-
 /**
  * @author Stedy
  *
  */
 public class GUI extends JFrame implements IGUI, ActionListener {
-	
+
 	private MainTableModel model;
 	private MainTable table;
 
-	private InternalGUIMediator GUImed = new InternalGUIMediator();
+	/**
+	 * Public only for simulator, it will be made private.
+	 */
+	public InternalGUIMediator GUImed = new InternalGUIMediator();
 	private Mediator mainMed;
 
 	private JPanel mainPanel;
@@ -49,15 +50,15 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 		super("Auction House");
 		setResizable(false);
 		setSize(900, 600);
-		
+
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	    int height = screenSize.height/2;
 	    int width = screenSize.width/2;
 	    int fHeight = this.getHeight()/2;
 	    int fWidth = this.getWidth()/2;
-	    
+
 	    this.setLocation(width-fWidth, height-fHeight);
-		
+
 
 		// First display login window.
         setVisible(false);
@@ -129,7 +130,7 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 		// Main panel.
 		mainPanel = new JPanel();
 		mainPanel.setLayout(null);
-		
+
 		welcome = new JLabel();
 		welcome.setHorizontalAlignment(SwingConstants.CENTER);
 		welcome.setBounds(10, 5, 874, 20);
@@ -139,18 +140,18 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 		logout.setFocusable(false);
 		logout.setBounds(800, 7, 84, 20);
         mainPanel.add(logout);
-        
+
         JScrollPane scroll = new JScrollPane(table);
         scroll.setBounds(10,43,874,508);
         mainPanel.add(scroll);
-        
+
         getContentPane().add(mainPanel);
-        
+
         separator = new JSeparator();
         separator.setBounds(239, 25, 400, 2);
         mainPanel.add(separator);
 	}
-	
+
 	public JLabel getWelcomeLabel()
 	{
 		return this.welcome;
@@ -164,119 +165,129 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 
 	/**
 	 * Start transfer.
-	 * 
+	 *
 	 * @param serviceId
 	 * @param buyerId
 	 * @param sellerId
 	 */
+	@Override
 	public void startTransfer(int serviceId, int buyerId, int sellerId)
 	{
 		this.mainMed.startTransfer(serviceId, buyerId, sellerId);
 	}
-	
+
 	/**
 	 * Update transfer.
-	 * 
+	 *
 	 * @param serviceId
 	 * @param userId
 	 * @param progress
 	 */
+	@Override
 	public void updateTransfer(int serviceId, int userId, int progress)
 	{
 		this.GUImed.updateTransfer(serviceId, userId, progress);
 	}
-	
+
 	/**
 	 * Login user.
-	 * 
+	 *
 	 * @param username
 	 * @param password
 	 * @param type
 	 * @return
 	 */
+	@Override
 	public int login(String username, String password, UserType type)
 	{
 		return this.mainMed.login(username, password, type);
 	}
-	
+
 	/**
 	 * Logout user.
-	 * 
+	 *
 	 * @param userId
 	 * @return
 	 */
+	@Override
 	public boolean logout(int userId)
 	{
 		return this.mainMed.logout(userId);
 	}
-	
+
 	/**
 	 * Launch offer request.
-	 * 
+	 *
 	 * @param serviceId
 	 * @param userId
 	 */
+	@Override
 	public CellTableModel launchOfferRequest(int serviceId, int userId)
 	{
 		return this.mainMed.launchOfferRequest(serviceId, userId);
 	}
-	
+
 	/**
 	 * Drop an offer request.
-	 * 
+	 *
 	 * @param serviceId
 	 * @param userId
 	 */
+	@Override
 	public boolean dropOfferRequest(int serviceId, int userId)
 	{
 		return this.mainMed.dropOfferRequest(serviceId, userId);
 	}
-	
+
 	/**
-	 * Accept offer. 
+	 * Accept offer.
 	 * @param serviceId
 	 * @param buyerId
 	 * @param sellerId
 	 * @return
 	 */
+	@Override
 	public boolean acceptOffer(int serviceId, int buyerId, int sellerId)
 	{
 		return this.mainMed.acceptOffer(serviceId, buyerId, sellerId);
 	}
-	
+
 	/**
-	 * Refuse offer. 
+	 * Refuse offer.
 	 * @param serviceId
 	 * @param buyerId
 	 * @param sellerId
 	 * @return
 	 */
+	@Override
 	public boolean refuseOffer(int serviceId, int buyerId, int sellerId)
 	{
 		return this.mainMed.refuseOffer(serviceId, buyerId, sellerId);
 	}
-	
+
 	/**
 	 * Make offer.
-	 * 
+	 *
 	 * @param serviceId
 	 * @param buyerId
 	 * @param sellerId
 	 * @param price
 	 * @return
 	 */
+	@Override
 	public boolean makeOffer(int serviceId, int buyerId, int sellerId, int price)
 	{
 		return this.mainMed.makeOffer(serviceId, buyerId, sellerId, price);
 	}
-	
+
 	/**
-	 * Remove offer. 
+	 * Remove offer.
 	 * @param serviceId
 	 * @param buyerId
 	 * @param sellerId
 	 * @return
 	 */
+	@Override
 	public boolean removeOffer(int serviceId, int buyerId, int sellerId)
 	{
 		return this.mainMed.removeOffer(serviceId, buyerId, sellerId);
