@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.awt.Dialog;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -58,8 +59,7 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	    int fWidth = this.getWidth()/2;
 
 	    this.setLocation(width-fWidth, height-fHeight);
-
-
+	    
 		// First display login window.
         setVisible(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);

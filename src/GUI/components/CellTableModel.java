@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 
 public class CellTableModel extends AbstractTableModel{
-	private String[] columnNames = {"User", "Status", "Progress"};
+	private String[] columnNames = {"User", "Status", "Progress", "Price"};
 	private ArrayList<Object[]> data;
 	private ArrayList<Integer> entryIds;
 
