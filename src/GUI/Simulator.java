@@ -200,7 +200,7 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 		int i = 0;
 		while (i < noServices)
 		{
-			//Thread.sleep(5 * DELAY);
+			Thread.sleep(5 * DELAY);
 
 			if (gui.isActive() == true && gui.GUImed.getType() == UserType.BUYER)
 			{

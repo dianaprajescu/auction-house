@@ -11,16 +11,16 @@ public class AuctionTimer extends Timer {
 	int left;
 	Timer timer;
 	InternalGUIMediator mediator;
-	
+
 	public AuctionTimer(InternalGUIMediator med, MainTableModel model, int r)
 	{
 		this.mtm = model;
 		this.row = r;
 		this.mediator = med;
-		left = 15;
-		
+		left = 35;
+
 		timer = this;
-		
+
 		this.schedule(new TimerTask(){
 
 			@Override
@@ -36,7 +36,7 @@ public class AuctionTimer extends Timer {
 					timer.purge();
 				}
 			}
-			
+
 		}, 0, 1000);
 	}
 }
