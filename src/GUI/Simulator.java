@@ -3,11 +3,13 @@
  */
 package GUI;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import javax.swing.SwingWorker;
 
+import GUI.components.CellTableModel;
 import app.Mediator;
 import app.UserType;
 
@@ -37,7 +39,16 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 
 			if (gui.isActive() == true)
 			{
-				simulateLaunchDropOffer();
+				if (gui.GUImed.getType() == UserType.BUYER)
+				{
+					// Buyer launches or drop offer requests.
+					simulateLaunchDropOffer();
+				}
+				else
+				{
+					// Seller makes offer.
+					simulateMakeOffer();
+				}
 
 				Thread.sleep(DELAY);
 				simulateLogout();
@@ -100,7 +111,8 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 		}
 
 		// Set user type random.
-		if (valid % 2 == 1)
+		int type = rand.nextInt(2);
+		if (type % 2 == 1)
 		{
 			gui.GUImed.setType(UserType.BUYER);
 		}
@@ -134,15 +146,15 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 		Random rand = new Random();
 
 		// How many services to activate?
-		int noServices = rand.nextInt(gui.getTable().getRowCount());
+		int noServices = rand.nextInt(gui.getTable().getRowCount()-1) + 1;
 
 		int i = 0;
 		while (i < noServices)
 		{
+			Thread.sleep(5 * DELAY);
+
 			if (gui.isActive() == true)
 			{
-				Thread.sleep(5 * DELAY);
-
 				// Select random service.
 				int service = rand.nextInt(gui.getTable().getRowCount());
 
@@ -162,6 +174,43 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 				return;
 			}
 		}
+	}
+
+	/**
+	 * Simulate make offer.
+	 *
+	 * @throws InterruptedException
+	 */
+	private void simulateMakeOffer() throws InterruptedException
+	{
+		// Select random active service.
+		Random rand = new Random();
+		ArrayList<Integer> mainRows = new ArrayList<Integer>();
+		int i;
+
+		for (i = 0; i < gui.getTable().getRowCount(); i++)
+		{
+			if (((String) gui.getTable().getValueAt(i, 2)).compareToIgnoreCase("active") == 0)
+			{
+				mainRows.add(i);
+			}
+		}
+
+		if (mainRows.size() == 0)
+		{
+			// No offer to make.
+			return;
+		}
+
+		int service = mainRows.get(rand.nextInt(mainRows.size()));
+
+		// Select random cell.
+		CellTableModel ctm = (CellTableModel) gui.getTable().getValueAt(service, 1);
+		int cellRow = rand.nextInt(ctm.getRowCount());
+
+		// Make offer.
+		gui.GUImed.userAction("make offer", service, cellRow);
+		Thread.sleep(2 * DELAY);
 	}
 
 }
