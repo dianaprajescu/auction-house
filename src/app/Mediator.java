@@ -58,7 +58,7 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	 */
 	public CellTableModel launchOfferRequest(int serviceId, int userId)
 	{
-		return this.client.launchOfferRequest(serviceId, userId);
+		return this.network.launchOfferRequest(serviceId, userId);
 	}
 	
 	/**
@@ -70,7 +70,7 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	 */
 	public boolean dropOfferRequest(int serviceId, int userId)
 	{
-		return this.client.dropOfferRequest(serviceId, userId);
+		return this.network.dropOfferRequest(serviceId, userId);
 	}
 	
 	/**
@@ -82,7 +82,7 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	 */
 	public boolean acceptOffer(int serviceId, int buyerId, int sellerId)
 	{
-		return this.client.acceptOffer(serviceId, buyerId, sellerId);
+		return this.network.acceptOffer(serviceId, buyerId, sellerId);
 	}
 	
 	/**
@@ -94,7 +94,7 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	 */
 	public boolean refuseOffer(int serviceId, int buyerId, int sellerId)
 	{
-		return this.client.refuseOffer(serviceId, buyerId, sellerId);
+		return this.network.refuseOffer(serviceId, buyerId, sellerId);
 	}
 	
 	/**
@@ -108,7 +108,7 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	 */
 	public boolean makeOffer(int serviceId, int buyerId, int sellerId, int price)
 	{
-		return this.client.makeOffer(serviceId, buyerId, sellerId, price);
+		return this.network.makeOffer(serviceId, buyerId, sellerId, price);
 	}
 	
 	/**
@@ -120,7 +120,7 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	 */
 	public boolean removeOffer(int serviceId, int buyerId, int sellerId)
 	{
-		return this.client.removeOffer(serviceId, buyerId, sellerId);
+		return this.network.removeOffer(serviceId, buyerId, sellerId);
 	}
 
 	/**
