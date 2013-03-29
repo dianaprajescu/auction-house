@@ -255,7 +255,7 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 		}
 
 		// Generate random no of offers.
-		int noOffers = rand.nextInt(mainRows.size()) + 3;
+		int noOffers = rand.nextInt(mainRows.size() - 1) + 1;
 
 		for (i = 0; i < noOffers; i++)
 		{
