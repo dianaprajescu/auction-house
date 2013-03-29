@@ -14,6 +14,7 @@ import javax.swing.SwingWorker;
 
 import GUI.components.CellTableModel;
 import GUI.components.MainTableModel;
+import Network.MockupNetwork;
 import app.Mediator;
 import app.UserType;
 
@@ -24,12 +25,14 @@ import app.UserType;
 public class Simulator extends SwingWorker<Integer, Integer> {
 	private static final int DELAY = 1000;
 	private GUI gui;
+	private MockupNetwork network;
 	private Mediator med;
 
-	public Simulator (Mediator med, GUI gui)
+	public Simulator (Mediator med, GUI gui, MockupNetwork network)
 	{
 		this.med = med;
 		this.gui = gui;
+		this.network = network;
 	}
 
 	/* (non-Javadoc)
@@ -60,6 +63,9 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 				{
 					// Seller makes offer.
 					simulateMakeOffer();
+
+					// Offer was exceeded.
+					simulateOfferExceeded();
 				}
 
 				Thread.sleep(DELAY);
@@ -70,19 +76,6 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 				simulateLogin();
 			}
 		}
-
-		/*int i = 0;
-		while (i < 10)
-		{
-			Thread.sleep(DELAY);
-			i++;
-			System.out.println("in while");
-			if (i % 2 == 0)
-			{
-				System.out.println("in if");
-				publish(i);
-			}
-		}*/
 
 		//return new Integer(0);
 	}
@@ -255,7 +248,7 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 		}
 
 		// Generate random no of offers.
-		int noOffers = rand.nextInt(mainRows.size()) + 1;
+		int noOffers = rand.nextInt(mainRows.size()) + 3;
 
 		for (i = 0; i < noOffers; i++)
 		{
@@ -363,6 +356,41 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 
 		Thread.sleep(5 * DELAY);
 		return 1;
+	}
+
+	/**
+	 * Simulate offer exceeded.
+	 *
+	 * @throws InterruptedException
+	 */
+	private void simulateOfferExceeded() throws InterruptedException
+	{
+		int i, j;
+		Random rand = new Random();
+
+		// Get all offers made.
+		for (i = 0; i < gui.getTable().getRowCount(); i++)
+		{
+			// Get buyers.
+			CellTableModel ctm = (CellTableModel) gui.getTable().getValueAt(i, 1);
+			for (j = 0; j < ctm.getRowCount(); j++)
+			{
+				if (((String) ctm.getValueAt(j, 1)).compareToIgnoreCase("offer made") == 0)
+				{
+					// Get current price.
+					int price = (Integer) ctm.getValueAt(j, 2);
+					price = price - rand.nextInt(10) - 10;
+
+					// Random offers are exceeded.
+					int exceed = rand.nextInt(2);
+					if (exceed % 2 == 1)
+					{
+						network.offerExceeded(((MainTableModel) gui.getTable().getModel()).getIdAt(i), ctm.getIdAt(j), price);
+						Thread.sleep(3 * DELAY);
+					}
+				}
+			}
+		}
 	}
 
 }

@@ -731,6 +731,7 @@ public class InternalGUIMediator {
 			if (buyerRow >= 0)
 			{
 				ctm.setValueAt("Offer Exceeded", buyerRow, 1);
+				ctm.setValueAt(price, buyerRow, 2);
 			}
 		}
 	}
