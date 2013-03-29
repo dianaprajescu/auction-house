@@ -465,7 +465,10 @@ public class InternalGUIMediator {
 		// Get the service id.
 		int serviceId = mtm.getIdAt(mainRow);
 
+		// Stop transfer.
 		gui.stopTransfer(serviceId, username.getId());
+		
+		// Drop offer request.
 		boolean dropRequest = gui.dropOfferRequest(serviceId, this.username.getId());
 
 		if (!dropRequest)
@@ -874,6 +877,7 @@ public class InternalGUIMediator {
 	 */
 	public void updateTransfer(int serviceId, int userId, int progress)
 	{
+		// Drop bad packets.
 		try
 		{
 			// Cannot simulate both buyer and seller at the same time.
