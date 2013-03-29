@@ -4,7 +4,6 @@
 package GUI;
 
 import java.util.HashMap;
-import java.util.Random;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -127,47 +126,47 @@ public class InternalGUIMediator {
 		else
 		{
 			MainTableModel userServices = this.gui.getServiceList(username.getId(), username.getType());
-			
+
 			if (userServices != null)
 			{
 				this.gui.getTable().setModel(userServices);
-				
+
 				// Close login frame.
 				login.setVisible(false);
-	
+
 				// Set the logged in userID;
 				username.setId(logged);
-	
+
 				// Set the logged userType.
 				username.setType(type);
-	
+
 				// Add username label in main frame.
 				JLabel welcome = gui.getWelcomeLabel();
 				welcome.setText("Welcome to Auction House, " + username.getText() + "!");
-	
+
 				// Set gui frame visible.
 				gui.setVisible(true);
-				
+
 				MainTable table = this.gui.getTable();
 				MainTableModel mtm = (MainTableModel) table.getModel();
 				CellTableModel ctm;
-	
+
 				// Add some services.
 				if (username.getType() == UserType.SELLER)
 				{
 					for (int i=0; i<mtm.getRowCount(); i++)
 					{
 						int serviceId = mtm.getIdAt(i);
-						
+
 						// Launch offer request in the sistem.
 						ctm = gui.getUserList(serviceId, username.getType());
-						
+
 						// There are buyers in the system.
 						if (ctm != null)
 						{
 							// Activate service.
 							mtm.setStatusAt("Active", i);
-			
+
 							table.setValueAt(ctm, i, 1);
 							this.gui.getTable().rebuildTable();
 						}
@@ -189,25 +188,25 @@ public class InternalGUIMediator {
 		if (this.gui.logout(username.getId()))
 		{
 			gui.dispose();
-			
+
 			MainTableModel mtm = (MainTableModel) this.gui.getTable().getModel();
-			
+
 			for (int row=0; row < mtm.getRowCount(); row++)
 			{
 				// Cancel transfer.
 				gui.stopTransfer(mtm.getIdAt(row), username.getId());
-				
+
 				// Cancel timer.
 				mtm.setTimerAt("-", row);
-				
+
 				AuctionTimer timer = mtm.getTimerObjectAt(row);
-				
+
 				if (timer != null)
 				{
 					timer.cancel();
 				}
 			}
-			
+
 			this.gui.getTable().setModel(new MainTableModel());
 			login.setVisible(true);
 		}
@@ -470,7 +469,7 @@ public class InternalGUIMediator {
 
 		// Stop transfer.
 		gui.stopTransfer(serviceId, username.getId());
-		
+
 		// Drop offer request.
 		boolean dropRequest = gui.dropOfferRequest(serviceId, this.username.getId());
 
@@ -534,6 +533,11 @@ public class InternalGUIMediator {
 				}
 				else
 				{
+					// Remove timer.
+					mtm.setTimerAt("Finished", mainRow);
+					mtm.fireTableCellUpdated(mainRow, 3);
+					mtm.getTimerObjectAt(mainRow).cancel();
+
 					ctm.setValueAt("Transfer Started", cellRow, 1);
 					gui.startTransfer(serviceId, this.username.getId(), sellerId);
 				}
@@ -775,7 +779,7 @@ public class InternalGUIMediator {
 			{
 				ctm.setValueAt("Offer Exceeded", buyerRow, 1);
 				ctm.setValueAt(price, buyerRow, 2);
-				
+
 				((MainTableModel)this.gui.getTable().getModel()).fireTableCellUpdated(serviceRow, 1);
 			}
 		}
@@ -886,13 +890,13 @@ public class InternalGUIMediator {
 			{
 				MainTable table = this.gui.getTable();
 				MainTableModel mtm = (MainTableModel) table.getModel();
-	
+
 				int serviceRow = mtm.findRowByServiceId(serviceId);
 				if (serviceRow >= 0)
 				{
 					CellTableModel ctm = (CellTableModel) table.getValueAt(serviceRow, 1);
 					int userRow = ctm.findRowByUserId(userId);
-	
+
 					if (progress != 100)
 					{
 						ctm.setValueAt("Transfer in Progress", userRow, 1);
@@ -902,7 +906,7 @@ public class InternalGUIMediator {
 						ctm.setValueAt("Transfer Completed", userRow, 1);
 					}
 					ctm.setValueAt(progress, userRow, 3);
-	
+
 					ctm.fireTableCellUpdated(userRow, 3);
 					table.rebuildTable();
 				}
@@ -999,10 +1003,10 @@ public class InternalGUIMediator {
 				// Update offer in GUI.
 				ctm.setValueAt("Offer Made", ctm.findRowByUserId(buyerId), 1);
 				ctm.setValueAt(priceOffered, ctm.findRowByUserId(buyerId), 2);
-				
+
 				((MainTableModel)this.gui.getTable().getModel()).fireTableDataChanged();
 				this.gui.getTable().rebuildTable();
-				
+
 				pdb.dispose();
 			}
 		}
