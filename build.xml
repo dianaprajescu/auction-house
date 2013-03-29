@@ -35,4 +35,10 @@
             <classpath refid="proiect-idp.classpath"/>
         </java>
     </target>
+	<target name="simulate">
+        <java classname="app.Main" failonerror="true" fork="yes">
+            <classpath refid="proiect-idp.classpath"/>
+        	<arg value="simulate" />
+        </java>
+    </target>
 </project>
