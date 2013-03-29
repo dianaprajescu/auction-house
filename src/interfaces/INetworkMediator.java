@@ -2,6 +2,7 @@ package interfaces;
 
 import app.UserType;
 import GUI.components.CellTableModel;
+import GUI.components.MainTableModel;
 
 /**
  * @author Stedy
@@ -83,12 +84,4 @@ public interface INetworkMediator {
 	 * @param buyerId
 	 */
 	public void offerRemoved(int serviceId, int sellerId);
-	
-	/**
-	 * Get a list with sellers or buyers for a service.
-	 * 
-	 * @param serviceId
-	 * @return
-	 */
-	public CellTableModel getUserList(int serviceId, UserType type);
 }

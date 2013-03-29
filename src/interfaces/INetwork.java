@@ -2,6 +2,7 @@ package interfaces;
 
 import app.UserType;
 import GUI.components.CellTableModel;
+import GUI.components.MainTableModel;
 
 /**
  * @author Stedy
@@ -138,9 +139,18 @@ public interface INetwork {
 	public void offerRemoved(int serviceId, int sellerId);
 	
 	/**
-	 * 
+	 * Get a list of users for the logged in user.
+	 *
 	 * @param serviceId
 	 * @param type
 	 */
 	public CellTableModel getUserList(int serviceId, UserType type);
+	
+	/**
+	 * Get a list of users for the logged in user.
+	 *
+	 * @param userId
+	 * @param type
+	 */
+	public MainTableModel getServiceList(int userId, UserType type);
 }

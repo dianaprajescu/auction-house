@@ -126,49 +126,59 @@ public class InternalGUIMediator {
 		// Login user with the ID got.
 		else
 		{
-			// Close login frame.
-			login.setVisible(false);
-
-			// Set the logged in userID;
-			username.setId(logged);
-
-			// Set the logged userType.
-			username.setType(type);
-
-			// Add username label in main frame.
-			JLabel welcome = gui.getWelcomeLabel();
-			welcome.setText("Welcome to Auction House, " + username.getText() + "!");
-
-			// Set gui frame visible.
-			gui.setVisible(true);
+			MainTableModel userServices = this.gui.getServiceList(username.getId(), username.getType());
 			
-			MainTable table = this.gui.getTable();
-			MainTableModel mtm = (MainTableModel) table.getModel();
-			CellTableModel ctm;
-
-			// Add some services.
-			if (username.getType() == UserType.SELLER)
+			if (userServices != null)
 			{
-				for (int i=0; i<mtm.getRowCount(); i++)
+				this.gui.getTable().setModel(userServices);
+				
+				// Close login frame.
+				login.setVisible(false);
+	
+				// Set the logged in userID;
+				username.setId(logged);
+	
+				// Set the logged userType.
+				username.setType(type);
+	
+				// Add username label in main frame.
+				JLabel welcome = gui.getWelcomeLabel();
+				welcome.setText("Welcome to Auction House, " + username.getText() + "!");
+	
+				// Set gui frame visible.
+				gui.setVisible(true);
+				
+				MainTable table = this.gui.getTable();
+				MainTableModel mtm = (MainTableModel) table.getModel();
+				CellTableModel ctm;
+	
+				// Add some services.
+				if (username.getType() == UserType.SELLER)
 				{
-					int serviceId = mtm.getIdAt(i);
-					
-					// Launch offer request in the sistem.
-					ctm = gui.getUserList(serviceId, username.getType());
-					
-					// There are buyers in the system.
-					if (ctm != null)
+					for (int i=0; i<mtm.getRowCount(); i++)
 					{
-						// Activate service.
-						mtm.setStatusAt("Active", i);
-		
-						table.setValueAt(ctm, i, 1);
-						this.gui.getTable().rebuildTable();
+						int serviceId = mtm.getIdAt(i);
+						
+						// Launch offer request in the sistem.
+						ctm = gui.getUserList(serviceId, username.getType());
+						
+						// There are buyers in the system.
+						if (ctm != null)
+						{
+							// Activate service.
+							mtm.setStatusAt("Active", i);
+			
+							table.setValueAt(ctm, i, 1);
+							this.gui.getTable().rebuildTable();
+						}
 					}
 				}
 			}
+			else
+			{
+				this.gui.getTable().setModel(new MainTableModel());
+			}
 		}
-
 	}
 
 	/**
@@ -179,6 +189,23 @@ public class InternalGUIMediator {
 		if (this.gui.logout(username.getId()))
 		{
 			gui.dispose();
+			
+			MainTableModel mtm = (MainTableModel) this.gui.getTable().getModel();
+			
+			for (int row=0; row < mtm.getRowCount(); row++)
+			{
+				// Cancel timer.
+				mtm.setTimerAt("-", row);
+				
+				AuctionTimer timer = mtm.getTimerObjectAt(row);
+				
+				if (timer != null)
+				{
+					timer.cancel();
+				}
+			}
+			
+			this.gui.getTable().setModel(new MainTableModel());
 			login.setVisible(true);
 		}
 		else

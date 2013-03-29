@@ -9,6 +9,7 @@ import GUI.Login;
 import GUI.components.CellTableModel;
 import GUI.components.LoginButton;
 import GUI.components.LogoutButton;
+import GUI.components.MainTableModel;
 import GUI.components.PasswordField;
 import GUI.components.BuyerType;
 import GUI.components.SellerType;
@@ -110,4 +111,12 @@ public interface IGUIMediator {
 	 * @return
 	 */
 	public CellTableModel getUserList(int serviceId, UserType type);
+	
+	/**
+	 * Get a list of users for the logged in user.
+	 *
+	 * @param userId
+	 * @param type
+	 */
+	public MainTableModel getServiceList(int userId, UserType type);
 }

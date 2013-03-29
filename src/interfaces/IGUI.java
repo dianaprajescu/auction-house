@@ -1,6 +1,7 @@
 package interfaces;
 
 import GUI.components.CellTableModel;
+import GUI.components.MainTableModel;
 import app.UserType;
 
 /**
@@ -170,4 +171,12 @@ public interface IGUI {
 	 * @return
 	 */
 	public CellTableModel getUserList(int serviceId, UserType type);
+	
+	/**
+	 * Get a list of users for the logged in user.
+	 *
+	 * @param userId
+	 * @param type
+	 */
+	public MainTableModel getServiceList(int userId, UserType type);
 }
