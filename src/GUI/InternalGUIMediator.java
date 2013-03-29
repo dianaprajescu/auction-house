@@ -11,6 +11,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 
 import GUI.components.AuctionTimer;
+import GUI.components.AutoCloseDialog;
 import GUI.components.BuyerType;
 import GUI.components.CellTable;
 import GUI.components.CellTableModel;
@@ -118,7 +119,7 @@ public class InternalGUIMediator {
 		// Could not login.
 		if (logged == -1)
 		{
-			JOptionPane.showMessageDialog(null, "Invalid login data.");
+			AutoCloseDialog.showMessageDialog(null, "Invalid login data.", "Error!", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
