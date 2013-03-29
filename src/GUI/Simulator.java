@@ -51,10 +51,16 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 					// Buyer can accept or reject an offer.
 					if (simulateAcceptRejectOffer() == -1)
 					{
-						// Buyer launches or drop offer requests.
-						if (simulateLaunchDropOffer() == -1)
+						// No offers were made. Make some offers.
+						if (simulateOfferReceived() == -1)
 						{
-							// User type was changed manually from GUI.
+							// No active services. Buyer launches or drop offer requests.
+							if (simulateLaunchDropOffer() == -1)
+							{
+								// User type was changed manually from GUI.
+								continue;
+							}
+
 							continue;
 						}
 					}
@@ -391,6 +397,53 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 				}
 			}
 		}
+	}
+
+	private int simulateOfferReceived() throws InterruptedException
+	{
+		Random rand = new Random();
+
+		// Get active services.
+		ArrayList<Integer> mainRows = new ArrayList<Integer>();
+		int i;
+
+		for (i = 0; i < gui.getTable().getRowCount(); i++)
+		{
+			if (((String) gui.getTable().getValueAt(i, 2)).compareToIgnoreCase("active") == 0)
+			{
+				mainRows.add(i);
+			}
+		}
+
+		// No active services.
+		if (mainRows.size() == 0)
+		{
+			return -1;
+		}
+
+		// Generate random no of offers.
+		int noOffers = rand.nextInt(mainRows.size() - 1) + 1;
+
+		for (i = 0; i < noOffers; i++)
+		{
+			// Select random active service.
+			int service = mainRows.get(rand.nextInt(mainRows.size()));
+
+			// Select random cell.
+			CellTableModel ctm = (CellTableModel) gui.getTable().getValueAt(service, 1);
+			int cellRow = rand.nextInt(ctm.getRowCount());
+
+			if (((String) ctm.getValueAt(cellRow, 1)).compareToIgnoreCase("no offer") == 0)
+			{
+				// Make offer.
+				int price = rand.nextInt(200) + 1;
+				network.offerMade(((MainTableModel) gui.getTable().getModel()).getIdAt(service), ctm.getIdAt(cellRow), price);
+
+				Thread.sleep(2 * DELAY);
+			}
+		}
+
+		return 1;
 	}
 
 }
