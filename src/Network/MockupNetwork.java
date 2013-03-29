@@ -7,10 +7,15 @@ import interfaces.INetwork;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Random;
 
 import GUI.components.CellTableModel;
+import GUI.components.MainTableModel;
+import app.Database;
 import app.Mediator;
+import app.UserType;
 
 /**
  * @author Stedy
@@ -145,5 +150,60 @@ public class MockupNetwork implements INetwork {
 	@Override
 	public void dropUser(int userId) {
 		this.med.dropUser(userId);
+	}
+
+	@Override
+	public CellTableModel getUserList(int serviceId, UserType type) {
+		boolean add = (new Random()).nextBoolean();
+		
+		if (add)
+		{
+			// Populate model with a random number of sellers.
+			int noUsers = new Random().nextInt(6) + 1;
+		
+			// Create a new CellTableModel.
+			CellTableModel ct = new CellTableModel();
+		
+			for (int i = 0; i < noUsers; i++)
+			{
+				// Create sellers.
+				int userId = (new Random().nextInt(3)) + i * 3;
+				Object[] rowx = {"user_name" + userId, "No Offer", "-", 0};
+				ct.addRow(userId, rowx);
+			}
+		
+			return ct;
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	@Override
+	public MainTableModel getServiceList(int userId, UserType type) {
+		// Populate model.
+		MainTableModel model = new MainTableModel();
+
+		// Get services from DB.
+		Database db = new Database();
+		ResultSet rs = db.query("SELECT * FROM service");
+
+		try {
+			while (rs.next())
+			{
+				boolean add = (new Random()).nextBoolean();
+				
+				if (add)
+				{
+					Object[] row = {rs.getString("name"), new CellTableModel(), "Inactive", "-"};
+					model.addRow(rs.getInt("id"), row);
+				}
+			}
+		} catch (SQLException e1) {
+			return null;
+		}
+		
+		return model;
 	}
 }

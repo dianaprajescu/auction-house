@@ -10,6 +10,7 @@ import interfaces.INetworkMediator;
 import interfaces.IWSClient;
 import interfaces.IWSClientMediator;
 import GUI.components.CellTableModel;
+import GUI.components.MainTableModel;
 
 /**
  * @author Stedy
@@ -134,5 +135,15 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	@Override
 	public void dropUser(int userId) {
 		this.gui.dropUser(userId);
+	}
+
+	@Override
+	public CellTableModel getUserList(int serviceId, UserType type) {
+		return this.network.getUserList(serviceId, type);
+	}
+
+	@Override
+	public MainTableModel getServiceList(int userId, UserType type) {
+		return this.network.getServiceList(userId, type);
 	}
 }

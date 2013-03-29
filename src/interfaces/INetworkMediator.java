@@ -1,5 +1,9 @@
 package interfaces;
 
+import app.UserType;
+import GUI.components.CellTableModel;
+import GUI.components.MainTableModel;
+
 /**
  * @author Stedy
  *

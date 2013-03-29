@@ -78,25 +78,7 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	 */
 	@Override
 	public void init() {
-		// Populate model.
-		model = new MainTableModel();
-
-		// Get services from DB.
-		Database db = new Database();
-		ResultSet rs = db.query("SELECT * FROM service");
-
-		try {
-			while (rs.next())
-			{
-				Object[] row = {rs.getString("name"), new CellTableModel(), "Inactive", "-"};
-				model.addRow(rs.getInt("id"), row);
-			}
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-		table = new MainTable(model, GUImed);
+		table = new MainTable(new MainTableModel(), GUImed);
 		table.addMouseListener(new MainTableMouseListener(GUImed, this));
 		table.rebuildTable();
 
@@ -261,5 +243,15 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	@Override
 	public void offerRemoved(int serviceId, int sellerId) {
 		this.GUImed.offerRemoved(serviceId, sellerId);
+	}
+	
+	@Override
+	public CellTableModel getUserList(int serviceId, UserType type) {
+		return this.mainMed.getUserList(serviceId, type);
+	}
+
+	@Override
+	public MainTableModel getServiceList(int userId, UserType type) {
+		return this.mainMed.getServiceList(userId, type);
 	}
 }

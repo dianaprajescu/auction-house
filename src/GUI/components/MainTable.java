@@ -21,6 +21,7 @@ public class MainTable extends JTable
 
 	public void rebuildTable()
 	{	
+		this.getColumnModel().getColumn(1).setPreferredWidth(500);
 		try {
 		    for (int row=0; row < this.getRowCount(); row++) {
 		        int rowHeight = this.getRowHeight();
