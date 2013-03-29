@@ -786,6 +786,8 @@ public class InternalGUIMediator {
 			{
 				ctm.setValueAt("Offer Exceeded", buyerRow, 1);
 				ctm.setValueAt(price, buyerRow, 2);
+				
+				((MainTableModel)this.gui.getTable().getModel()).fireTableCellUpdated(serviceRow, 1);
 			}
 		}
 	}
@@ -1006,6 +1008,10 @@ public class InternalGUIMediator {
 				// Update offer in GUI.
 				ctm.setValueAt("Offer Made", ctm.findRowByUserId(buyerId), 1);
 				ctm.setValueAt(priceOffered, ctm.findRowByUserId(buyerId), 2);
+				
+				((MainTableModel)this.gui.getTable().getModel()).fireTableDataChanged();
+				this.gui.getTable().rebuildTable();
+				
 				pdb.dispose();
 			}
 		}

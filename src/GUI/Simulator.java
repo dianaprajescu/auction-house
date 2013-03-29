@@ -42,44 +42,51 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 	protected Integer doInBackground() throws Exception {
 		while (true)
 		{
-			Thread.sleep(DELAY);
-
-			if (gui.isActive() == true)
+			try
 			{
-				if (gui.GUImed.getType() == UserType.BUYER)
+				Thread.sleep(DELAY);
+
+				if (gui.isActive() == true)
 				{
-					// Buyer can accept or reject an offer.
-					if (simulateAcceptRejectOffer() == -1)
+					if (gui.GUImed.getType() == UserType.BUYER)
 					{
 						// No offers were made. Make some offers.
-						if (simulateOfferReceived() == -1)
+						if (simulateAcceptRejectOffer() == -1)
 						{
-							// No active services. Buyer launches or drop offer requests.
-							if (simulateLaunchDropOffer() == -1)
+							// Buyer can accept or reject an offer.
+							if (simulateOfferReceived() == -1)
 							{
-								// User type was changed manually from GUI.
-								continue;
+								// No active services. Buyer launches or drop offer requests.
+								if (simulateLaunchDropOffer() == -1)
+								{
+									// User type was changed manually from GUI.
+									continue;
+								}
 							}
 
 							continue;
 						}
 					}
+					else
+					{
+						// Seller makes offer.
+						simulateMakeOffer();
+
+						// Offer was exceeded.
+						simulateOfferExceeded();
+					}
+
+					Thread.sleep(DELAY);
+					simulateLogout();
 				}
 				else
 				{
-					// Seller makes offer.
-					simulateMakeOffer();
-
-					// Offer was exceeded.
-					simulateOfferExceeded();
+					simulateLogin();
 				}
-
-				Thread.sleep(DELAY);
-				simulateLogout();
 			}
-			else
+			catch(Exception e)
 			{
-				simulateLogin();
+
 			}
 		}
 
