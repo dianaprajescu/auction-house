@@ -66,6 +66,13 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 
 							continue;
 						}
+
+						// Receive some more offers.
+						Random rand = new Random();
+						if (rand.nextBoolean())
+						{
+							continue;
+						}
 					}
 					else
 					{
@@ -74,7 +81,7 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 
 						// Offer was exceeded.
 						simulateOfferExceeded();
-						
+
 						// Accept offer.
 						simulateOfferAccepted();
 					}
@@ -488,7 +495,7 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 
 		return 1;
 	}
-	
+
 	public void simulateOfferAccepted() throws InterruptedException
 	{
 		int i, j;
