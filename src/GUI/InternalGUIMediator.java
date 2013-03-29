@@ -888,19 +888,20 @@ public class InternalGUIMediator {
 	 */
 	public void updateTransfer(int serviceId, int userId, int progress)
 	{
+		// Cannot simulate both buyer and seller at the same time.
+		if (this.username.getId() != userId)
+		{
+			MainTable table = this.gui.getTable();
+			MainTableModel mtm = (MainTableModel) table.getModel();
 
-			// Cannot simulate both buyer and seller at the same time.
-			if (this.username.getId() != userId)
+			int serviceRow = mtm.findRowByServiceId(serviceId);
+			if (serviceRow >= 0)
 			{
-				MainTable table = this.gui.getTable();
-				MainTableModel mtm = (MainTableModel) table.getModel();
+				CellTableModel ctm = (CellTableModel) table.getValueAt(serviceRow, 1);
+				int userRow = ctm.findRowByUserId(userId);
 
-				int serviceRow = mtm.findRowByServiceId(serviceId);
-				if (serviceRow >= 0)
+				if (userRow >= 0)
 				{
-					CellTableModel ctm = (CellTableModel) table.getValueAt(serviceRow, 1);
-					int userRow = ctm.findRowByUserId(userId);
-
 					if (progress != 100)
 					{
 						ctm.setValueAt("Transfer in Progress", userRow, 1);
@@ -910,12 +911,12 @@ public class InternalGUIMediator {
 						ctm.setValueAt("Transfer Completed", userRow, 1);
 					}
 					ctm.setValueAt(progress, userRow, 3);
-
+	
 					ctm.fireTableCellUpdated(userRow, 3);
 					table.rebuildTable();
 				}
 			}
-
+		}
 	}
 
 	/**
