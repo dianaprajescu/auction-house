@@ -194,6 +194,9 @@ public class InternalGUIMediator {
 			
 			for (int row=0; row < mtm.getRowCount(); row++)
 			{
+				// Cancel transfer.
+				gui.stopTransfer(mtm.getIdAt(row), username.getId());
+				
 				// Cancel timer.
 				mtm.setTimerAt("-", row);
 				
