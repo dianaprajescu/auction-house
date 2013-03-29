@@ -254,4 +254,9 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	public MainTableModel getServiceList(int userId, UserType type) {
 		return this.mainMed.getServiceList(userId, type);
 	}
+
+	@Override
+	public void stopTransfer(int serviceId, int userId) {
+		this.mainMed.stopTransfer(serviceId, userId);
+	}
 }

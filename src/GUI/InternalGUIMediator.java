@@ -244,25 +244,7 @@ public class InternalGUIMediator {
 			// Service active.
 			else if (status.compareToIgnoreCase("active") == 0)
 			{
-				// Show this option only if no offer accepted.
-				CellTableModel ctm = (CellTableModel) gui.getTable().getValueAt(gui.getTable().getSelectedRow(), 1);
-				int i;
-				boolean accepted = false;
-				for (i = 0; i < ctm.getRowCount(); i++)
-				{
-					String userStatus = ctm.getStatusAt(i);
-					int intStatus = this.getIntStatus(userStatus);
-
-					if (intStatus >= 5 && intStatus <= 8)
-					{
-						accepted = true;
-					}
-				}
-
-				if (accepted == false)
-				{
-					popup.add(new PopupMenuItem("Drop Offer Request", this, this.gui, gui.getTable().getSelectedRow(), 0));
-				}
+				popup.add(new PopupMenuItem("Drop Offer Request", this, this.gui, gui.getTable().getSelectedRow(), 0));
 			}
 
 			// Show the menu.
@@ -483,6 +465,7 @@ public class InternalGUIMediator {
 		// Get the service id.
 		int serviceId = mtm.getIdAt(mainRow);
 
+		gui.stopTransfer(serviceId, username.getId());
 		boolean dropRequest = gui.dropOfferRequest(serviceId, this.username.getId());
 
 		if (!dropRequest)
@@ -891,31 +874,38 @@ public class InternalGUIMediator {
 	 */
 	public void updateTransfer(int serviceId, int userId, int progress)
 	{
-		// Cannot simulate both buyer and seller at the same time.
-		if (this.username.getId() != userId)
+		try
 		{
-			MainTable table = this.gui.getTable();
-			MainTableModel mtm = (MainTableModel) table.getModel();
-
-			int serviceRow = mtm.findRowByServiceId(serviceId);
-			if (serviceRow >= 0)
+			// Cannot simulate both buyer and seller at the same time.
+			if (this.username.getId() != userId)
 			{
-				CellTableModel ctm = (CellTableModel) table.getValueAt(serviceRow, 1);
-				int userRow = ctm.findRowByUserId(userId);
-
-				if (progress != 100)
+				MainTable table = this.gui.getTable();
+				MainTableModel mtm = (MainTableModel) table.getModel();
+	
+				int serviceRow = mtm.findRowByServiceId(serviceId);
+				if (serviceRow >= 0)
 				{
-					ctm.setValueAt("Transfer in Progress", userRow, 1);
+					CellTableModel ctm = (CellTableModel) table.getValueAt(serviceRow, 1);
+					int userRow = ctm.findRowByUserId(userId);
+	
+					if (progress != 100)
+					{
+						ctm.setValueAt("Transfer in Progress", userRow, 1);
+					}
+					else
+					{
+						ctm.setValueAt("Transfer Completed", userRow, 1);
+					}
+					ctm.setValueAt(progress, userRow, 3);
+	
+					ctm.fireTableCellUpdated(userRow, 3);
+					table.rebuildTable();
 				}
-				else
-				{
-					ctm.setValueAt("Transfer Completed", userRow, 1);
-				}
-				ctm.setValueAt(progress, userRow, 3);
-
-				ctm.fireTableCellUpdated(userRow, 3);
-				table.rebuildTable();
 			}
+		}
+		catch(Exception e)
+		{
+			
 		}
 	}
 

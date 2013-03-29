@@ -9,6 +9,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import GUI.components.CellTableModel;
@@ -23,6 +25,8 @@ import app.UserType;
  */
 public class MockupNetwork implements INetwork {
 	private Mediator med;
+	
+	HashMap<Integer, TransferTask> transfers;
 
 	/**
 	 * Constructor.
@@ -31,12 +35,16 @@ public class MockupNetwork implements INetwork {
 	{
 		this.med = med;
 		med.registerNetwork(this);
+		
+		transfers = new HashMap<Integer, TransferTask>();
 	}
 
 	@Override
 	public void startTransfer(final int serviceId, final int buyerId, final int sellerId)
 	{
 		TransferTask tt = new TransferTask( 20 + (new Random()).nextInt(61));
+		
+		transfers.put(serviceId, tt);
 
 		tt.addPropertyChangeListener(new PropertyChangeListener(){
 			@Override
@@ -49,6 +57,16 @@ public class MockupNetwork implements INetwork {
 			}
 		});
 		tt.execute();
+	}
+	
+	public void stopTransfer(int serviceId, int userId)
+	{
+		TransferTask tt = transfers.get(serviceId);
+		if (tt != null)
+		{
+			tt.done();
+			transfers.remove(serviceId);
+		}
 	}
 
 	@Override

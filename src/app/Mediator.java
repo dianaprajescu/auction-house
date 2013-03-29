@@ -146,4 +146,9 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	public MainTableModel getServiceList(int userId, UserType type) {
 		return this.network.getServiceList(userId, type);
 	}
+
+	@Override
+	public void stopTransfer(int serviceId, int userId) {
+		this.network.stopTransfer(serviceId, userId);
+	}
 }

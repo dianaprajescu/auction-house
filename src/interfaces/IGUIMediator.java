@@ -119,4 +119,12 @@ public interface IGUIMediator {
 	 * @param type
 	 */
 	public MainTableModel getServiceList(int userId, UserType type);
+	
+	/**
+	 * User initiates stop transfer.
+	 * 
+	 * @param serviceId
+	 * @param userId
+	 */
+	public void stopTransfer(int serviceId, int userId);
 }

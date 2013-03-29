@@ -27,9 +27,5 @@ public class TransferTask extends SwingWorker<Integer, Integer> {
 	}
 
 	protected void done() {
-		if (isCancelled())
-			System.out.println("Cancelled !");
-		else
-			System.out.println("Done !");
 	}
 }
