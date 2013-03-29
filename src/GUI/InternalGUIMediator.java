@@ -306,7 +306,7 @@ public class InternalGUIMediator {
 				popup.add(new PopupMenuItem("Make Offer", this, this.gui, gui.getTable().getSelectedRow(), table.getSelectedRow()));
 			}
 
-			if (intStatus == 2)
+			if (intStatus == 2 || (intStatus >= 5 && intStatus < 9))
 			{
 				popup.add(new PopupMenuItem("Remove Offer", this, this.gui, gui.getTable().getSelectedRow(), table.getSelectedRow()));
 			}
@@ -628,6 +628,9 @@ public class InternalGUIMediator {
 		}
 		else
 		{
+			// Stop transfer.
+			gui.stopTransfer(serviceId, username.getId());
+
 			// Update offer in GUI.
 			ctm.setValueAt("No Offer", cellRow, 1);
 			ctm.setValueAt("-", cellRow, 2);
