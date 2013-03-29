@@ -243,13 +243,17 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 
 		// Get active services.
 		ArrayList<Integer> mainRows = new ArrayList<Integer>();
-		int i;
+		int i, noSellers = 0;
 
 		for (i = 0; i < gui.getTable().getRowCount(); i++)
 		{
 			if (((String) gui.getTable().getValueAt(i, 2)).compareToIgnoreCase("active") == 0)
 			{
 				mainRows.add(i);
+
+				// Get no of sellers.
+				CellTableModel ctm = (CellTableModel) gui.getTable().getValueAt(i, 1);
+				noSellers += ctm.getRowCount();
 			}
 		}
 
@@ -261,7 +265,7 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 		}
 
 		// Generate random no of offers.
-		int noOffers = rand.nextInt(mainRows.size() - 1) + 1;
+		int noOffers = rand.nextInt(noSellers / 2) + 1;
 
 		for (i = 0; i < noOffers; i++)
 		{
@@ -412,13 +416,17 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 
 		// Get active services.
 		ArrayList<Integer> mainRows = new ArrayList<Integer>();
-		int i;
+		int i, noSellers = 0;
 
 		for (i = 0; i < gui.getTable().getRowCount(); i++)
 		{
 			if (((String) gui.getTable().getValueAt(i, 2)).compareToIgnoreCase("active") == 0)
 			{
 				mainRows.add(i);
+
+				// Get no of sellers.
+				CellTableModel ctm = (CellTableModel) gui.getTable().getValueAt(i, 1);
+				noSellers += ctm.getRowCount();
 			}
 		}
 
@@ -429,7 +437,7 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 		}
 
 		// Generate random no of offers.
-		int noOffers = rand.nextInt(mainRows.size() - 1) + 1;
+		int noOffers = rand.nextInt(noSellers / 2) + 1;
 
 		for (i = 0; i < noOffers; i++)
 		{
