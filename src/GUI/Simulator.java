@@ -74,6 +74,9 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 
 						// Offer was exceeded.
 						simulateOfferExceeded();
+						
+						// Accept offer.
+						simulateOfferAccepted();
 					}
 
 					Thread.sleep(DELAY);
@@ -459,6 +462,32 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 		}
 
 		return 1;
+	}
+	
+	public void simulateOfferAccepted() throws InterruptedException
+	{
+		int i, j;
+		Random rand = new Random();
+
+		// Get all offers made.
+		for (i = 0; i < gui.getTable().getRowCount(); i++)
+		{
+			// Get buyers.
+			CellTableModel ctm = (CellTableModel) gui.getTable().getValueAt(i, 1);
+			for (j = 0; j < ctm.getRowCount(); j++)
+			{
+				if (((String) ctm.getValueAt(j, 1)).compareToIgnoreCase("offer made") == 0)
+				{
+					// Random offers are exceeded.
+					boolean accepted = rand.nextBoolean();
+					if (accepted)
+					{
+						network.offerAccepted(((MainTableModel) gui.getTable().getModel()).getIdAt(i), ctm.getIdAt(j));
+						Thread.sleep(3 * DELAY);
+					}
+				}
+			}
+		}
 	}
 
 }
