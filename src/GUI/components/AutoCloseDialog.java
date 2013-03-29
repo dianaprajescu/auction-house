@@ -1,16 +1,14 @@
 package GUI.components;
 
 import java.awt.Component;
-import java.awt.TrayIcon.MessageType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
-import javax.swing.UIManager;
 
-public class AutoCloseDialog implements Runnable, ActionListener
+public class AutoCloseDialog implements ActionListener
 {
     private JDialog dialog;
 
@@ -46,10 +44,4 @@ public class AutoCloseDialog implements Runnable, ActionListener
       }
       
     }
-
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		
-	}
 }
