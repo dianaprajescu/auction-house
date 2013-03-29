@@ -66,6 +66,13 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 
 							continue;
 						}
+
+						// Receive some more offers.
+						Random rand = new Random();
+						if (rand.nextBoolean())
+						{
+							continue;
+						}
 					}
 					else
 					{
@@ -74,7 +81,7 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 
 						// Offer was exceeded.
 						simulateOfferExceeded();
-						
+
 						// Accept offer.
 						simulateOfferAccepted();
 					}
@@ -447,8 +454,33 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 			// Select random active service.
 			int service = mainRows.get(rand.nextInt(mainRows.size()));
 
-			// Select random cell.
 			CellTableModel ctm = (CellTableModel) gui.getTable().getValueAt(service, 1);
+
+			// Check if auction finished (transfer started).
+			int j;
+			boolean finished = false;
+			for (j = 0; j < ctm.getRowCount(); j++)
+			{
+				if (((String) ctm.getValueAt(j, 1)).compareToIgnoreCase("transfer started") == 0 ||
+						((String) ctm.getValueAt(j, 1)).compareToIgnoreCase("transfer in progress") == 0 ||
+						((String) ctm.getValueAt(j, 1)).compareToIgnoreCase("transfer completed") == 0 ||
+						((String) ctm.getValueAt(j, 1)).compareToIgnoreCase("transfer failed") == 0)
+				{
+					finished = true;
+					break;
+				}
+			}
+
+			if (finished)
+			{
+				if (noOffers > noSellers - ctm.getRowCount())
+				{
+					noOffers -= ctm.getRowCount();
+				}
+				continue;
+			}
+
+			// Select random cell.
 			int cellRow = rand.nextInt(ctm.getRowCount());
 
 			if (((String) ctm.getValueAt(cellRow, 1)).compareToIgnoreCase("no offer") == 0)
@@ -463,7 +495,7 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 
 		return 1;
 	}
-	
+
 	public void simulateOfferAccepted() throws InterruptedException
 	{
 		int i, j;
