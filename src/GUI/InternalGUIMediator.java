@@ -877,9 +877,7 @@ public class InternalGUIMediator {
 	 */
 	public void updateTransfer(int serviceId, int userId, int progress)
 	{
-		// Drop bad packets.
-		try
-		{
+
 			// Cannot simulate both buyer and seller at the same time.
 			if (this.username.getId() != userId)
 			{
@@ -906,11 +904,7 @@ public class InternalGUIMediator {
 					table.rebuildTable();
 				}
 			}
-		}
-		catch(Exception e)
-		{
-			
-		}
+
 	}
 
 	/**
