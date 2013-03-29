@@ -64,7 +64,7 @@ public class MockupNetwork implements INetwork {
 		TransferTask tt = transfers.get(serviceId);
 		if (tt != null)
 		{
-			tt.done();
+			tt.cancel(true);
 			transfers.remove(serviceId);
 		}
 	}
