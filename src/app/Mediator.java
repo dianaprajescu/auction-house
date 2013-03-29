@@ -135,4 +135,9 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	public void dropUser(int userId) {
 		this.gui.dropUser(userId);
 	}
+
+	@Override
+	public CellTableModel getUserList(int serviceId, UserType type) {
+		return this.network.getUserList(serviceId, type);
+	}
 }

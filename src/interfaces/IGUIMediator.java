@@ -101,4 +101,13 @@ public interface IGUIMediator {
 	 * @return
 	 */
 	public boolean removeOffer(int serviceId, int buyerId, int sellerId);
+	
+	/**
+	 * Get a list of users for a service.
+	 * 
+	 * @param serviceId
+	 * @param type
+	 * @return
+	 */
+	public CellTableModel getUserList(int serviceId, UserType type);
 }

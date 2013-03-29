@@ -11,6 +11,7 @@ import java.util.Random;
 
 import GUI.components.CellTableModel;
 import app.Mediator;
+import app.UserType;
 
 /**
  * @author Stedy
@@ -145,5 +146,33 @@ public class MockupNetwork implements INetwork {
 	@Override
 	public void dropUser(int userId) {
 		this.med.dropUser(userId);
+	}
+
+	@Override
+	public CellTableModel getUserList(int serviceId, UserType type) {
+		boolean add = (new Random()).nextBoolean();
+		
+		if (add)
+		{
+			// Populate model with a random number of sellers.
+			int noUsers = new Random().nextInt(6) + 1;
+		
+			// Create a new CellTableModel.
+			CellTableModel ct = new CellTableModel();
+		
+			for (int i = 0; i < noUsers; i++)
+			{
+				// Create sellers.
+				int userId = (new Random().nextInt(3)) + i * 3;
+				Object[] rowx = {"user_name" + userId, "No Offer", "-", 0};
+				ct.addRow(userId, rowx);
+			}
+		
+			return ct;
+		}
+		else
+		{
+			return null;
+		}
 	}
 }

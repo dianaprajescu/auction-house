@@ -4,6 +4,7 @@
 package GUI;
 
 import java.util.HashMap;
+import java.util.Random;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -140,6 +141,32 @@ public class InternalGUIMediator {
 
 			// Set gui frame visible.
 			gui.setVisible(true);
+			
+			MainTable table = this.gui.getTable();
+			MainTableModel mtm = (MainTableModel) table.getModel();
+			CellTableModel ctm;
+
+			// Add some services.
+			if (username.getType() == UserType.SELLER)
+			{
+				for (int i=0; i<mtm.getRowCount(); i++)
+				{
+					int serviceId = mtm.getIdAt(i);
+					
+					// Launch offer request in the sistem.
+					ctm = gui.getUserList(serviceId, username.getType());
+					
+					// There are buyers in the system.
+					if (ctm != null)
+					{
+						// Activate service.
+						mtm.setStatusAt("Active", i);
+		
+						table.setValueAt(ctm, i, 1);
+						this.gui.getTable().rebuildTable();
+					}
+				}
+			}
 		}
 
 	}

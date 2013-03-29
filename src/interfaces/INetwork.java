@@ -1,5 +1,6 @@
 package interfaces;
 
+import app.UserType;
 import GUI.components.CellTableModel;
 
 /**
@@ -135,4 +136,11 @@ public interface INetwork {
 	 * @param buyerId
 	 */
 	public void offerRemoved(int serviceId, int sellerId);
+	
+	/**
+	 * 
+	 * @param serviceId
+	 * @param type
+	 */
+	public CellTableModel getUserList(int serviceId, UserType type);
 }

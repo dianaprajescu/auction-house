@@ -262,4 +262,9 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	public void offerRemoved(int serviceId, int sellerId) {
 		this.GUImed.offerRemoved(serviceId, sellerId);
 	}
+	
+	@Override
+	public CellTableModel getUserList(int serviceId, UserType type) {
+		return this.mainMed.getUserList(serviceId, type);
+	}
 }
