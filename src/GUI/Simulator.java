@@ -66,6 +66,10 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 
 							continue;
 						}
+						else
+						{
+							simulateOfferRemoved();
+						}
 
 						// Receive some more offers.
 						Random rand = new Random();
@@ -166,36 +170,23 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 	 */
 	private void simulateLogout() throws InterruptedException
 	{
-		boolean transfer = true;
 		int i, j;
 
-		while (transfer)
+		// Check if transfer in progress.
+		for (i = 0; i < gui.getTable().getRowCount(); i++)
 		{
-			transfer = false;
+			CellTableModel ctm = (CellTableModel) gui.getTable().getValueAt(i, 1);
 
-			// Check if transfer in progress.
-			for (i = 0; i < gui.getTable().getRowCount(); i++)
+			for (j = 0; j < ctm.getRowCount(); j++)
 			{
-				CellTableModel ctm = (CellTableModel) gui.getTable().getValueAt(i, 1);
-
-				for (j = 0; j < ctm.getRowCount(); j++)
+				if (((String) ctm.getValueAt(j, 1)).compareToIgnoreCase("transfer in progress") == 0)
 				{
-					if (((String) ctm.getValueAt(j, 1)).compareToIgnoreCase("transfer in progress") == 0)
-					{
-						transfer = true;
-
-						// Transfer may take a while. Sleep.
-						Thread.sleep(5 * DELAY);
-						break;
-					}
-				}
-
-				if (transfer)
-				{
-					break;
+					// Simulate other stuff until transfer ends.
+					return;
 				}
 			}
 		}
+
 
 		gui.GUImed.logout();
 	}
@@ -433,10 +424,6 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 			if (((String) gui.getTable().getValueAt(i, 2)).compareToIgnoreCase("active") == 0)
 			{
 				mainRows.add(i);
-
-				// Get no of sellers.
-				CellTableModel ctm = (CellTableModel) gui.getTable().getValueAt(i, 1);
-				noSellers += ctm.getRowCount();
 			}
 		}
 
@@ -444,6 +431,14 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 		if (mainRows.size() == 0)
 		{
 			return -1;
+		}
+
+		// Check if auction expired or finished.
+		for (i = 0; i < mainRows.size(); i++)
+		{
+			// Get no of sellers.
+			CellTableModel ctm = (CellTableModel) gui.getTable().getValueAt(mainRows.get(i), 1);
+			noSellers += ctm.getRowCount();
 		}
 
 		// Generate random no of offers.
@@ -456,35 +451,29 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 
 			CellTableModel ctm = (CellTableModel) gui.getTable().getValueAt(service, 1);
 
-			// Check if auction finished (transfer started).
-			int j;
-			boolean finished = false;
-			for (j = 0; j < ctm.getRowCount(); j++)
-			{
-				if (((String) ctm.getValueAt(j, 1)).compareToIgnoreCase("transfer started") == 0 ||
-						((String) ctm.getValueAt(j, 1)).compareToIgnoreCase("transfer in progress") == 0 ||
-						((String) ctm.getValueAt(j, 1)).compareToIgnoreCase("transfer completed") == 0 ||
-						((String) ctm.getValueAt(j, 1)).compareToIgnoreCase("transfer failed") == 0)
-				{
-					finished = true;
-					break;
-				}
-			}
-
-			if (finished)
-			{
-				if (noOffers > noSellers - ctm.getRowCount())
-				{
-					noOffers -= ctm.getRowCount();
-				}
-				continue;
-			}
-
 			// Select random cell.
 			int cellRow = rand.nextInt(ctm.getRowCount());
 
 			if (((String) ctm.getValueAt(cellRow, 1)).compareToIgnoreCase("no offer") == 0)
 			{
+				// Check if auction expired or finished.
+				boolean closed = false;
+				for (i = 0; i < mainRows.size(); i++)
+				{
+					if (((String) gui.getTable().getValueAt(service, 3)).compareToIgnoreCase("Expired") == 0 ||
+							((String) gui.getTable().getValueAt(service, 3)).compareToIgnoreCase("Finished") == 0)
+					{
+						// Remove auction.
+						mainRows.remove(i);
+						closed = true;
+					}
+				}
+
+				if (closed)
+				{
+					continue;
+				}
+
 				// Make offer.
 				int price = rand.nextInt(200) + 1;
 				network.offerMade(((MainTableModel) gui.getTable().getModel()).getIdAt(service), ctm.getIdAt(cellRow), price);
@@ -515,6 +504,42 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 					if (accepted)
 					{
 						network.offerAccepted(((MainTableModel) gui.getTable().getModel()).getIdAt(i), ctm.getIdAt(j));
+						Thread.sleep(3 * DELAY);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * When logged as a buyer, the seller may remove his offer at any time.
+	 *
+	 * @return
+	 * @throws InterruptedException
+	 */
+	public void simulateOfferRemoved() throws InterruptedException
+	{
+		int i, j;
+		Random rand = new Random();
+
+		// Get all offers made.
+		for (i = 0; i < gui.getTable().getRowCount(); i++)
+		{
+			// Get sellers.
+			CellTableModel ctm = (CellTableModel) gui.getTable().getValueAt(i, 1);
+			for (j = 0; j < ctm.getRowCount(); j++)
+			{
+				if (((String) ctm.getValueAt(j, 1)).compareToIgnoreCase("offer accepted") == 0 ||
+						((String) ctm.getValueAt(j, 1)).compareToIgnoreCase("transfer started") == 0 ||
+						((String) ctm.getValueAt(j, 1)).compareToIgnoreCase("offer in progress") == 0)
+				{
+					// Random offers are canceled.
+					boolean accepted = rand.nextBoolean();
+					System.out.println("sdfdsf");
+					if (accepted)
+					{
+						System.out.println("dadada");
+						network.offerRemoved(((MainTableModel) gui.getTable().getModel()).getIdAt(i), ctm.getIdAt(j));
 						Thread.sleep(3 * DELAY);
 					}
 				}
