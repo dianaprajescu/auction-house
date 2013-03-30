@@ -111,7 +111,7 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 
 	@Override
 	public void offerRemoved(int serviceId, int sellerId) {
-		this.offerRemoved(serviceId, sellerId);
+		this.gui.offerRemoved(serviceId, sellerId);
 	}
 
 	@Override
