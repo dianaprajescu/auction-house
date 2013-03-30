@@ -873,6 +873,10 @@ public class InternalGUIMediator {
 
 			if (sellerRow >= 0)
 			{
+				// Stop transfer.
+				gui.stopTransfer(serviceId, username.getId());
+
+				// Update values.
 				ctm.setValueAt("No Offer", sellerRow, 1);
 				ctm.setValueAt("-", sellerRow, 2);
 			}

@@ -66,10 +66,9 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 
 							continue;
 						}
-						else
-						{
-							simulateOfferRemoved();
-						}
+
+						simulateOfferRemoved();
+
 
 						// Receive some more offers.
 						Random rand = new Random();
@@ -531,14 +530,12 @@ public class Simulator extends SwingWorker<Integer, Integer> {
 			{
 				if (((String) ctm.getValueAt(j, 1)).compareToIgnoreCase("offer accepted") == 0 ||
 						((String) ctm.getValueAt(j, 1)).compareToIgnoreCase("transfer started") == 0 ||
-						((String) ctm.getValueAt(j, 1)).compareToIgnoreCase("offer in progress") == 0)
+						((String) ctm.getValueAt(j, 1)).compareToIgnoreCase("transfer in progress") == 0)
 				{
 					// Random offers are canceled.
 					boolean accepted = rand.nextBoolean();
-					System.out.println("sdfdsf");
 					if (accepted)
 					{
-						System.out.println("dadada");
 						network.offerRemoved(((MainTableModel) gui.getTable().getModel()).getIdAt(i), ctm.getIdAt(j));
 						Thread.sleep(3 * DELAY);
 					}
