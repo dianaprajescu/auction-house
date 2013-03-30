@@ -114,7 +114,7 @@ public class InternalGUIMediator {
 			return;
 		}
 
-		logged = this.gui.login(username.getText(), password.getText(), type);
+		logged = this.gui.login(username.getText(), new String(password.getPassword()), type);
 
 		// Could not login.
 		if (logged == -1)
