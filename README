@@ -6,12 +6,22 @@ Autori:
 
 URL Github: https://github.com/dianaprajescu/proiect-idp.git (branch tema1)
 
+Tehnologie folosita:
+	- Windows 7
+	- JDK 1.7
+
 Configurare:
 - Pentru a configura userii si serviciile folosite am folosit o baza de date de tip mysql.
 - Pentru conexiunea cu baza de date am folosit "mysql-connector-java-5.1.24-bin.jar" ce se
 regaseste in folderul cu resurse.
 - Pentru a configura baza de date pentru proiect se vor realiza modificarile necesare in
 clasa DatabaseConfig si apoi se va compila proiectul (rulare comanda "ant").
+- In directorul "resources" se gaseste un dump al bazei de date pe care am folosit-o pe
+durata testatrii si care este utilizata de asemenea in modulul de simulare. Aceasta
+trebuie importata in MySQL si recomandam folosirea ei in structura actuala. Pentru
+autentificare se poate folosi utilizatorul "diana" cu parola "test" atat pentru logarea
+ca seller cat si pentru logarea ca buyer.
+
 
 Reguli ANT:
 	- build:    "ant"
@@ -27,17 +37,22 @@ directe
 	- Pentru partea de GUI exista un mediator intern ce realizeaza medierea intre elementele 
 din interiorul interfetei grafice: InternalGUIMediator.
 
+
 Logica de efectuare a unei actiuni din mediatorul intern catre network:
 	InternalGUIMediator -> GUI (IGUI) -> Mediator (IGUIMediator) -> INetwork
+	
 	
 Logica de efectuare a unei actiuni din network catre GUI:
 	INetwork -> Mediator (INetworkMediator) -> GUI (IGUI) -> InternalGUIMediator
 	
+	
 Logica de efectuare a unei actiuni din GUI catre WebService:
 	InternalGUIMediator -> GUI (IGUI) -> Mediator (IGUIMediator) -> IWSClient
 	
+	
 Logica de efecutare a unei actiuni din WebServiceClient catre GUI:
 	IWSClient -> Mediator (IWWSClientMediator) -> GUI (IGUI) -> InternalGUIMediator
+	
 
 Implementare GUI:
 	- Pentru implementarea modulului de GUI am folosit design patternurile MVC, Mediator si 
@@ -51,11 +66,13 @@ conexiuni pe care ar fi trebuit sa le realizam in caz contrar.
 interfetei grafice principale. Acesta extinde AbstractTableModel si implementeaza metode
 specifice necesare in logica aplicatiei ulterior. Similar, CellTableModel extinde 
 AbstractTableModel, in aplicatie acesta reprezentand o celula din interiorul lui 
-MainTableModel.
+MainTableModel. Separarea datelor de structura aplicatiei, ne-a ajutat sa accesam cu usurinta
+datele in Controller atunci cand am avut nevoie si le-am putut mentine organizat.
 	- In interfata principala, datele apar sub forma unui JTable (cu modelul MainTableModel),
 iar informatiile despre utilizatorii unei licitatii reprezinta tot un JTable (cu modelul
 CellTableModel) ce este o celula din tabelul principla. Am ales acest mod de implementare pentru
 usurinta de a reprezenta datele.
+
 
 INetwork:
 	- MockupNetwork reprezinta un Mockup realizat peste INetwork ce contine metode ce simuleaza
@@ -65,17 +82,21 @@ si va gestiona modul in care acestia comunica.
 	- Din modulul Network se pot initializa actiuni efectuate de un seller ce influenteaza un
 buyer sau invers.
 
+
 IWSClient:
 	- MockupWSClient reprezinta un Mockup realizat peste IWSClient ce contine metode pentru
 simularea comportamentului modulului de WSClient.
 	- WSClient se va ocupa de medierea intre client si WebService, realizand autentificarea
 utilizatorilor
 
+
 IGUIMediator:
 	- implementeaza actiunile ce sunt efectuate din GUI catre Mediator
+	
 
 INetworkMediator:
 	- implementeaza actiunile ce sunt efectuate din Network catre Mediator
+	
 	
 IWSClientMediator:
 	- implementeaza actiunile ce sunt efectuate din WSClient catre Mediator
