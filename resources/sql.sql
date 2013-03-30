@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 30, 2013 at 12:09 AM
+-- Generation Time: Mar 30, 2013 at 01:09 AM
 -- Server version: 5.1.53
 -- PHP Version: 5.3.4
 
@@ -20,27 +20,6 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 --
 CREATE DATABASE `auction_house` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `auction_house`;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `offer`
---
-
-CREATE TABLE IF NOT EXISTS `offer` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_service_id` int(11) NOT NULL,
-  `seller_id` int(11) NOT NULL,
-  `price` float NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `user_service_id` (`user_service_id`),
-  KEY `seller_id` (`seller_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
---
--- Dumping data for table `offer`
---
-
 
 -- --------------------------------------------------------
 
@@ -91,43 +70,4 @@ CREATE TABLE IF NOT EXISTS `user` (
 --
 
 INSERT INTO `user` (`id`, `username`, `password`, `type`, `logged`) VALUES
-(1, 'diana', 'test', 2, 1);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `user_service`
---
-
-CREATE TABLE IF NOT EXISTS `user_service` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `service_id` int(11) NOT NULL,
-  `status` tinyint(4) NOT NULL COMMENT '1-inactive, 2-no_offer, 3-offer_made, 4-offer_exceeded, 5-offer_accepted, 6-offer_refused, 7-transfer_started, 8-transfer_in_progress, 9-transfer_completed, 10-transfer_failed',
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  KEY `service_id` (`service_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
---
--- Dumping data for table `user_service`
---
-
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `offer`
---
-ALTER TABLE `offer`
-  ADD CONSTRAINT `offer_ibfk_1` FOREIGN KEY (`user_service_id`) REFERENCES `user_service` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `offer_ibfk_2` FOREIGN KEY (`seller_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `user_service`
---
-ALTER TABLE `user_service`
-  ADD CONSTRAINT `user_service_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `user_service_ibfk_2` FOREIGN KEY (`service_id`) REFERENCES `service` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+(1, 'diana', 'test', 1, 1);
