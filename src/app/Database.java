@@ -32,8 +32,8 @@ public class Database {
 			Class.forName("com.mysql.jdbc.Driver");
 			
 			// Setup the connection with the DB
-			connect = DriverManager.getConnection("jdbc:mysql://localhost/auction_house?" +
-					"user=root&password=");
+			connect = DriverManager.getConnection("jdbc:mysql://"+ DatabaseConfig.host +"/auction_house?" +
+					"user=" + DatabaseConfig.username + "&password=" + DatabaseConfig.password);
 			
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Error connecting to DB!", "DB error", JOptionPane.ERROR_MESSAGE);

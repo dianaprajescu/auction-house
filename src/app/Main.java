@@ -18,14 +18,19 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		
+		// Initiate.
 		Mediator med = new Mediator();
 		GUI gui = new GUI(med);
 		MockupNetwork network = new MockupNetwork(med);
 		MockupWSClient wsClient = new MockupWSClient(med, gui);
 
-		// Comment these 2 lines to stop simulator.
-		Simulator s = new Simulator(med, gui, network);
-		s.execute();
+		// Check if simulation should be started.
+		if (args.length > 0 && args[0].compareTo("simulate") == 0)
+		{
+			Simulator s = new Simulator(med, gui, network);
+			s.execute();
+		}
 	}
 
 }
