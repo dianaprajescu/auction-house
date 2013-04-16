@@ -1,0 +1,127 @@
+package Network;
+
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
+import java.nio.charset.Charset;
+import java.util.Iterator;
+
+public class ServerNetwork {
+	public static int port = 30000;
+	public static String url = "127.0.0.1";
+	public static int BUF_SIZE = 8;
+	
+	private static ServerSocketChannel channel;
+	private static Selector selector;
+	
+	public static void main(String[] args) throws IOException{
+		init();
+	}
+	
+	public static void accept(SelectionKey key) throws IOException
+	{
+		// The new connection.
+		ServerSocketChannel serverSocketChannel = (ServerSocketChannel)key.channel();
+		
+		// Accept connection on server.
+		SocketChannel clientSocketChannel = serverSocketChannel.accept();
+		
+		// Configure connection to nonblocking.
+		clientSocketChannel.configureBlocking(false);
+		
+		// Set buffer size.
+		ByteBuffer buf = ByteBuffer.allocateDirect(BUF_SIZE);
+		
+		// Wait for client to send message.
+		clientSocketChannel.register(key.selector(), SelectionKey.OP_READ, buf);
+	}
+	
+	public static void read(SelectionKey key) throws IOException
+	{
+		// Create buffer.
+		ByteBuffer buffer = ByteBuffer.allocate(BUF_SIZE);
+		
+		// Init client channel.
+		SocketChannel clientChannel = (SocketChannel) key.channel();
+		
+		// Number of bytes read.
+		int bytesRead = 0;
+		
+		// Read data.
+		if ((bytesRead = clientChannel.read(buffer)) > 0) {
+            buffer.flip();
+            
+            // Process message and do write.
+            System.out.println(buffer.getInt() + ":" + buffer.getInt());
+            
+            buffer.clear();
+        }
+		
+		if (bytesRead < 0) {
+            // Close the client channel.
+            clientChannel.close();
+        }
+	}
+	
+	public static void write(SelectionKey key) throws IOException
+	{
+		// Init client channel.
+		SocketChannel clientChannel = (SocketChannel) key.channel();
+		
+		// Init buffer message.
+		CharBuffer buffer = CharBuffer.wrap("Hello client");
+		
+		// Write buffer message.
+		while (buffer.hasRemaining())
+		{
+			clientChannel.write((Charset.defaultCharset().encode(buffer)));
+		}
+		
+		// Clear buffer.
+		buffer.clear();
+	}
+	
+	public static void init() throws IOException{
+		// Create a new serversocketchannel;
+		channel = ServerSocketChannel.open();
+		
+		// Bind the channel to an address and listen for unbound connections.
+		channel.bind(new InetSocketAddress(url, port));
+		
+		// Set nonblocking.
+		channel.configureBlocking(false);
+		
+		// Create a new selector.
+		selector = Selector.open();
+		
+		// Accept new connections.
+		channel.register(selector, SelectionKey.OP_ACCEPT);
+		
+		// Wait for connections.
+		while (true) {
+			
+			if (selector.select() == 0){
+				continue;
+			}
+			
+			// Iterate through the list of selected keys.
+			for (Iterator<SelectionKey> it = selector.selectedKeys().iterator(); it.hasNext(); ) {
+				SelectionKey key = it.next();
+				it.remove();
+				
+				// Accept connection.
+				if (key.isAcceptable())
+					accept(key);
+				
+				// Read from client.
+				else if (key.isReadable())
+					read(key);
+			}
+		}
+	}
+}

@@ -25,13 +25,21 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	@Override
 	public int login(String username, String password, UserType type)
 	{
-		return this.client.login(username, password, type);
+		int loggedId = this.client.login(username, password, type);
+		
+		//TODO make login request to network (INetwork).
+		
+		return loggedId;
 	}
 
 	@Override
 	public boolean logout(int userId)
 	{
-		return this.client.logout(userId);
+		boolean logout = this.client.logout(userId);
+		
+		//TODO make logout request to network.
+		
+		return logout;
 	}
 
 
