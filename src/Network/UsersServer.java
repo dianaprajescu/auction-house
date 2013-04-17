@@ -43,6 +43,21 @@ public class UsersServer {
 	}
 	
 	/**
+	 * Remove user.
+	 * 
+	 * @param channel
+	 */
+	public void remove(SocketChannel channel){
+		// Find the index with channel passed.
+		int idx = channels.indexOf(channel);
+		
+		ids.remove(idx);
+		types.remove(idx);
+		channels.remove(idx);
+		services.remove(idx);
+	}
+	
+	/**
 	 * User registers his service.
 	 * 
 	 * @param serviceId

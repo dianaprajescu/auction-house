@@ -23,9 +23,15 @@ public class StateWrite implements IStateClientNetwork {
 		// Put message in buffer.
 		processMessage();
 		
-		// Send message.
-		while (buffer.hasRemaining()){
-			channel.write(buffer);
+		try{
+			// Send message.
+			while (buffer.hasRemaining()){
+				channel.write(buffer);
+			}
+		}
+		catch(Exception e)
+		{
+			channel.close();
 		}
 	}
 

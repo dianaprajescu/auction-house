@@ -27,36 +27,49 @@ public class StateRead implements IStateClientNetwork {
 	public void execute() throws IOException {
 		this.prepareBuffer();
 		
-		// Read the size of the message.
-		if (channel.read(buffer) > 0) {
-			buffer.flip();
+		try
+		{
+			int byteBuffer;
 			
-			// Message size.
-			int messageSize = buffer.getInt();
-
-			buffer.clear();
-			
-			// Init server message.
-			message.setSize(messageSize);
-			
-			// Init buffer for message.
-			ByteBuffer messageBuffer = ByteBuffer.allocate(messageSize);
-			
-			// Read the message.
-			if (channel.read(messageBuffer) > 0) {
-				messageBuffer.flip();
+			// Read the size of the message.
+			if ((byteBuffer = channel.read(buffer)) > 0) {
+				buffer.flip();
 				
-				// Set message type.
-				message.setMethod(messageBuffer.getInt());
+				// Message size.
+				int messageSize = buffer.getInt();
+	
+				buffer.clear();
 				
-				// Get message content.
-				while(messageBuffer.hasRemaining()){
-					message.addByte(messageBuffer.get());
+				// Init server message.
+				message.setSize(messageSize);
+				
+				// Init buffer for message.
+				ByteBuffer messageBuffer = ByteBuffer.allocate(messageSize);
+				
+				// Read the message.
+				if ((byteBuffer = channel.read(messageBuffer)) > 0) {
+					messageBuffer.flip();
+					
+					// Set message type.
+					message.setMethod(messageBuffer.getInt());
+					
+					// Get message content.
+					while(messageBuffer.hasRemaining()){
+						message.addByte(messageBuffer.get());
+					}
+					
+					// Clear buffer.
+					messageBuffer.clear();
 				}
-				
-				// Clear buffer.
-				messageBuffer.clear();
 			}
+			
+			if (byteBuffer == -1){
+				throw new Exception ("EOF");
+			}
+		}
+		catch(Exception e)
+		{
+			channel.close();
 		}
 		
 		if (message.getMethod() != -1)

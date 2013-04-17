@@ -48,47 +48,57 @@ public class ServerNetwork {
 		// Init client channel.
 		SocketChannel clientChannel = (SocketChannel) key.channel();
 		
-		// Create buffer.
-		ByteBuffer buffer = ByteBuffer.allocate(Integer.SIZE / 8);
+		// Init server message.
+		ServerMessage message = new ServerMessage();
 		
-		// Number of bytes read.
-		int bytesRead = 0;
-		
-		// Read the size of the message.
-		if ((bytesRead = clientChannel.read(buffer)) > 0) {
-			buffer.flip();
+		try {
+			// Create buffer.
+			ByteBuffer buffer = ByteBuffer.allocate(Integer.SIZE / 8);
 			
-			// Message size.
-			int messageSize = buffer.getInt();
-
-			buffer.clear();
+			// Number of bytes read.
+			int bytesRead = 0;
 			
-			// Init server message.
-			ServerMessage message = new ServerMessage();
-			message.setSize(messageSize);
-			
-			// Init buffer for message.
-			ByteBuffer messageBuffer = ByteBuffer.allocate(messageSize);
-			
-			// Read the message.
-			if (clientChannel.read(messageBuffer) > 0) {
-				messageBuffer.flip();
+			// Read the size of the message.
+			if ((bytesRead = clientChannel.read(buffer)) > 0) {
+				buffer.flip();
 				
-				// Set message type.
-				message.setMethod(messageBuffer.getInt());
+				// Message size.
+				int messageSize = buffer.getInt();
+	
+				buffer.clear();
 				
-				// Get message content.
-				while(messageBuffer.hasRemaining()){
-					message.addByte(messageBuffer.get());
+				message.setSize(messageSize);
+				
+				// Init buffer for message.
+				ByteBuffer messageBuffer = ByteBuffer.allocate(messageSize);
+				
+				// Read the message.
+				if ((bytesRead = clientChannel.read(messageBuffer)) > 0) {
+					messageBuffer.flip();
+					
+					// Set message type.
+					message.setMethod(messageBuffer.getInt());
+					
+					// Get message content.
+					while(messageBuffer.hasRemaining()){
+						message.addByte(messageBuffer.get());
+					}
+					
+					// Clear buffer.
+					messageBuffer.clear();
 				}
-				
-				// Clear buffer.
-				messageBuffer.clear();
 			}
 			
-			process(message, clientChannel);
-			message.toString();
+			if (bytesRead == -1){
+				throw new IOException("EOF");
+			}
 		}
+		catch(Exception e){
+			users.remove(clientChannel);
+			clientChannel.close();
+		}
+		
+		process(message, clientChannel);
 	}
 	
 	public static void process(ServerMessage message, SocketChannel channel) throws IOException
@@ -115,24 +125,6 @@ public class ServerNetwork {
 		int serviceId = buf.getInt();
 		int userId = buf.getInt();
 		users.addService(serviceId, userId);
-	}
-	
-	public static void write(SelectionKey key) throws IOException
-	{
-		// Init client channel.
-		SocketChannel clientChannel = (SocketChannel) key.channel();
-		
-		// Init buffer message.
-		CharBuffer buffer = CharBuffer.wrap("Hello client");
-		
-		// Write buffer message.
-		while (buffer.hasRemaining())
-		{
-			clientChannel.write((Charset.defaultCharset().encode(buffer)));
-		}
-		
-		// Clear buffer.
-		buffer.clear();
 	}
 	
 	public static void init() throws IOException{
