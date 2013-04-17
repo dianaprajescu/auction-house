@@ -5,6 +5,8 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 
+import javax.swing.SwingUtilities;
+
 import interfaces.INetwork;
 
 public class StateRead implements IStateClientNetwork {
@@ -69,7 +71,19 @@ public class StateRead implements IStateClientNetwork {
 	}
 
 	public void processMessage() {
-		System.out.println("Process message: " + message.getMethod());
+		if (message.getMethod() == NetworkMethods.NEW_USER.getInt())
+		{
+			processNewUser();
+		}
+	}
+	
+	public void processNewUser(){
+		buffer =  message.getBuffer();
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				network.newUser(buffer.getInt(), buffer.getInt(), "lalala");
+			}
+		});
 	}
 
 }

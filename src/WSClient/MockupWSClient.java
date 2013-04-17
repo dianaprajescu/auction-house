@@ -108,7 +108,7 @@ public class MockupWSClient implements IWSClient {
 			{
 				boolean add = (new Random()).nextBoolean();
 				
-				if (add)
+				if (true)
 				{
 					Object[] row = {rs.getString("name"), new CellTableModel(), "Inactive", "-"};
 					model.addRow(rs.getInt("id"), row);

@@ -76,11 +76,13 @@ public class UsersServer {
 						
 						// User has service with the current id.
 						if (services.get(i).get(j) == serviceId){
-							int[] message = {NetworkMethods.REGISTER_SERVICE.getInt(), serviceId, userId};
+							int[] messageSeller = {NetworkMethods.NEW_USER.getInt(), serviceId, userId};
+							StateWrite stateSeller = new StateWrite(channels.get(i), messageSeller);
+							stateSeller.execute();
 							
-							StateWrite state = new StateWrite(channels.get(i), message);
-							
-							state.execute();
+							int[] messageBuyer = {NetworkMethods.NEW_USER.getInt(), serviceId, ids.get(i)};
+							StateWrite stateBuyer = new StateWrite(channels.get(idx), messageBuyer);
+							stateBuyer.execute();
 							
 							break;
 						}

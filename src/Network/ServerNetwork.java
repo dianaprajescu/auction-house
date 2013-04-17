@@ -89,11 +89,6 @@ public class ServerNetwork {
 			process(message, clientChannel);
 			message.toString();
 		}
-		
-		if (bytesRead < 0) {
-            // Close the client channel.
-            clientChannel.close();
-        }
 	}
 	
 	public static void process(ServerMessage message, SocketChannel channel) throws IOException

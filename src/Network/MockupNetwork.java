@@ -91,9 +91,6 @@ public class MockupNetwork implements INetwork {
 	@Override
 	public CellTableModel launchOfferRequest(int serviceId, int userId)
 	{	
-		// Populate model with a random number of sellers.
-		int noSellers = new Random().nextInt(6) + 1;
-
 		// Create a new CellTableModel.
 		CellTableModel ct = new CellTableModel();
 

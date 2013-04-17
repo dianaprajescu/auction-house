@@ -156,12 +156,9 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	@Override
 	public MainTableModel getServiceList(int userId, UserType type) {
 		MainTableModel mtm = this.client.getServiceList(userId, type);
-		
-		System.out.println(type);
-		
+
 		if (type == UserType.SELLER)
 		{
-			System.out.println("da");
 			for (int i=0; i < mtm.getRowCount(); i++){
 				this.network.registerService(mtm.getIdAt(i), userId);
 			}

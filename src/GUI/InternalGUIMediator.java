@@ -146,6 +146,8 @@ public class InternalGUIMediator {
 
 				MainTable table = this.gui.getTable();
 				MainTableModel mtm = (MainTableModel) table.getModel();
+				
+				/*
 				CellTableModel ctm;
 
 				// Add some services.
@@ -168,7 +170,7 @@ public class InternalGUIMediator {
 							this.gui.getTable().rebuildTable();
 						}
 					}
-				}
+				}*/
 			}
 			else
 			{
@@ -222,9 +224,6 @@ public class InternalGUIMediator {
 	 */
 	public void showServicePopup(MainTable table, int x, int y)
 	{
-		System.out.println(this.gui.getTable().getSelectedStatus());
-		System.out.println(this.gui.getTable().getSelectedId());
-
 		// Get service status.
 		String status = this.gui.getTable().getSelectedStatus();
 
@@ -444,8 +443,8 @@ public class InternalGUIMediator {
 			// Activate service.
 			mtm.setStatusAt("Active", mainRow);
 
-			table.setValueAt(ctm, mainRow, 1);
-			this.gui.getTable().rebuildTable();
+			//table.setValueAt(ctm, mainRow, 1);
+			//this.gui.getTable().rebuildTable();
 
 			mtm.setTimerObjectAt(new AuctionTimer(this, mtm, mainRow), mainRow);
 		}
@@ -655,12 +654,12 @@ public class InternalGUIMediator {
 			CellTableModel ctm = (CellTableModel) mtm.getValueAt(serviceRow, 1);
 
 			// Add new user.
-			Object[] newUser = {username, "No Offer", 0};
+			Object[] newUser = {username, "No Offer", 0, 0};
 			ctm.addRow(userId, newUser);
 
 			// Update.
-			ctm.fireTableDataChanged();
-
+			ctm.fireTableCellUpdated(serviceRow, 1);
+			
 			table.rebuildTable();
 		}
 	}
