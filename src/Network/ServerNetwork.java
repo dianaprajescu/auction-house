@@ -9,21 +9,22 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+
+import app.UserType;
 
 public class ServerNetwork {
 	public static int port = 30000;
 	public static String url = "127.0.0.1";
 	public static int BUF_SIZE = 8;
 	
-	static HashMap<SocketChannel, ServerMessage> channels;
-	
 	private static ServerSocketChannel channel;
 	private static Selector selector;
+	private static UsersServer users;
 	
 	public static void main(String[] args) throws IOException{
+		users = new UsersServer();
 		init();
 	}
 	
@@ -38,8 +39,6 @@ public class ServerNetwork {
 		// Configure connection to nonblocking.
 		clientSocketChannel.configureBlocking(false);
 		
-		channels.put(clientSocketChannel, new ServerMessage());
-		
 		// Wait for client to send message.
 		clientSocketChannel.register(key.selector(), SelectionKey.OP_READ, null);
 	}
@@ -50,7 +49,7 @@ public class ServerNetwork {
 		SocketChannel clientChannel = (SocketChannel) key.channel();
 		
 		// Create buffer.
-		ByteBuffer buffer = ByteBuffer.allocate(4);
+		ByteBuffer buffer = ByteBuffer.allocate(Integer.SIZE / 8);
 		
 		// Number of bytes read.
 		int bytesRead = 0;
@@ -65,7 +64,7 @@ public class ServerNetwork {
 			buffer.clear();
 			
 			// Init server message.
-			ServerMessage message = channels.get(clientChannel);
+			ServerMessage message = new ServerMessage();
 			message.setSize(messageSize);
 			
 			// Init buffer for message.
@@ -76,7 +75,7 @@ public class ServerNetwork {
 				messageBuffer.flip();
 				
 				// Set message type.
-				message.setType(messageBuffer.getInt());
+				message.setMethod(messageBuffer.getInt());
 				
 				// Get message content.
 				while(messageBuffer.hasRemaining()){
@@ -87,6 +86,7 @@ public class ServerNetwork {
 				messageBuffer.clear();
 			}
 			
+			process(message, clientChannel);
 			message.toString();
 		}
 		
@@ -96,9 +96,30 @@ public class ServerNetwork {
         }
 	}
 	
-	public static void process(int method, ArrayList<Integer> params, SocketChannel clientChannel)
+	public static void process(ServerMessage message, SocketChannel channel) throws IOException
 	{
-		System.out.println("Process message in server + " + params);
+		if (message.getMethod() == NetworkMethods.LOGIN.getInt()){
+			processLogin(message, channel);
+		}
+		else if (message.getMethod() == NetworkMethods.REGISTER_SERVICE.getInt()){
+			processRegisterService(message, channel);
+		}
+	}
+	
+	public static void processLogin(ServerMessage message, SocketChannel channel)
+	{
+		System.out.println("login");
+		ByteBuffer buf = message.getBuffer();
+		users.addUser(buf.getInt(), buf.getInt(), channel);
+	}
+	
+	public static void processRegisterService(ServerMessage message, SocketChannel channel) throws IOException
+	{
+		System.out.println("registerService");
+		ByteBuffer buf = message.getBuffer();
+		int serviceId = buf.getInt();
+		int userId = buf.getInt();
+		users.addService(serviceId, userId);
 	}
 	
 	public static void write(SelectionKey key) throws IOException
@@ -134,8 +155,6 @@ public class ServerNetwork {
 		
 		// Accept new connections.
 		channel.register(selector, SelectionKey.OP_ACCEPT);
-		
-		channels = new HashMap<SocketChannel, ServerMessage>();
 		
 		// Wait for connections.
 		while (true) {

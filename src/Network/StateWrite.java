@@ -34,15 +34,13 @@ public class StateWrite implements IStateClientNetwork {
 		buffer = ByteBuffer.allocate((message.length + 1) * Integer.SIZE / 8);
 	}
 
-	@Override
-	public void processMessage() {
+	public void processMessage() {	
+		// Set message length.
+		buffer.putInt(message.length * Integer.SIZE / 8);
+		
 		// Put message in buffer.
 		for (int i = 0; i < message.length; i++)
 		{
-			if (i == 0){
-				buffer.putInt(message.length * Integer.SIZE / 8);
-			}
-			
 			buffer.putInt(message[i]);
 		}
 		

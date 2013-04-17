@@ -155,18 +155,18 @@ public interface INetwork {
 	public CellTableModel getUserList(int serviceId, UserType type);
 	
 	/**
-	 * Get a list of users for the logged in user.
-	 *
-	 * @param userId
-	 * @param type
-	 */
-	public MainTableModel getServiceList(int userId, UserType type);
-	
-	/**
 	 * User initiates stop transfer.
 	 * 
 	 * @param serviceId
 	 * @param userId
 	 */
 	public void stopTransfer(int serviceId, int userId);
+	
+	/**
+	 * Register a new service.
+	 * 
+	 * @param serviceId
+	 * @param userId
+	 */
+	public void registerService(int serviceId, int userId);
 }

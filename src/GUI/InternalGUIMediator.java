@@ -126,6 +126,8 @@ public class InternalGUIMediator {
 		// Login user with the ID got.
 		else
 		{
+			username.setId(logged);
+			username.setType(type);
 			MainTableModel userServices = this.gui.getServiceList(username.getId(), username.getType());
 
 			if (userServices != null)
@@ -134,12 +136,6 @@ public class InternalGUIMediator {
 
 				// Close login frame.
 				login.setVisible(false);
-
-				// Set the logged in userID;
-				username.setId(logged);
-
-				// Set the logged userType.
-				username.setType(type);
 
 				// Add username label in main frame.
 				JLabel welcome = gui.getWelcomeLabel();

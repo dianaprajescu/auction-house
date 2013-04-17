@@ -97,13 +97,15 @@ public class MockupNetwork implements INetwork {
 		// Create a new CellTableModel.
 		CellTableModel ct = new CellTableModel();
 
+		this.registerService(serviceId, userId);
+		/*
 		for (int i = 0; i < noSellers; i++)
 		{
 			// Create sellers.
 			int sellerId = (new Random().nextInt(3)) + i * 3;
 			Object[] rowx = {"seller_name" + sellerId, "No Offer", "-", 0};
 			ct.addRow(sellerId, rowx);
-		}
+		} */
 
 		return ct;
 	}
@@ -196,13 +198,14 @@ public class MockupNetwork implements INetwork {
 			// Create a new CellTableModel.
 			CellTableModel ct = new CellTableModel();
 		
+			/*
 			for (int i = 0; i < noUsers; i++)
 			{
 				// Create sellers.
 				int userId = (new Random().nextInt(3)) + i * 3;
 				Object[] rowx = {"user_name" + userId, "No Offer", "-", 0};
 				ct.addRow(userId, rowx);
-			}
+			}*/
 		
 			return ct;
 		}
@@ -213,29 +216,9 @@ public class MockupNetwork implements INetwork {
 	}
 
 	@Override
-	public MainTableModel getServiceList(int userId, UserType type) {
-		// Populate model.
-		MainTableModel model = new MainTableModel();
-
-		// Get services from DB.
-		Database db = new Database();
-		ResultSet rs = db.query("SELECT * FROM service");
-
-		try {
-			while (rs.next())
-			{
-				boolean add = (new Random()).nextBoolean();
-				
-				if (add)
-				{
-					Object[] row = {rs.getString("name"), new CellTableModel(), "Inactive", "-"};
-					model.addRow(rs.getInt("id"), row);
-				}
-			}
-		} catch (SQLException e1) {
-			return null;
-		}
+	public void registerService(int serviceId, int userId) {
+		int[] message = {NetworkMethods.REGISTER_SERVICE.getInt(), serviceId, userId};
 		
-		return model;
+		client.sendMessage(message);
 	}
 }

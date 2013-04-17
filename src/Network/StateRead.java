@@ -12,42 +12,64 @@ public class StateRead implements IStateClientNetwork {
 	SocketChannel channel;
 	INetwork network;
 	ByteBuffer buffer;
-	ArrayList<Integer> message;
+	ByteBuffer messageBuffer;
+	ServerMessage message;
 	
 	public StateRead(SocketChannel channel, INetwork network) {
 		this.channel = channel;
 		this.network = network;
+		this.message = new ServerMessage();
 	}
 	
 	@Override
 	public void execute() throws IOException {
 		this.prepareBuffer();
 		
-		// Read from server.
-		while (channel.read(buffer) > 0) {
+		// Read the size of the message.
+		if (channel.read(buffer) > 0) {
 			buffer.flip();
 			
-			int param;
-			while(buffer.hasRemaining() && (param = buffer.getInt()) > 0)
-			{
-				message.add(param);
+			// Message size.
+			int messageSize = buffer.getInt();
+
+			buffer.clear();
+			
+			// Init server message.
+			message.setSize(messageSize);
+			
+			// Init buffer for message.
+			ByteBuffer messageBuffer = ByteBuffer.allocate(messageSize);
+			
+			// Read the message.
+			if (channel.read(messageBuffer) > 0) {
+				messageBuffer.flip();
+				
+				// Set message type.
+				message.setMethod(messageBuffer.getInt());
+				
+				// Get message content.
+				while(messageBuffer.hasRemaining()){
+					message.addByte(messageBuffer.get());
+				}
+				
+				// Clear buffer.
+				messageBuffer.clear();
 			}
 		}
 		
-		if (message.size() > 0){
+		if (message.getMethod() != -1)
+		{
 			this.processMessage();
 		}
 	}
 
 	@Override
 	public void prepareBuffer() {
-		buffer = ByteBuffer.allocate(ServerNetwork.BUF_SIZE);
-		message = new ArrayList<Integer>();
+		buffer = ByteBuffer.allocate(Integer.SIZE / 8);
 	}
 
-	@Override
 	public void processMessage() {
-		System.out.println("Process message: " + message);
+		System.out.println("Process message: " + message.getMethod());
 	}
 
 }
