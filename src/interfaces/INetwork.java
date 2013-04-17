@@ -18,6 +18,14 @@ public interface INetwork {
 	public void startTransfer(final int serviceId, final int buyerId, final int sellerId);
 	
 	/**
+	 * Login a new user.
+	 * 
+	 * @param userId
+	 * @param type
+	 */
+	public void login(int userId, UserType type);
+	
+	/**
 	 * New user gets online.
 	 * 
 	 * @param serviceId

@@ -27,7 +27,10 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	{
 		int loggedId = this.client.login(username, password, type);
 		
-		//TODO make login request to network (INetwork).
+		if (loggedId > 0)
+		{
+			this.network.login(loggedId, type);
+		}
 		
 		return loggedId;
 	}

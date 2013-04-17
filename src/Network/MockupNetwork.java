@@ -27,6 +27,8 @@ public class MockupNetwork implements INetwork {
 	private Mediator med;
 	
 	HashMap<Integer, TransferTask> transfers;
+	
+	private ClientNetwork client;
 
 	/**
 	 * Constructor.
@@ -35,6 +37,8 @@ public class MockupNetwork implements INetwork {
 	{
 		this.med = med;
 		med.registerNetwork(this);
+		
+		this.client = new ClientNetwork(this);
 		
 		transfers = new HashMap<Integer, TransferTask>();
 	}
@@ -68,6 +72,16 @@ public class MockupNetwork implements INetwork {
 			transfers.remove(serviceId);
 		}
 	}
+	
+	@Override
+	public void login(int userId, UserType type){
+		
+		client.start();
+		
+		int[] message = {NetworkMethods.LOGIN.getInt(), userId, type.getType()};
+		
+		client.sendMessage(message);
+	}
 
 	@Override
 	public void newUser(int serviceId, int userId, String username) {
@@ -76,7 +90,7 @@ public class MockupNetwork implements INetwork {
 
 	@Override
 	public CellTableModel launchOfferRequest(int serviceId, int userId)
-	{
+	{	
 		// Populate model with a random number of sellers.
 		int noSellers = new Random().nextInt(6) + 1;
 

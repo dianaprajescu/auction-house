@@ -1,42 +1,68 @@
 package Network;
 
-import java.io.IOException;
+import interfaces.INetwork;
+
 import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.util.LinkedList;
+import java.util.Queue;
 
-public class ClientNetwork {
+public class ClientNetwork extends Thread {
+	// The associate network.
+	INetwork network;
 	
-	public static void main(String[] args) throws IOException {
+	// Message queue;
+	Queue<int[]> messages;
+	
+	// The client state.
+	IStateClientNetwork state;
+	
+	public ClientNetwork(INetwork network){
+		this.network = network;
+		
+		// Init the message queue.
+		this.messages = new LinkedList<int[]>();
+	}
+	
+	public void sendMessage(int[] message){
+		this.messages.add(message);
+	}
 
-        SocketChannel channel = SocketChannel.open();
- 
-        // we open this channel in non blocking mode
-        channel.configureBlocking(false);
-        channel.connect(new InetSocketAddress(ServerNetwork.url, ServerNetwork.port));
- 
-        while (!channel.finishConnect()) {
-            System.out.println("still connecting");
-        }
-        
-        if (true) {
-            // see if any message has been received
-            ByteBuffer buffer = ByteBuffer.allocate(ServerNetwork.BUF_SIZE);
-            
-            buffer.putInt(100);
-            buffer.putInt(200);
-            buffer.flip();
- 
-            if (true) {
-                
-                while (buffer.hasRemaining()) {
-                    channel.write(buffer);
-                }
-            }
- 
-        }
-        
-        while(true);
+	@Override
+	public void run() {
+		try
+		{
+			// Open new communication channel.
+			SocketChannel channel = SocketChannel.open();
+			 
+	        // Open this channel in non blocking mode.
+	        channel.configureBlocking(false);
+	        
+	        // Connect to server.
+	        channel.connect(new InetSocketAddress(ServerNetwork.url, ServerNetwork.port));
+	 
+	        // Wait for connecting.
+	        while (!channel.finishConnect());
+	        
+	        while (true)
+	        {
+		        // Send messages if they exist.
+		        if (this.messages.size() > 0) {
+		        	state = new StateWrite(channel, this.messages.poll());
+		        }
+		        else
+		        {
+		        	state = new StateRead(channel, network);
+		        }
+		        
+		        // Execute current state.
+		        state.execute();
+	        }
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 }

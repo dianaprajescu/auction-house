@@ -9,12 +9,13 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 public class ServerNetwork {
 	public static int port = 30000;
 	public static String url = "127.0.0.1";
-	public static int BUF_SIZE = 8;
+	public static int BUF_SIZE = 24;
 	
 	private static ServerSocketChannel channel;
 	private static Selector selector;
@@ -56,16 +57,34 @@ public class ServerNetwork {
 		if ((bytesRead = clientChannel.read(buffer)) > 0) {
             buffer.flip();
             
-            // Process message and do write.
-            System.out.println(buffer.getInt() + ":" + buffer.getInt());
+            // Get method.
+            int method = buffer.getInt();
             
+            // Init an array of params.
+            ArrayList<Integer> params = new ArrayList<Integer>();
+            
+            // Read params.
+            int param;
+            while(buffer.hasRemaining() && (param = buffer.getInt()) > 0)
+            {
+            	params.add(param);
+            }
+
             buffer.clear();
+            
+            // Process message.
+            process(method, params, clientChannel);
         }
 		
 		if (bytesRead < 0) {
             // Close the client channel.
             clientChannel.close();
         }
+	}
+	
+	public static void process(int method, ArrayList<Integer> params, SocketChannel clientChannel)
+	{
+		System.out.println("Process message in server + " + params);
 	}
 	
 	public static void write(SelectionKey key) throws IOException
