@@ -1,7 +1,7 @@
 package Network;
 
 public enum NetworkMethods {
-	LOGIN(1);
+	LOGIN(2);
 	
 	private int id;
 	

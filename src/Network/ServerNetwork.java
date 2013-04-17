@@ -10,12 +10,15 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 public class ServerNetwork {
 	public static int port = 30000;
 	public static String url = "127.0.0.1";
-	public static int BUF_SIZE = 24;
+	public static int BUF_SIZE = 8;
+	
+	static HashMap<SocketChannel, ServerMessage> channels;
 	
 	private static ServerSocketChannel channel;
 	private static Selector selector;
@@ -25,7 +28,7 @@ public class ServerNetwork {
 	}
 	
 	public static void accept(SelectionKey key) throws IOException
-	{
+	{	
 		// The new connection.
 		ServerSocketChannel serverSocketChannel = (ServerSocketChannel)key.channel();
 		
@@ -35,46 +38,57 @@ public class ServerNetwork {
 		// Configure connection to nonblocking.
 		clientSocketChannel.configureBlocking(false);
 		
-		// Set buffer size.
-		ByteBuffer buf = ByteBuffer.allocateDirect(BUF_SIZE);
+		channels.put(clientSocketChannel, new ServerMessage());
 		
 		// Wait for client to send message.
-		clientSocketChannel.register(key.selector(), SelectionKey.OP_READ, buf);
+		clientSocketChannel.register(key.selector(), SelectionKey.OP_READ, null);
 	}
 	
 	public static void read(SelectionKey key) throws IOException
 	{
-		// Create buffer.
-		ByteBuffer buffer = ByteBuffer.allocate(BUF_SIZE);
-		
 		// Init client channel.
 		SocketChannel clientChannel = (SocketChannel) key.channel();
+		
+		// Create buffer.
+		ByteBuffer buffer = ByteBuffer.allocate(4);
 		
 		// Number of bytes read.
 		int bytesRead = 0;
 		
-		// Read data.
+		// Read the size of the message.
 		if ((bytesRead = clientChannel.read(buffer)) > 0) {
-            buffer.flip();
-            
-            // Get method.
-            int method = buffer.getInt();
-            
-            // Init an array of params.
-            ArrayList<Integer> params = new ArrayList<Integer>();
-            
-            // Read params.
-            int param;
-            while(buffer.hasRemaining() && (param = buffer.getInt()) > 0)
-            {
-            	params.add(param);
-            }
+			buffer.flip();
+			
+			// Message size.
+			int messageSize = buffer.getInt();
 
-            buffer.clear();
-            
-            // Process message.
-            process(method, params, clientChannel);
-        }
+			buffer.clear();
+			
+			// Init server message.
+			ServerMessage message = channels.get(clientChannel);
+			message.setSize(messageSize);
+			
+			// Init buffer for message.
+			ByteBuffer messageBuffer = ByteBuffer.allocate(messageSize);
+			
+			// Read the message.
+			if (clientChannel.read(messageBuffer) > 0) {
+				messageBuffer.flip();
+				
+				// Set message type.
+				message.setType(messageBuffer.getInt());
+				
+				// Get message content.
+				while(messageBuffer.hasRemaining()){
+					message.addByte(messageBuffer.get());
+				}
+				
+				// Clear buffer.
+				messageBuffer.clear();
+			}
+			
+			message.toString();
+		}
 		
 		if (bytesRead < 0) {
             // Close the client channel.
@@ -120,6 +134,8 @@ public class ServerNetwork {
 		
 		// Accept new connections.
 		channel.register(selector, SelectionKey.OP_ACCEPT);
+		
+		channels = new HashMap<SocketChannel, ServerMessage>();
 		
 		// Wait for connections.
 		while (true) {
