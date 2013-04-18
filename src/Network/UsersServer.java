@@ -1,6 +1,7 @@
 package Network;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -82,7 +83,7 @@ public class UsersServer {
 				{
 					if (services.get(idx).contains(services.get(i).get(j)))
 					{
-						int[] message = {NetworkMethods.USER_LEFT.getInt(), services.get(i).get(j), ids.get(idx)};
+						Object[] message = {NetworkMethods.USER_LEFT.getInt(), services.get(i).get(j), ids.get(idx)};
 						StateWrite state = new StateWrite(channels.get(i), message);
 						state.execute();
 					}
@@ -118,7 +119,7 @@ public class UsersServer {
 								if (offers.get(j).get(idxService).get(offer.getKey()) > price)
 								{
 									// Inform the seller.
-									int[] messageSeller = {NetworkMethods.REMOVE_EXCEEDED.getInt(), serviceId, offer.getKey(), offers.get(j).get(idxService).get(offer.getKey())};
+									Object[] messageSeller = {NetworkMethods.REMOVE_EXCEEDED.getInt(), serviceId, offer.getKey(), offers.get(j).get(idxService).get(offer.getKey())};
 									StateWrite state = new StateWrite(channels.get(j), messageSeller);
 									state.execute();
 								}
@@ -180,11 +181,11 @@ public class UsersServer {
 
 						// User has service with the current id.
 						if (services.get(i).get(j) == serviceId){
-							int[] messageSeller = {NetworkMethods.NEW_USER.getInt(), serviceId, userId};
+							Object[] messageSeller = {NetworkMethods.NEW_USER.getInt(), serviceId, userId};
 							StateWrite stateSeller = new StateWrite(channels.get(i), messageSeller);
 							stateSeller.execute();
 
-							int[] messageBuyer = {NetworkMethods.NEW_USER.getInt(), serviceId, ids.get(i)};
+							Object[] messageBuyer = {NetworkMethods.NEW_USER.getInt(), serviceId, ids.get(i)};
 							StateWrite stateBuyer = new StateWrite(channels.get(idx), messageBuyer);
 							stateBuyer.execute();
 
@@ -215,7 +216,7 @@ public class UsersServer {
 		offers.get(idxSeller).get(idxService).put(buyerId, price);
 
 		// Inform the buyer about the offer.
-		int[] messageBuyer = {NetworkMethods.MAKE_OFFER.getInt(), serviceId, sellerId, price};
+		Object[] messageBuyer = {NetworkMethods.MAKE_OFFER.getInt(), serviceId, sellerId, price};
 		StateWrite state = new StateWrite(channels.get(idxBuyer), messageBuyer);
 		state.execute();
 
@@ -232,12 +233,47 @@ public class UsersServer {
 					if (offers.get(i).get(idxService).get(buyerId) > price)
 					{
 						// Inform the seller about the offer.
-						int[] messageSeller = {NetworkMethods.OFFER_EXCEEDED.getInt(), serviceId, buyerId, price};
+						Object[] messageSeller = {NetworkMethods.OFFER_EXCEEDED.getInt(), serviceId, buyerId, price};
 						state = new StateWrite(channels.get(i), messageSeller);
 						state.execute();
 					}
 				}
 			}
+		}
+	}
+
+	public void startTransfer(int serviceId, int buyerId, int sellerId) throws IOException{
+		int idxSeller = this.ids.indexOf(sellerId);
+
+		if (idxSeller >= 0)
+		{
+			Object[] message = {NetworkMethods.START_TRANSFER.getInt(), serviceId, buyerId, sellerId};
+			StateWrite state = new StateWrite(channels.get(idxSeller), message);
+			state.execute();
+		}
+	}
+
+	public void processTransfer(int progress, int serviceId, int buyerId, int sellerId, ByteBuffer buf) throws IOException{
+		int idxBuyer = this.ids.indexOf(buyerId);
+
+		if (idxBuyer >= 0)
+		{
+			System.out.println("newTransfer");
+			Object[] message = {NetworkMethods.NEW_TRANSFER.getInt(), progress, serviceId, buyerId, sellerId, buf};
+			StateWrite state = new StateWrite(channels.get(idxBuyer), message);
+			state.execute();
+		}
+	}
+
+	public void processGotTransfer(int serviceId, int buyerId, int sellerId) throws IOException
+	{
+		int idxSeller = this.ids.indexOf(sellerId);
+
+		if (idxSeller >= 0)
+		{
+			Object[] msg = {NetworkMethods.UPDATE_TRANSFER.getInt(), serviceId, buyerId, sellerId};
+			StateWrite state = new StateWrite(channels.get(idxSeller), msg);
+			state.execute();
 		}
 	}
 
@@ -254,7 +290,7 @@ public class UsersServer {
 		int idxSeller = ids.indexOf(sellerId);
 
 		// Inform the seller.
-		int[] messageSeller = {NetworkMethods.OFFER_REFUSED.getInt(), serviceId, buyerId};
+		Object[] messageSeller = {NetworkMethods.OFFER_REFUSED.getInt(), serviceId, buyerId};
 		StateWrite state = new StateWrite(channels.get(idxSeller), messageSeller);
 		state.execute();
 	}
@@ -285,7 +321,7 @@ public class UsersServer {
 					if (offers.get(i).get(idxService).containsKey(userId))
 					{
 						// Refuse offer.
-						int[] messageSeller = {NetworkMethods.OFFER_REFUSED.getInt(), serviceId, userId};
+						Object[] messageSeller = {NetworkMethods.OFFER_REFUSED.getInt(), serviceId, userId};
 						StateWrite state = new StateWrite(channels.get(i), messageSeller);
 						state.execute();
 					}
@@ -307,7 +343,7 @@ public class UsersServer {
 		int idxBuyer = ids.indexOf(buyerId);
 
 		// Inform the buyer.
-		int[] message = {NetworkMethods.OFFER_REMOVED.getInt(), serviceId, sellerId};
+		Object[] message = {NetworkMethods.OFFER_REMOVED.getInt(), serviceId, sellerId};
 		StateWrite state = new StateWrite(channels.get(idxBuyer), message);
 		state.execute();
 	}

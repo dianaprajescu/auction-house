@@ -33,28 +33,28 @@ public class MockupNetwork implements INetwork {
 	}
 
 	@Override
-	public void startTransfer(final int serviceId, final int buyerId, final int sellerId) throws IOException
+	public void transfer(int serviceId, int buyerId, int sellerId)
 	{
-		int[] message = {NetworkMethods.START_TRANSFER.getInt(), serviceId, sellerId};
+		System.out.println("Network: transfer");
+		File file = this.client.getTransfer(serviceId, buyerId);
+
+		this.med.updateTransfer(file.getServiceId(), file.getBuyerId(), file.getProgress());
+
+		Object[] message = {NetworkMethods.TRANSFER.getInt(), serviceId, buyerId, sellerId};
 
 		client.sendMessage(message);
 	}
-
+	
 	@Override
-	public void transfer(int serviceId)
+	public void gotTransfer(int progress, int serviceId, int buyerId, int sellerId)
 	{
-		File file = this.client.getTransfer(serviceId);
-
-		this.med.updateTransfer(file.getServiceId(), file.getSellerId(), file.getProgress());
-
-		int[] message = {NetworkMethods.TRANSFER.getInt(), serviceId};
-
-		client.sendMessage(message);
+		this.med.updateTransfer(serviceId, sellerId, progress);
 	}
 
 	@Override
 	public void stopTransfer(int serviceId, int userId)
 	{
+		
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class MockupNetwork implements INetwork {
 		client = new ClientNetwork(this);
 		client.start();
 
-		int[] message = {NetworkMethods.LOGIN.getInt(), userId, type.getType()};
+		Object[] message = {NetworkMethods.LOGIN.getInt(), userId, type.getType()};
 
 		client.sendMessage(message);
 	}
@@ -74,11 +74,9 @@ public class MockupNetwork implements INetwork {
 
 	@Override
 	public void logout(int userId){
-		int[] message = {NetworkMethods.LOGOUT.getInt(), userId};
+		Object[] message = {NetworkMethods.LOGOUT.getInt(), userId};
 
 		client.sendMessage(message);
-
-		client.interrupt();
 	}
 
 	@Override
@@ -109,7 +107,7 @@ public class MockupNetwork implements INetwork {
 	public boolean dropOfferRequest(int serviceId, int userId)
 	{
 		//TODO send refuse offer to all sellers.
-		int[] message = {NetworkMethods.DROP_OFFER_REQUEST.getInt(), serviceId, userId};
+		Object[] message = {NetworkMethods.DROP_OFFER_REQUEST.getInt(), serviceId, userId};
 
 		client.sendMessage(message);
 
@@ -119,8 +117,10 @@ public class MockupNetwork implements INetwork {
 	@Override
 	public boolean acceptOffer(int serviceId, int buyerId, int sellerId)
 	{
-		//TODO send refuse offer to all sellers.
-
+		Object[] message = {NetworkMethods.ACCEPT_OFFER.getInt(), serviceId, buyerId, sellerId};
+		
+		client.sendMessage(message);
+		
 		return true;
 	}
 
@@ -128,7 +128,7 @@ public class MockupNetwork implements INetwork {
 	public boolean refuseOffer(int serviceId, int buyerId, int sellerId)
 	{
 		//TODO send refuse the selers offer.
-		int[] message = {NetworkMethods.REFUSE_OFFER.getInt(), serviceId, buyerId, sellerId};
+		Object[] message = {NetworkMethods.REFUSE_OFFER.getInt(), serviceId, buyerId, sellerId};
 
 		client.sendMessage(message);
 
@@ -138,7 +138,7 @@ public class MockupNetwork implements INetwork {
 	@Override
 	public boolean makeOffer(int serviceId, int buyerId, int sellerId, int price)
 	{
-		int[] message = {NetworkMethods.MAKE_OFFER.getInt(), serviceId, buyerId, sellerId, price};
+		Object[] message = {NetworkMethods.MAKE_OFFER.getInt(), serviceId, buyerId, sellerId, price};
 
 		client.sendMessage(message);
 
@@ -153,7 +153,7 @@ public class MockupNetwork implements INetwork {
 	@Override
 	public boolean removeOffer(int serviceId, int buyerId, int sellerId)
 	{
-		int[] message = {NetworkMethods.REMOVE_OFFER.getInt(), serviceId, buyerId, sellerId};
+		Object[] message = {NetworkMethods.REMOVE_OFFER.getInt(), serviceId, buyerId, sellerId};
 
 		client.sendMessage(message);
 
@@ -217,7 +217,7 @@ public class MockupNetwork implements INetwork {
 
 	@Override
 	public void registerService(int serviceId, int userId) {
-		int[] message = {NetworkMethods.REGISTER_SERVICE.getInt(), serviceId, userId};
+		Object[] message = {NetworkMethods.REGISTER_SERVICE.getInt(), serviceId, userId};
 
 		client.sendMessage(message);
 	}

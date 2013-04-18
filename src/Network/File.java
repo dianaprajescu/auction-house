@@ -7,16 +7,19 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.SocketChannel;
 
 public class File {
-	private static final int MESSAGE_LENGTH = 1024;
+	static final int MESSAGE_LENGTH = 1024;
 
 	// Service id.
 	private int serviceId;
 	
-	// Seller id.
-	private int sellerId;
+	// Buyer id.
+	private int buyerId;
 	
 	// The file size.
 	private int count;
+	
+	// Seller id.
+	private int sellerId;
 	
 	// Progress.
 	private int progress;
@@ -34,11 +37,12 @@ public class File {
 	 * @param count
 	 * @throws IOException
 	 */
-	public File(int count, int serviceId, int sellerId) throws IOException
+	public File(int count, int serviceId, int buyerId, int sellerId) throws IOException
 	{
 		this.serviceId = serviceId;
 		this.count = count;
 		this.progress = 0;
+		this.buyerId = buyerId;
 		this.sellerId = sellerId;
 		
 		@SuppressWarnings("resource")
@@ -57,9 +61,9 @@ public class File {
 	public ByteBuffer getBuffer() throws IOException
 	{
 		// Init buffer size.
-    	ByteBuffer buffer = ByteBuffer.allocate(MESSAGE_LENGTH + 5 * Integer.SIZE / 8);
+    	ByteBuffer buffer = ByteBuffer.allocate(MESSAGE_LENGTH + 6 * Integer.SIZE / 8);
     	
-    	buffer.putInt(MESSAGE_LENGTH + 4 * Integer.SIZE / 8);
+    	buffer.putInt(MESSAGE_LENGTH + 5 * Integer.SIZE / 8);
     	
     	// Set message type.
     	buffer.putInt(NetworkMethods.TRANSFER.getInt());
@@ -69,11 +73,14 @@ public class File {
     	// Progress
     	buffer.putInt(this.getProgress());
     	
-    	// Seller id.
-    	buffer.putInt(this.sellerId);
-    	
     	// Service id.
     	buffer.putInt(this.serviceId);
+    	
+    	// Buyer id.
+    	buffer.putInt(this.buyerId);
+    	
+    	// Buyer id.
+    	buffer.putInt(this.sellerId);
     	
     	// Read from file.
     	if (fileChannel.read(buffer) > 0)
@@ -103,9 +110,9 @@ public class File {
 	 * 
 	 * @return
 	 */
-	public int getSellerId()
+	public int getBuyerId()
 	{
-		return this.sellerId;
+		return this.buyerId;
 	}
 	
 	/**

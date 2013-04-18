@@ -40,15 +40,6 @@ public interface IGUIMediator {
 	public boolean logout(int userId);
 	
 	/**
-	 * Start transfer.
-	 * 
-	 * @param serviceId
-	 * @param buyerId
-	 * @param sellerId
-	 */
-	public void startTransfer(int serviceId, int buyerId, int sellerId);
-	
-	/**
 	 * A buyer has launched an offer request.
 	 *
 	 * @param   int  userType  1 for buyer and 2 for seller.

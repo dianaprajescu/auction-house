@@ -15,11 +15,17 @@ public class StateRead implements IStateClientNetwork {
 	ByteBuffer buffer;
 	ByteBuffer messageBuffer;
 	ServerMessage message;
+	ClientNetwork clientNetwork;
+	int serviceId;
+	int buyerId;
+	int sellerId;
+	int progress;
 
-	public StateRead(SocketChannel channel, INetwork network) {
+	public StateRead(SocketChannel channel, INetwork network, ClientNetwork clientNetwork) {
 		this.channel = channel;
 		this.network = network;
 		this.message = new ServerMessage();
+		this.clientNetwork = clientNetwork;
 	}
 
 	@Override
@@ -98,9 +104,23 @@ public class StateRead implements IStateClientNetwork {
 		{
 			processOfferMade();
 		}
+		else if (message.getMethod() == NetworkMethods.START_TRANSFER.getInt())
+		{
+			System.out.println("Process ST TR");
+			try {
+				processStartTransfer();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		else if (message.getMethod() == NetworkMethods.UPDATE_TRANSFER.getInt())
 		{
 			processUpdateTransfer();
+		}
+		else if (message.getMethod() == NetworkMethods.NEW_TRANSFER.getInt())
+		{
+			processNewTransfer();
 		}
 		else if (message.getMethod() == NetworkMethods.OFFER_EXCEEDED.getInt())
 		{
@@ -142,13 +162,13 @@ public class StateRead implements IStateClientNetwork {
 
 	public void processUpdateTransfer(){
 
-		System.out.println("processUpdateTransfer");
+		System.out.println("StateRead: processUpdateTransfer");
 
 		buffer =  message.getBuffer();
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				network.transfer(buffer.getInt());
+				network.transfer(buffer.getInt(), buffer.getInt(), buffer.getInt());
 			}
 		});
 	}
@@ -170,6 +190,44 @@ public class StateRead implements IStateClientNetwork {
 			@Override
 			public void run() {
 				network.offerExceeded(buffer.getInt(), buffer.getInt(), buffer.getInt());
+			}
+		});
+	}
+	
+	private void processStartTransfer() throws IOException
+	{
+		System.out.println("StateRead: processStartTransfer");
+		
+		buffer =  message.getBuffer();
+		serviceId = buffer.getInt();
+		buyerId = buffer.getInt();
+		sellerId = buffer.getInt();
+		this.clientNetwork.startTransfer(serviceId, buyerId, sellerId);
+		
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				network.transfer(serviceId, buyerId, sellerId);
+			}
+		});
+	}
+	
+	private void processNewTransfer()
+	{
+		System.out.println("New: processNewTransfer");
+		buffer =  message.getBuffer();
+		progress = buffer.getInt();
+		serviceId = buffer.getInt();
+		buyerId = buffer.getInt();
+		sellerId = buffer.getInt();
+		
+		Object[] message = {NetworkMethods.GOT_TRANSFER.getInt(), serviceId, buyerId, sellerId};
+		this.clientNetwork.sendMessage(message);
+		
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				network.gotTransfer(progress, serviceId, buyerId, sellerId);
 			}
 		});
 	}

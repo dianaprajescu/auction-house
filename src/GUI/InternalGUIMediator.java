@@ -524,6 +524,7 @@ public class InternalGUIMediator {
 
 					if (intStatus == 2)
 					{
+						//TODO Refuse offer request.
 						ctm.setValueAt("Offer Refused", i, 1);
 					}
 				}
@@ -534,8 +535,8 @@ public class InternalGUIMediator {
 					mtm.fireTableCellUpdated(mainRow, 3);
 					mtm.getTimerObjectAt(mainRow).cancel();
 
-					ctm.setValueAt("Transfer Started", cellRow, 1);
-					gui.startTransfer(serviceId, this.username.getId(), sellerId);
+					ctm.setValueAt("Offer Accepted", cellRow, 1);
+					//gui.startTransfer(serviceId, this.username.getId(), sellerId);
 				}
 			}
 		}
@@ -765,7 +766,7 @@ public class InternalGUIMediator {
 				ctm.setValueAt("Offer Accepted", buyerRow, 1);
 
 				//TODO Start transfer. Review should be set in network probably.
-				this.gui.startTransfer(serviceId, buyerId, username.getId());
+				//this.gui.startTransfer(serviceId, buyerId, username.getId());
 			}
 		}
 	}

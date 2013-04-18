@@ -130,6 +130,12 @@ public class ServerNetwork {
 		{
 			processRemoveOffer(message, channel);
 		}
+		else if (message.getMethod() == NetworkMethods.GOT_TRANSFER.getInt()){
+			processGotTransfer(message, channel);
+		}
+		else if (message.getMethod() == NetworkMethods.ACCEPT_OFFER.getInt()){
+			processAcceptOffer(message, channel);
+		}
 	}
 
 	public static void processLogin(ServerMessage message, SocketChannel channel)
@@ -170,12 +176,37 @@ public class ServerNetwork {
 
 		ByteBuffer buf = message.getBuffer();
 		int progress = buf.getInt();
-		int sellerId = buf.getInt();
 		int serviceId = buf.getInt();
-
-		int[] msg = {NetworkMethods.UPDATE_TRANSFER.getInt(), serviceId};
-		StateWrite state = new StateWrite(channel, msg);
-		state.execute();
+		int buyerId = buf.getInt();
+		int sellerId = buf.getInt();
+		
+		users.processTransfer(progress, serviceId, buyerId, sellerId, buf);
+		
+		//int[] msg = {NetworkMethods.UPDATE_TRANSFER.getInt(), serviceId, buyerId, sellerId};
+		//StateWrite state = new StateWrite(channel, msg);
+		//state.execute();
+	}
+	
+	public static void processGotTransfer(ServerMessage message, SocketChannel channel) throws IOException{
+		System.out.println("processGotTransfer");
+		
+		ByteBuffer buf = message.getBuffer();
+		int serviceId = buf.getInt();
+		int buyerId = buf.getInt();
+		int sellerId = buf.getInt();
+		
+		users.processGotTransfer(serviceId, buyerId, sellerId);
+	}
+	
+	public static void processAcceptOffer(ServerMessage message, SocketChannel channel) throws IOException{
+		System.out.println("acceptOffer");
+		
+		ByteBuffer buf = message.getBuffer();
+		int serviceId = buf.getInt();
+		int buyerId = buf.getInt();
+		int sellerId = buf.getInt();
+		
+		users.startTransfer(serviceId, buyerId, sellerId);
 	}
 
 	private static void processRefuseOffer(ServerMessage message, SocketChannel channel) throws IOException

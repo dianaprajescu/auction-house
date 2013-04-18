@@ -11,16 +11,6 @@ import app.UserType;
  */
 public interface INetwork {
 	/**
-	 * Start a new transfer.
-	 * @param serviceId
-	 * @param buyerId
-	 * @param sellerId
-	 * @throws IOException
-	 */
-
-	public void startTransfer(final int serviceId, final int buyerId, final int sellerId) throws IOException;
-
-	/**
 	 * Login a new user.
 	 *
 	 * @param userId
@@ -184,6 +174,10 @@ public interface INetwork {
 	 * Continue transfer.
 	 *
 	 * @param serviceId
+	 * @param buyerId
+	 * @param sellerId 
 	 */
-	public void transfer(int serviceId);
+	public void transfer(int serviceId, int buyerId, int sellerId);
+
+	void gotTransfer(int progress, int serviceid, int buyerId, int sellerId);
 }

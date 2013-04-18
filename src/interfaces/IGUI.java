@@ -24,15 +24,6 @@ public interface IGUI {
 	public boolean logout(int userId);
 
 	/**
-	 * Start transfer.
-	 *
-	 * @param serviceId
-	 * @param buyerId
-	 * @param sellerId
-	 */
-	public void startTransfer(int serviceId, int buyerId, int sellerId);
-
-	/**
 	 * Update transfer.
 	 *
 	 * @param serviceId
