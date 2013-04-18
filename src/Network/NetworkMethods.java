@@ -10,7 +10,10 @@ public enum NetworkMethods {
 	LOGOUT(5),
 	USER_LEFT(6),
 	UPDATE_TRANSFER(7),
-	OFFER_EXCEEDED(8);
+	OFFER_EXCEEDED(8),
+	DROP_OFFER_REQUEST(9),
+	REFUSE_OFFER(10),
+	OFFER_REFUSED(11);
 
 	private int id;
 

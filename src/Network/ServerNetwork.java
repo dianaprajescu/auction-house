@@ -87,7 +87,7 @@ public class ServerNetwork {
 			if (bytesRead == -1){
 				throw new IOException("EOF");
 			}
-			
+
 			process(message, clientChannel);
 		}
 		catch(Exception e){
@@ -117,6 +117,10 @@ public class ServerNetwork {
 		}
 		else if (message.getMethod() == NetworkMethods.TRANSFER.getInt()){
 			processTransfer(message, channel);
+		}
+		else if (message.getMethod() == NetworkMethods.REFUSE_OFFER.getInt())
+		{
+			processRefuseOffer(message, channel);
 		}
 	}
 
@@ -152,20 +156,29 @@ public class ServerNetwork {
 		int price = buf.getInt();
 		users.makeOffer(serviceId, buyerId, sellerId, price);
 	}
-	
+
 	public static void processTransfer(ServerMessage message, SocketChannel channel) throws IOException{
 		System.out.println("processTransfer");
-		
+
 		ByteBuffer buf = message.getBuffer();
 		int progress = buf.getInt();
 		int sellerId = buf.getInt();
 		int serviceId = buf.getInt();
-		
+
 		int[] msg = {NetworkMethods.UPDATE_TRANSFER.getInt(), serviceId};
 		StateWrite state = new StateWrite(channel, msg);
 		state.execute();
 	}
-	
+
+	private static void processRefuseOffer(ServerMessage message, SocketChannel channel) throws IOException
+	{
+		ByteBuffer buf = message.getBuffer();
+		int serviceId = buf.getInt();
+		int buyerId = buf.getInt();
+		int sellerId = buf.getInt();
+		users.refuseOffer(serviceId, buyerId, sellerId);
+	}
+
 	public static void init() throws IOException{
 		// Create a new serversocketchannel;
 		channel = ServerSocketChannel.open();

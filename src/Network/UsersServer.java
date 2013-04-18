@@ -194,4 +194,22 @@ public class UsersServer {
 			}
 		}
 	}
+
+	/**
+	 * Buyer refuses an offer made by a seller.
+	 *
+	 * @param serviceId
+	 * @param buyerId
+	 * @param sellerId
+	 * @throws IOException
+	 */
+	public void refuseOffer(int serviceId, int buyerId, int sellerId) throws IOException
+	{
+		int idxSeller = ids.indexOf(sellerId);
+
+		// Inform the seller.
+		int[] messageSeller = {NetworkMethods.OFFER_REFUSED.getInt(), serviceId, buyerId};
+		StateWrite state = new StateWrite(channels.get(idxSeller), messageSeller);
+		state.execute();
+	}
 }
