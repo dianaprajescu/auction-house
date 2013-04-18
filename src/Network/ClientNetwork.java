@@ -28,6 +28,9 @@ public class ClientNetwork extends Thread {
 	// Transfers.
 	HashMap<Integer, HashMap<Integer, File>> transfers;
 	
+	// Files received.
+	HashMap<Integer, ReceivedFile> filesReceived;
+	
 	// Channel.
 	SocketChannel channel;
 	
@@ -46,6 +49,9 @@ public class ClientNetwork extends Thread {
 		
 		// Init transfers.
 		transfers = new HashMap<Integer, HashMap<Integer, File>>();
+		
+		// Init received files.
+		filesReceived = new HashMap<Integer, ReceivedFile>();
 	}
 	
 	public void sendMessage(Object[] message){
@@ -111,6 +117,18 @@ public class ClientNetwork extends Thread {
 		{
 			return null;
 		}
+	}
+	
+	public void saveTransfer(int serviceId, int buyerId, int sellerId, ByteBuffer buffer) throws IOException 
+	{
+		if (!filesReceived.containsKey(serviceId))
+		{
+			ReceivedFile f = new ReceivedFile(serviceId, buyerId, sellerId);
+			filesReceived.put(serviceId, f);
+		}
+		
+		ReceivedFile f = filesReceived.get(serviceId);
+		f.write(buffer);
 	}
 
 	@Override
