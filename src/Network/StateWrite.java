@@ -42,8 +42,6 @@ public class StateWrite implements IStateClientNetwork {
 			// Set buffer.
 			buffer = clientNetwork.getBufferTransfer(message[1]);
 			
-			System.out.println(buffer.capacity());
-			
 			if (buffer == null)
 			{
 				return;

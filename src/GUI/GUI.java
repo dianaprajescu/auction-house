@@ -5,9 +5,6 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.awt.Dialog;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -22,7 +19,6 @@ import GUI.components.MainTable;
 import GUI.components.MainTableModel;
 import GUI.components.MainTableMouseListener;
 import app.Command;
-import app.Database;
 import app.Mediator;
 import app.UserType;
 
@@ -59,7 +55,7 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	    int fWidth = this.getWidth()/2;
 
 	    this.setLocation(width-fWidth, height-fHeight);
-	    
+
 		// First display login window.
         setVisible(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -211,8 +207,8 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	}
 
 	@Override
-	public void dropUser(int userId) {
-		this.GUImed.dropUser(userId);
+	public void userLeft(int serviceId, int userId) {
+		this.GUImed.userLeft(serviceId, userId);
 	}
 
 	@Override
@@ -244,7 +240,7 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	public void offerRemoved(int serviceId, int sellerId) {
 		this.GUImed.offerRemoved(serviceId, sellerId);
 	}
-	
+
 	@Override
 	public CellTableModel getUserList(int serviceId, UserType type) {
 		return this.mainMed.getUserList(serviceId, type);

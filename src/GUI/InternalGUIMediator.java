@@ -146,7 +146,7 @@ public class InternalGUIMediator {
 
 				MainTable table = this.gui.getTable();
 				MainTableModel mtm = (MainTableModel) table.getModel();
-				
+
 				/*
 				CellTableModel ctm;
 
@@ -659,7 +659,7 @@ public class InternalGUIMediator {
 
 			// Update.
 			ctm.fireTableCellUpdated(serviceRow, 1);
-			
+
 			table.rebuildTable();
 		}
 	}
@@ -668,23 +668,36 @@ public class InternalGUIMediator {
 	 * User goes offline.
 	 *
 	 * @param userId
+	 * @param serviceId
 	 */
-	public void dropUser(int userId)
+	public void userLeft(int serviceId, int userId)
 	{
 		MainTable table = this.gui.getTable();
 		MainTableModel mtm = (MainTableModel) table.getModel();
 
 		for (int i=0; i<mtm.getRowCount(); i++)
 		{
-			// Get the cell table model for service.
-			CellTableModel ctm = (CellTableModel) mtm.getValueAt(i, 1);
+			if (mtm.getIdAt(i) == serviceId)
+			{
+				// Get the cell table model for service.
+				CellTableModel ctm = (CellTableModel) mtm.getValueAt(i, 1);
 
-			// Remove user.
-			ctm.removeRow(userId);
+				// Find the user.
+				for (int j = 0; j < ctm.getRowCount(); j++)
+				{
+					if (ctm.getIdAt(j) == userId)
+					{
+						// Remove user.
+						ctm.removeRow(j);
 
-			// Update.
-			ctm.fireTableDataChanged();
-			table.rebuildTable();
+						break;
+					}
+				}
+
+				// Update.
+				ctm.fireTableDataChanged();
+				table.rebuildTable();
+			}
 		}
 	}
 
@@ -910,7 +923,7 @@ public class InternalGUIMediator {
 						ctm.setValueAt("Transfer Completed", userRow, 1);
 					}
 					ctm.setValueAt(progress, userRow, 3);
-	
+
 					ctm.fireTableCellUpdated(userRow, 3);
 					table.rebuildTable();
 				}
