@@ -1,7 +1,5 @@
 package Network;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -10,8 +8,7 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
-
-import javax.swing.JFrame;
+import org.apache.log4j.*;
 
 public class ServerNetwork extends Thread{
 	public static int port = 30000;
@@ -20,7 +17,9 @@ public class ServerNetwork extends Thread{
 	private ServerSocketChannel channel;
 	private Selector selector;
 	private UsersServer users;
-
+	
+	static Logger log = Logger.getLogger(ServerNetwork.class);
+	
 	public ServerNetwork()
 	{
 		users = new UsersServer();
@@ -33,6 +32,8 @@ public class ServerNetwork extends Thread{
 
 		// Accept connection on server.
 		SocketChannel clientSocketChannel = serverSocketChannel.accept();
+		
+		log.debug("Accept new client from " + clientSocketChannel.getRemoteAddress());
 
 		// Configure connection to nonblocking.
 		clientSocketChannel.configureBlocking(false);
@@ -45,6 +46,8 @@ public class ServerNetwork extends Thread{
 	{
 		// Init client channel.
 		SocketChannel clientChannel = (SocketChannel) key.channel();
+		
+		log.debug("Read from " + clientChannel.getRemoteAddress());
 
 		// Init server message.
 		ServerMessage message = new ServerMessage();
@@ -62,6 +65,8 @@ public class ServerNetwork extends Thread{
 
 				// Message size.
 				int messageSize = buffer.getInt();
+				
+				log.debug("Message size " + messageSize);
 
 				buffer.clear();
 
@@ -94,8 +99,10 @@ public class ServerNetwork extends Thread{
 			process(message, clientChannel);
 		}
 		catch(Exception e){
-			e.printStackTrace();
-			System.out.println("close connection");
+			
+			log.debug("Channel closed " + clientChannel.getRemoteAddress());
+			log.error("Channel closed " + clientChannel.getRemoteAddress());
+			
 			users.remove(clientChannel);
 			clientChannel.close();
 		}
@@ -143,71 +150,76 @@ public class ServerNetwork extends Thread{
 
 	public void processLogin(ServerMessage message, SocketChannel channel)
 	{
-		System.out.println("login");
 		ByteBuffer buf = message.getBuffer();
-		users.addUser(buf.getInt(), buf.getInt(), channel);
+		
+		int userId = buf.getInt();
+		int type = buf.getInt();
+		
+		log.debug(userId + " " + type);
+		
+		users.addUser(userId, type, channel);
 	}
 
 	public void processRegisterService(ServerMessage message, SocketChannel channel) throws IOException
 	{
-		System.out.println("registerService");
 		ByteBuffer buf = message.getBuffer();
 		int serviceId = buf.getInt();
 		int userId = buf.getInt();
+		
+		log.debug(serviceId + " " + userId);
+		
 		users.addService(serviceId, userId);
 	}
 
 	private void processLogout(SocketChannel channel) throws IOException
 	{
-		System.out.println("logout");
+		log.debug("logout");
 		users.remove(channel);
 	}
 
 	public void processMakeOffer(ServerMessage message, SocketChannel channel) throws IOException
 	{
-		System.out.println("makeOffer");
 		ByteBuffer buf = message.getBuffer();
 		int serviceId = buf.getInt();
 		int buyerId = buf.getInt();
 		int sellerId = buf.getInt();
 		int price = buf.getInt();
+		
+		log.debug(price + " " + serviceId + " " + buyerId + " " + sellerId);
+		
 		users.makeOffer(serviceId, buyerId, sellerId, price);
 	}
 
 	public void processTransfer(ServerMessage message, SocketChannel channel) throws IOException{
-		System.out.println("processTransfer");
-
 		ByteBuffer buf = message.getBuffer();
 		int progress = buf.getInt();
 		int serviceId = buf.getInt();
 		int buyerId = buf.getInt();
 		int sellerId = buf.getInt();
 		
-		users.processTransfer(progress, serviceId, buyerId, sellerId, buf);
+		log.debug(progress + " " + serviceId + " " + buyerId + " " + sellerId);
 		
-		//int[] msg = {NetworkMethods.UPDATE_TRANSFER.getInt(), serviceId, buyerId, sellerId};
-		//StateWrite state = new StateWrite(channel, msg);
-		//state.execute();
+		users.processTransfer(progress, serviceId, buyerId, sellerId, buf);
 	}
 	
-	public void processGotTransfer(ServerMessage message, SocketChannel channel) throws IOException{
-		System.out.println("processGotTransfer");
-		
+	public void processGotTransfer(ServerMessage message, SocketChannel channel) throws IOException{		
 		ByteBuffer buf = message.getBuffer();
 		int serviceId = buf.getInt();
 		int buyerId = buf.getInt();
 		int sellerId = buf.getInt();
+		
+		log.debug(serviceId + " " + buyerId + " " + sellerId);
 		
 		users.processGotTransfer(serviceId, buyerId, sellerId);
 	}
 	
 	public void processAcceptOffer(ServerMessage message, SocketChannel channel) throws IOException{
-		System.out.println("acceptOffer");
-		
 		ByteBuffer buf = message.getBuffer();
 		int serviceId = buf.getInt();
 		int buyerId = buf.getInt();
 		int sellerId = buf.getInt();
+		
+		log.debug(serviceId + " " + buyerId + " " + sellerId);
 		
 		users.startTransfer(serviceId, buyerId, sellerId);
 	}
@@ -218,6 +230,9 @@ public class ServerNetwork extends Thread{
 		int serviceId = buf.getInt();
 		int buyerId = buf.getInt();
 		int sellerId = buf.getInt();
+		
+		log.debug(serviceId + " " + buyerId + " " + sellerId);
+		
 		users.refuseOffer(serviceId, buyerId, sellerId);
 	}
 
@@ -226,6 +241,9 @@ public class ServerNetwork extends Thread{
 		ByteBuffer buf = message.getBuffer();
 		int serviceId = buf.getInt();
 		int userId = buf.getInt();
+		
+		log.debug(serviceId + " " + userId);
+		
 		users.dropOfferRequest(serviceId, userId);
 	}
 
@@ -235,6 +253,9 @@ public class ServerNetwork extends Thread{
 		int serviceId = buf.getInt();
 		int buyerId = buf.getInt();
 		int sellerId = buf.getInt();
+		
+		log.debug(serviceId + " " + buyerId + " " + sellerId);
+		
 		users.removeOffer(serviceId, buyerId, sellerId);
 	}
 

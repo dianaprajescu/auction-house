@@ -3,6 +3,12 @@
  */
 package app;
 
+import java.io.IOException;
+
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+
 import interfaces.IGUI;
 import interfaces.IGUIMediator;
 import interfaces.INetwork;
@@ -11,6 +17,7 @@ import interfaces.IWSClient;
 import interfaces.IWSClientMediator;
 import GUI.components.CellTableModel;
 import GUI.components.MainTableModel;
+import Network.ServerNetwork;
 
 /**
  * @author Stedy
@@ -21,11 +28,25 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	private INetwork network;
 	private IWSClient client;
 
+	static Logger log = Logger.getLogger(Mediator.class);
 
 	@Override
 	public int login(String username, String password, UserType type)
 	{
+		// Set file appender.
+		Logger root = (Logger) Logger.getRootLogger();
+		PatternLayout pl = new PatternLayout();
+		pl.setConversionPattern("%-5p %l : %m%n");
+		FileAppender appender;
+		try {
+			appender = new FileAppender(pl, "logs/" + username + ".log", false);
+			root.addAppender(appender);
+		} catch (IOException e) {
+		}
+			
 		int loggedId = this.client.login(username, password, type);
+		
+		log.debug(loggedId);
 
 		if (loggedId > 0)
 		{
