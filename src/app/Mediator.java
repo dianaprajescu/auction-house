@@ -120,8 +120,8 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	}
 
 	@Override
-	public void removeExceeded(int serviceId, int buyerId) {
-		this.gui.removeExceeded(serviceId, buyerId);
+	public void removeExceeded(int serviceId, int buyerId, int price) {
+		this.gui.removeExceeded(serviceId, buyerId, price);
 	}
 
 	@Override

@@ -15,7 +15,8 @@ public enum NetworkMethods {
 	REFUSE_OFFER(10),
 	OFFER_REFUSED(11),
 	REMOVE_OFFER(12),
-	OFFER_REMOVED(13);
+	OFFER_REMOVED(13),
+	REMOVE_EXCEEDED(14);
 
 	private int id;
 

@@ -144,7 +144,7 @@ public interface IGUI {
 	 * @param serviceId
 	 * @param buyerId
 	 */
-	public void removeExceeded(int serviceId, int buyerId);
+	public void removeExceeded(int serviceId, int buyerId, int price);
 
 	/**
 	 * The seller has made an offer.
