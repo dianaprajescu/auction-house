@@ -100,7 +100,7 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 		}
 		catch (Exception e)
 		{
-			
+
 		}
 	}
 
@@ -135,8 +135,8 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	}
 
 	@Override
-	public void newUser(int serviceId, int userId, String username) {
-		this.gui.newUser(serviceId, userId, username);
+	public void newUser(int serviceId, int userId) {
+		this.gui.newUser(serviceId, userId, client.getUsername(userId));
 	}
 
 	@Override

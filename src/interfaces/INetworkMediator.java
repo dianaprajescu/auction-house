@@ -23,7 +23,7 @@ public interface INetworkMediator {
 	 * @param serviceId
 	 * @param userId
 	 */
-	public void newUser(int serviceId, int userId, String username);
+	public void newUser(int serviceId, int userId);
 
 	/**
 	 * User goes offline.

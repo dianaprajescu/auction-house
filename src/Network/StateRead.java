@@ -109,7 +109,7 @@ public class StateRead implements IStateClientNetwork {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				network.newUser(buffer.getInt(), buffer.getInt(), "lalala");
+				network.newUser(buffer.getInt(), buffer.getInt());
 			}
 		});
 	}
@@ -123,13 +123,14 @@ public class StateRead implements IStateClientNetwork {
 			}
 		});
 	}
-	
+
 	public void processUpdateTransfer(){
-		
+
 		System.out.println("processUpdateTransfer");
-		
+
 		buffer =  message.getBuffer();
 		SwingUtilities.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				network.transfer(buffer.getInt());
 			}

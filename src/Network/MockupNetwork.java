@@ -5,13 +5,7 @@ package Network;
 
 import interfaces.INetwork;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 
 import GUI.components.CellTableModel;
@@ -34,26 +28,27 @@ public class MockupNetwork implements INetwork {
 	{
 		this.med = med;
 		med.registerNetwork(this);
-		
+
 		this.client = new ClientNetwork(this);
 	}
 
 	@Override
 	public void startTransfer(final int serviceId, final int buyerId, final int sellerId) throws IOException
-	{	
+	{
 		int[] message = {NetworkMethods.START_TRANSFER.getInt(), serviceId, sellerId};
-		
+
 		client.sendMessage(message);
 	}
-	
+
+	@Override
 	public void transfer(int serviceId)
 	{
 		File file = this.client.getTransfer(serviceId);
-		
+
 		this.med.updateTransfer(file.getServiceId(), file.getSellerId(), file.getProgress());
-		
+
 		int[] message = {NetworkMethods.TRANSFER.getInt(), serviceId};
-		
+
 		client.sendMessage(message);
 	}
 
@@ -73,8 +68,8 @@ public class MockupNetwork implements INetwork {
 	}
 
 	@Override
-	public void newUser(int serviceId, int userId, String username) {
-		this.med.newUser(serviceId, userId, username);
+	public void newUser(int serviceId, int userId) {
+		this.med.newUser(serviceId, userId);
 	}
 
 	@Override
