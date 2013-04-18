@@ -8,6 +8,8 @@ import java.nio.channels.SocketChannel;
 
 import javax.swing.SwingUtilities;
 
+import sun.nio.cs.ext.TIS_620;
+
 public class StateRead implements IStateClientNetwork {
 
 	SocketChannel channel;
@@ -198,6 +200,7 @@ public class StateRead implements IStateClientNetwork {
 		serviceId = buffer.getInt();
 		buyerId = buffer.getInt();
 		sellerId = buffer.getInt();
+		
 		this.clientNetwork.startTransfer(serviceId, buyerId, sellerId);
 		
 		SwingUtilities.invokeLater(new Runnable() {
@@ -216,6 +219,13 @@ public class StateRead implements IStateClientNetwork {
 		serviceId = buffer.getInt();
 		buyerId = buffer.getInt();
 		sellerId = buffer.getInt();
+		
+		try {
+			this.clientNetwork.saveTransfer(serviceId, buyerId, sellerId, buffer);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		Object[] message = {NetworkMethods.GOT_TRANSFER.getInt(), serviceId, buyerId, sellerId};
 		this.clientNetwork.sendMessage(message);

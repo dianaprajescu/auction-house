@@ -45,8 +45,10 @@ public class File {
 		this.buyerId = buyerId;
 		this.sellerId = sellerId;
 		
+		String time = String.valueOf(System.currentTimeMillis());
+		
 		@SuppressWarnings("resource")
-		RandomAccessFile file = new RandomAccessFile("f" + this.serviceId, "rw");
+		RandomAccessFile file = new RandomAccessFile("f_" + serviceId + "_" + sellerId + "_" + buyerId + time, "rw");
         file.setLength(count * MESSAGE_LENGTH);
         
         this.fileChannel = file.getChannel();
