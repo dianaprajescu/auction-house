@@ -142,12 +142,6 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	}
 
 	@Override
-	public void startTransfer(int serviceId, int buyerId, int sellerId)
-	{
-		this.mainMed.startTransfer(serviceId, buyerId, sellerId);
-	}
-
-	@Override
 	public void updateTransfer(int serviceId, int userId, int progress)
 	{
 		this.GUImed.updateTransfer(serviceId, userId, progress);

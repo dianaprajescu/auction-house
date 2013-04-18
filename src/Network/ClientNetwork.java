@@ -17,33 +17,33 @@ public class ClientNetwork extends Thread {
 	INetwork network;
 	
 	// Message queue;
-	Queue<int[]> messages;
+	Queue<Object[]> messages;
 	
 	// The client state.
 	IStateClientNetwork state;
 	
 	// Transfers.
-	HashMap<Integer, File> transfers;
+	HashMap<Integer, HashMap<Integer, File>> transfers;
 	
 	// Channel.
 	SocketChannel channel;
 	
 	public ClientNetwork(){
 		// Init the message queue.
-		this.messages = new LinkedList<int[]>();
+		this.messages = new LinkedList<Object[]>();
 	}
 	
 	public ClientNetwork(INetwork network){
 		this.network = network;
 		
 		// Init the message queue.
-		this.messages = new LinkedList<int[]>();
+		this.messages = new LinkedList<Object[]>();
 		
 		// Init transfers.
-		transfers = new HashMap<Integer, File>();
+		transfers = new HashMap<Integer, HashMap<Integer, File>>();
 	}
 	
-	public void sendMessage(int[] message){
+	public void sendMessage(Object[] message){
 		this.messages.add(message);
 	}
 	
@@ -56,23 +56,56 @@ public class ClientNetwork extends Thread {
 		return this.network;
 	}
 	
-	public int[] netMessage(){
+	public Object[] netMessage(){
 		return this.messages.poll();
 	}
 	
-	public void startTransfer(int serviceId, int sellerId) throws IOException{
-		File file = new File(20 + (new Random()).nextInt(61), serviceId, sellerId);
-		this.transfers.put(serviceId, file);
+	public void startTransfer(int serviceId, int buyerId, int sellerId) throws IOException{
+		File file = new File(20 + (new Random()).nextInt(61), serviceId, buyerId, sellerId);
+		
+		HashMap<Integer, File> buyers;
+		
+		if (this.transfers.containsKey(serviceId))
+		{
+			buyers = this.transfers.get(serviceId);
+		}
+		else
+		{
+			buyers = new HashMap<Integer, File>();
+		}
+		
+		buyers.put(buyerId, file);
+		this.transfers.put(serviceId, buyers);
 	}
 	
-	public File getTransfer(int serviceId)
+	public File getTransfer(int serviceId, int buyerId)
 	{
-		return this.transfers.get(serviceId);
+		HashMap<Integer, File> buyers;
+		buyers = this.transfers.get(serviceId);
+		
+		if (buyers != null)
+		{
+			File f = buyers.get(buyerId);
+			
+			return f;
+		}
+		else
+		{
+			return null;
+		}
 	}
 	
-	public ByteBuffer getBufferTransfer(int serviceId) throws IOException{
-		File file = this.transfers.get(serviceId);
-		return file.getBuffer();
+	public ByteBuffer getBufferTransfer(int serviceId, int buyerId) throws IOException{
+		File file = this.getTransfer(serviceId, buyerId);
+		
+		if (file != null)
+		{
+			return file.getBuffer();
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	@Override
@@ -99,7 +132,7 @@ public class ClientNetwork extends Thread {
 		        }
 		        else
 		        {
-		        	state = new StateRead(channel, network);
+		        	state = new StateRead(channel, network, this);
 		        }
 		        
 		        // Execute current state.
