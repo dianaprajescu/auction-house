@@ -991,8 +991,8 @@ public class InternalGUIMediator {
 						}
 						ctm.setValueAt(progress, userRow, 3);
 	
-						ctm.fireTableCellUpdated(userRow, 1);
-						ctm.fireTableCellUpdated(userRow, 3);
+						ctm.fireTableDataChanged();
+						table.rebuildTable();
 					}
 				}
 			}

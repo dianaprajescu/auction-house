@@ -356,12 +356,17 @@ public class StateRead implements IStateClientNetwork {
 	private void processRequestDropped() {
 		
 		log.debug("");
-		
+
 		buffer =  message.getBuffer();
+		serviceId = buffer.getInt();
+		buyerId = buffer.getInt();
+		
+		this.clientNetwork.failTransfer(serviceId, buyerId);
+		
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				network.requestDropped(buffer.getInt(), buffer.getInt());
+				network.requestDropped(serviceId, buyerId);
 			}
 		});
 	}

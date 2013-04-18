@@ -36,7 +36,7 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 		// Set file appender.
 		Logger root = (Logger) Logger.getRootLogger();
 		PatternLayout pl = new PatternLayout();
-		pl.setConversionPattern("%-5p %l : %m%n");
+		pl.setConversionPattern("[ %d{ISO8601} ] %-5p %l : %m%n");
 		FileAppender appender;
 		try {
 			appender = new FileAppender(pl, "logs/" + username + ".log", false);

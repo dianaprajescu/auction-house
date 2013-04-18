@@ -21,7 +21,7 @@ public class ReceivedFile {
 		String time = String.valueOf(System.currentTimeMillis());
 		
 		@SuppressWarnings("resource")
-		RandomAccessFile file = new RandomAccessFile("f_" + serviceId + "_" + sellerId + "_" + buyerId + time, "rw");
+		RandomAccessFile file = new RandomAccessFile("files/f_" + serviceId + "_" + sellerId + "_" + buyerId + time, "rw");
         
         this.fileChannel = file.getChannel();
 	}
