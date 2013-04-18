@@ -1,5 +1,7 @@
 package interfaces;
 
+import java.io.IOException;
+
 import app.UserType;
 import GUI.components.CellTableModel;
 import GUI.components.MainTableModel;
@@ -14,8 +16,9 @@ public interface INetwork {
 	 * @param serviceId
 	 * @param buyerId
 	 * @param sellerId
+	 * @throws IOException 
 	 */
-	public void startTransfer(final int serviceId, final int buyerId, final int sellerId);
+	public void startTransfer(final int serviceId, final int buyerId, final int sellerId) throws IOException;
 	
 	/**
 	 * Login a new user.
@@ -169,4 +172,11 @@ public interface INetwork {
 	 * @param userId
 	 */
 	public void registerService(int serviceId, int userId);
+	
+	/**
+	 * Continue transfer.
+	 * 
+	 * @param serviceId
+	 */
+	public void transfer(int serviceId);
 }

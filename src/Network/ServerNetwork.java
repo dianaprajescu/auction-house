@@ -39,6 +39,8 @@ public class ServerNetwork {
 		// Configure connection to nonblocking.
 		clientSocketChannel.configureBlocking(false);
 		
+		System.out.println("new connection");
+		
 		// Wait for client to send message.
 		clientSocketChannel.register(key.selector(), SelectionKey.OP_READ, null);
 	}
@@ -64,6 +66,8 @@ public class ServerNetwork {
 				
 				// Message size.
 				int messageSize = buffer.getInt();
+				
+				System.out.println("Message size: " + messageSize);
 	
 				buffer.clear();
 				
@@ -92,13 +96,15 @@ public class ServerNetwork {
 			if (bytesRead == -1){
 				throw new IOException("EOF");
 			}
+			
+			process(message, clientChannel);
 		}
 		catch(Exception e){
+			e.printStackTrace();
+			System.out.println("close connection");
 			users.remove(clientChannel);
 			clientChannel.close();
 		}
-		
-		process(message, clientChannel);
 	}
 	
 	public static void process(ServerMessage message, SocketChannel channel) throws IOException
@@ -111,6 +117,9 @@ public class ServerNetwork {
 		}
 		else if (message.getMethod() == NetworkMethods.MAKE_OFFER.getInt()){
 			processMakeOffer(message, channel);
+		}
+		else if (message.getMethod() == NetworkMethods.TRANSFER.getInt()){
+			processTransfer(message, channel);
 		}
 	}
 	
@@ -139,6 +148,19 @@ public class ServerNetwork {
 		int sellerId = buf.getInt();
 		int price = buf.getInt();
 		users.makeOffer(serviceId, buyerId, sellerId, price);
+	}
+	
+	public static void processTransfer(ServerMessage message, SocketChannel channel) throws IOException{
+		System.out.println("processTransfer");
+		
+		ByteBuffer buf = message.getBuffer();
+		int progress = buf.getInt();
+		int sellerId = buf.getInt();
+		int serviceId = buf.getInt();
+		
+		int[] msg = {NetworkMethods.UPDATE_TRANSFER.getInt(), serviceId};
+		StateWrite state = new StateWrite(channel, msg);
+		state.execute();
 	}
 	
 	public static void init() throws IOException{

@@ -92,7 +92,13 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	@Override
 	public void startTransfer(int serviceId, int buyerId, int sellerId)
 	{
-		this.network.startTransfer(serviceId, buyerId, sellerId);
+		try{
+			this.network.startTransfer(serviceId, buyerId, sellerId);
+		}
+		catch (Exception e)
+		{
+			
+		}
 	}
 
 	@Override

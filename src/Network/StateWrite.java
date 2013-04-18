@@ -9,6 +9,13 @@ public class StateWrite implements IStateClientNetwork {
 	int[] message;
 	ByteBuffer buffer;
 	SocketChannel channel;
+	ClientNetwork clientNetwork;
+	
+	public StateWrite(SocketChannel channel, int[] message, ClientNetwork clientNetwork) {
+		this.channel = channel;
+		this.message = message;
+		this.clientNetwork = clientNetwork;
+	}
 	
 	public StateWrite(SocketChannel channel, int[] message) {
 		this.channel = channel;
@@ -17,11 +24,31 @@ public class StateWrite implements IStateClientNetwork {
 	
 	@Override
 	public void execute() throws IOException {
-		// Prepare buffer.
-		prepareBuffer();
-		
-		// Put message in buffer.
-		processMessage();
+		if (message[0] > NetworkMethods.TRANSFER.getInt())
+		{
+			// Prepare buffer.
+			prepareBuffer();
+			
+			// Put message in buffer.
+			processMessage();
+		}
+		else
+		{
+			if (message[0] == NetworkMethods.START_TRANSFER.getInt())
+			{
+				this.clientNetwork.startTransfer(message[1], message[2]);
+			}
+			
+			// Set buffer.
+			buffer = clientNetwork.getBufferTransfer(message[1]);
+			
+			System.out.println(buffer.capacity());
+			
+			if (buffer == null)
+			{
+				return;
+			}
+		}
 		
 		try{
 			// Send message.

@@ -51,10 +51,13 @@ public class UsersServer {
 		// Find the index with channel passed.
 		int idx = channels.indexOf(channel);
 		
-		ids.remove(idx);
-		types.remove(idx);
-		channels.remove(idx);
-		services.remove(idx);
+		if (idx >= 0)
+		{
+			ids.remove(idx);
+			types.remove(idx);
+			channels.remove(idx);
+			services.remove(idx);
+		}
 	}
 	
 	/**

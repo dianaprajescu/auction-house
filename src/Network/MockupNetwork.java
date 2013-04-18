@@ -7,6 +7,7 @@ import interfaces.INetwork;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -26,8 +27,6 @@ import app.UserType;
 public class MockupNetwork implements INetwork {
 	private Mediator med;
 	
-	HashMap<Integer, TransferTask> transfers;
-	
 	private ClientNetwork client;
 
 	/**
@@ -39,38 +38,29 @@ public class MockupNetwork implements INetwork {
 		med.registerNetwork(this);
 		
 		this.client = new ClientNetwork(this);
-		
-		transfers = new HashMap<Integer, TransferTask>();
 	}
 
 	@Override
-	public void startTransfer(final int serviceId, final int buyerId, final int sellerId)
-	{
-		TransferTask tt = new TransferTask(20 + (new Random()).nextInt(61), serviceId);
+	public void startTransfer(final int serviceId, final int buyerId, final int sellerId) throws IOException
+	{	
+		int[] message = {NetworkMethods.START_TRANSFER.getInt(), serviceId, sellerId};
 		
-		transfers.put(serviceId, tt);
-
-		tt.addPropertyChangeListener(new PropertyChangeListener(){
-			@Override
-			public void propertyChange(PropertyChangeEvent pce) {
-				if (pce.getPropertyName() == "progress")
-				{
-					med.updateTransfer(serviceId, sellerId, (int) pce.getNewValue());
-					med.updateTransfer(serviceId, buyerId, (int) pce.getNewValue());
-				}
-			}
-		});
-		tt.execute();
+		client.sendMessage(message);
+	}
+	
+	public void transfer(int serviceId)
+	{
+		File file = this.client.getTransfer(serviceId);
+		
+		this.med.updateTransfer(file.getServiceId(), file.getSellerId(), file.getProgress());
+		
+		int[] message = {NetworkMethods.TRANSFER.getInt(), serviceId};
+		
+		client.sendMessage(message);
 	}
 	
 	public void stopTransfer(int serviceId, int userId)
 	{
-		TransferTask tt = transfers.get(serviceId);
-		if (tt != null)
-		{
-			tt.cancel(true);
-			transfers.remove(serviceId);
-		}
 	}
 	
 	@Override
