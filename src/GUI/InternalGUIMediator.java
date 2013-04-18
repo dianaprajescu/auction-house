@@ -524,8 +524,7 @@ public class InternalGUIMediator {
 
 					if (intStatus == 2)
 					{
-						//TODO Refuse offer request.
-						ctm.setValueAt("Offer Refused", i, 1);
+						refuseOffer(mainRow, i);
 					}
 				}
 				else
