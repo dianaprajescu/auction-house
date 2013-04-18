@@ -88,6 +88,10 @@ public class StateRead implements IStateClientNetwork {
 		{
 			processNewUser();
 		}
+		if (message.getMethod() == NetworkMethods.MAKE_OFFER.getInt())
+		{
+			processOfferMade();
+		}
 	}
 	
 	public void processNewUser(){
@@ -95,6 +99,15 @@ public class StateRead implements IStateClientNetwork {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				network.newUser(buffer.getInt(), buffer.getInt(), "lalala");
+			}
+		});
+	}
+	
+	public void processOfferMade(){
+		buffer =  message.getBuffer();
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				network.offerMade(buffer.getInt(), buffer.getInt(), buffer.getInt());
 			}
 		});
 	}

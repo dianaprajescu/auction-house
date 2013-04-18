@@ -106,4 +106,12 @@ public class UsersServer {
 			}
 		}
 	}
+	
+	public void makeOffer(int serviceId, int buyerId, int sellerId, int price) throws IOException{
+		int idxBuyer = ids.indexOf(buyerId);
+		
+		int[] message = {NetworkMethods.MAKE_OFFER.getInt(), serviceId, sellerId, price};
+		StateWrite stateSeller = new StateWrite(channels.get(idxBuyer), message);
+		stateSeller.execute();
+	}
 }

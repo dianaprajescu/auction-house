@@ -1,9 +1,11 @@
 package Network;
 
 public enum NetworkMethods {
-	LOGIN(1), 
+	TRANSFER(0),
+	LOGIN(1),
 	REGISTER_SERVICE(2),
-	NEW_USER(3);
+	NEW_USER(3),
+	MAKE_OFFER(4);
 	
 	private int id;
 	

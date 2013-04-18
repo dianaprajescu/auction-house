@@ -18,6 +18,11 @@ public class ClientNetwork extends Thread {
 	// The client state.
 	IStateClientNetwork state;
 	
+	public ClientNetwork(){
+		// Init the message queue.
+		this.messages = new LinkedList<int[]>();
+	}
+	
 	public ClientNetwork(INetwork network){
 		this.network = network;
 		
