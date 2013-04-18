@@ -41,7 +41,7 @@ public class MockupNetwork implements INetwork {
 	@Override
 	public void startTransfer(final int serviceId, final int buyerId, final int sellerId)
 	{
-		TransferTask tt = new TransferTask( 20 + (new Random()).nextInt(61));
+		TransferTask tt = new TransferTask(20 + (new Random()).nextInt(61), serviceId);
 
 		transfers.put(serviceId, tt);
 
@@ -144,7 +144,9 @@ public class MockupNetwork implements INetwork {
 	@Override
 	public boolean makeOffer(int serviceId, int buyerId, int sellerId, int price)
 	{
-		//TODO send offer to the buyer. Update other offers (offer exceeded).
+		int[] message = {NetworkMethods.MAKE_OFFER.getInt(), serviceId, buyerId, sellerId, price};
+
+		client.sendMessage(message);
 
 		return true;
 	}

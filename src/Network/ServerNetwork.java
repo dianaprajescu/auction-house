@@ -104,9 +104,14 @@ public class ServerNetwork {
 		else if (message.getMethod() == NetworkMethods.REGISTER_SERVICE.getInt()){
 			processRegisterService(message, channel);
 		}
+
 		else if (message.getMethod() == NetworkMethods.LOGOUT.getInt())
 		{
 			processLogout(channel);
+		}
+
+		else if (message.getMethod() == NetworkMethods.MAKE_OFFER.getInt()){
+			processMakeOffer(message, channel);
 		}
 	}
 
@@ -130,6 +135,17 @@ public class ServerNetwork {
 	{
 		System.out.println("logout");
 		users.remove(channel);
+	}
+
+	public static void processMakeOffer(ServerMessage message, SocketChannel channel) throws IOException
+	{
+		System.out.println("makeOffer");
+		ByteBuffer buf = message.getBuffer();
+		int serviceId = buf.getInt();
+		int buyerId = buf.getInt();
+		int sellerId = buf.getInt();
+		int price = buf.getInt();
+		users.makeOffer(serviceId, buyerId, sellerId, price);
 	}
 
 	public static void init() throws IOException{
