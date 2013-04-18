@@ -16,6 +16,9 @@ public class ClientNetwork extends Thread {
 	// The associate network.
 	INetwork network;
 	
+	// Stop thread.
+	boolean off;
+	
 	// Message queue;
 	Queue<Object[]> messages;
 	
@@ -31,6 +34,8 @@ public class ClientNetwork extends Thread {
 	public ClientNetwork(){
 		// Init the message queue.
 		this.messages = new LinkedList<Object[]>();
+		
+		this.off = false;
 	}
 	
 	public ClientNetwork(INetwork network){
@@ -126,6 +131,11 @@ public class ClientNetwork extends Thread {
 	        
 	        while (true)
 	        {
+	        	if (this.off)
+	        	{
+	        		break;
+	        	}
+	        	
 		        // Send messages if they exist.
 		        if (this.messages.size() > 0) {
 		        	state = new StateWrite(channel, this.messages.poll(), this);
@@ -143,6 +153,11 @@ public class ClientNetwork extends Thread {
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	public void stopClient()
+	{
+		this.off = true;
 	}
 	
 }

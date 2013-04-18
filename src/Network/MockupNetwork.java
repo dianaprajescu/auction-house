@@ -77,8 +77,6 @@ public class MockupNetwork implements INetwork {
 		Object[] message = {NetworkMethods.LOGOUT.getInt(), userId};
 
 		client.sendMessage(message);
-
-		client.interrupt();
 	}
 
 	@Override

@@ -86,6 +86,11 @@ public class StateWrite implements IStateClientNetwork {
 			while (buffer.hasRemaining()){
 				channel.write(buffer);
 			}
+			
+			if ((int)message[0] == NetworkMethods.LOGOUT.getInt())
+			{
+				this.clientNetwork.stopClient();
+			}
 		}
 		catch(Exception e)
 		{
