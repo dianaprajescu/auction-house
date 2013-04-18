@@ -247,4 +247,22 @@ public class UsersServer {
 			}
 		}
 	}
+
+	/**
+	 * Seller removes the offer he made.
+	 *
+	 * @param serviceId
+	 * @param buyerId
+	 * @param sellerId
+	 * @throws IOException
+	 */
+	public void removeOffer(int serviceId, int buyerId, int sellerId) throws IOException
+	{
+		int idxBuyer = ids.indexOf(buyerId);
+
+		// Inform the buyer.
+		int[] message = {NetworkMethods.OFFER_REMOVED.getInt(), serviceId, sellerId};
+		StateWrite state = new StateWrite(channels.get(idxBuyer), message);
+		state.execute();
+	}
 }

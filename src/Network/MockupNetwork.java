@@ -148,7 +148,16 @@ public class MockupNetwork implements INetwork {
 	@Override
 	public boolean removeOffer(int serviceId, int buyerId, int sellerId)
 	{
+		int[] message = {NetworkMethods.REMOVE_OFFER.getInt(), serviceId, buyerId, sellerId};
+
+		client.sendMessage(message);
+
 		return true;
+	}
+
+	@Override
+	public void offerRemoved(int serviceId, int sellerId) {
+		this.med.offerRemoved(serviceId, sellerId);
 	}
 
 	@Override
@@ -177,11 +186,6 @@ public class MockupNetwork implements INetwork {
 
 		this.med.offerMade(serviceId, sellerId, price);
 
-	}
-
-	@Override
-	public void offerRemoved(int serviceId, int sellerId) {
-		this.med.offerRemoved(serviceId, sellerId);
 	}
 
 	@Override

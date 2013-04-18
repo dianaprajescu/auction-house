@@ -601,7 +601,7 @@ public class InternalGUIMediator {
 	}
 
 	/**
-	 * Refuse offer.
+	 * Remove offer.
 	 *
 	 * @param mainRow
 	 * @param cellRow

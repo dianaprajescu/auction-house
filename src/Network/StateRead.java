@@ -110,6 +110,10 @@ public class StateRead implements IStateClientNetwork {
 		{
 			processOfferRefused();
 		}
+		else if (message.getMethod() == NetworkMethods.OFFER_REMOVED.getInt())
+		{
+			processOfferRemoved();
+		}
 	}
 
 	public void processNewUser(){
@@ -167,14 +171,21 @@ public class StateRead implements IStateClientNetwork {
 	}
 
 	private void processOfferRefused() {
-
-		System.out.println("processOfferRefused");
-
 		buffer =  message.getBuffer();
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
 				network.offerRefused(buffer.getInt(), buffer.getInt());
+			}
+		});
+	}
+
+	private void processOfferRemoved() {
+		buffer =  message.getBuffer();
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				network.offerRemoved(buffer.getInt(), buffer.getInt());
 			}
 		});
 	}
