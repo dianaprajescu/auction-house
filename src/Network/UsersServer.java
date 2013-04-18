@@ -129,11 +129,6 @@ public class UsersServer {
 				}
 			}
 		}
-		else
-		{
-			//TODO If buyer goes offline he drops all offer requests.
-		}
-
 
 		// Close channel for the leaving user.
 		channels.get(idx).close();

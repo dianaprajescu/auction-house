@@ -297,7 +297,7 @@ public class InternalGUIMediator {
 		}
 		else
 		{
-			if (intStatus == 1)
+			if (intStatus == 1 || intStatus == 3 || intStatus == 4)
 			{
 				popup.add(new PopupMenuItem("Make Offer", this, this.gui, gui.getTable().getSelectedRow(), table.getSelectedRow()));
 			}
