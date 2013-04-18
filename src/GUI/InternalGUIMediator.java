@@ -367,9 +367,9 @@ public class InternalGUIMediator {
 				break;
 
 			case "drop auction":
-				// Drop auction.
-				ctm = (CellTableModel) gui.getTable().getValueAt(mainRow, 1);
-				ctm.setValueAt("No Offer", cellRow, 1);
+
+				this.dropAuction(mainRow, cellRow);
+
 				break;
 		}
 
@@ -634,7 +634,22 @@ public class InternalGUIMediator {
 			// Update offer in GUI.
 			ctm.setValueAt("No Offer", cellRow, 1);
 			ctm.setValueAt("-", cellRow, 2);
+
+			// Update.
+			((MainTableModel)this.gui.getTable().getModel()).fireTableCellUpdated(cellRow, 1);
 		}
+	}
+
+	/**
+	 * Drop the auction.
+	 *
+	 * @param mainRow
+	 * @param cellRow
+	 */
+	private void dropAuction (int mainRow, int cellRow)
+	{
+		// Same thing as remove offer except it's on "offer exceeded".
+		removeOffer(mainRow, cellRow);
 	}
 
 	/**
