@@ -1,5 +1,7 @@
 package Network;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -9,21 +11,22 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 
-public class ServerNetwork {
+import javax.swing.JFrame;
+
+public class ServerNetwork extends Thread{
 	public static int port = 30000;
 	public static String url = "127.0.0.1";
-	public static int BUF_SIZE = 8;
 
-	private static ServerSocketChannel channel;
-	private static Selector selector;
-	private static UsersServer users;
+	private ServerSocketChannel channel;
+	private Selector selector;
+	private UsersServer users;
 
-	public static void main(String[] args) throws IOException{
+	public ServerNetwork()
+	{
 		users = new UsersServer();
-		init();
 	}
 
-	public static void accept(SelectionKey key) throws IOException
+	public void accept(SelectionKey key) throws IOException
 	{
 		// The new connection.
 		ServerSocketChannel serverSocketChannel = (ServerSocketChannel)key.channel();
@@ -38,7 +41,7 @@ public class ServerNetwork {
 		clientSocketChannel.register(key.selector(), SelectionKey.OP_READ, null);
 	}
 
-	public static void read(SelectionKey key) throws IOException
+	public void read(SelectionKey key) throws IOException
 	{
 		// Init client channel.
 		SocketChannel clientChannel = (SocketChannel) key.channel();
@@ -98,7 +101,7 @@ public class ServerNetwork {
 		}
 	}
 
-	public static void process(ServerMessage message, SocketChannel channel) throws IOException
+	public void process(ServerMessage message, SocketChannel channel) throws IOException
 	{
 		if (message.getMethod() == NetworkMethods.LOGIN.getInt()){
 			processLogin(message, channel);
@@ -138,14 +141,14 @@ public class ServerNetwork {
 		}
 	}
 
-	public static void processLogin(ServerMessage message, SocketChannel channel)
+	public void processLogin(ServerMessage message, SocketChannel channel)
 	{
 		System.out.println("login");
 		ByteBuffer buf = message.getBuffer();
 		users.addUser(buf.getInt(), buf.getInt(), channel);
 	}
 
-	public static void processRegisterService(ServerMessage message, SocketChannel channel) throws IOException
+	public void processRegisterService(ServerMessage message, SocketChannel channel) throws IOException
 	{
 		System.out.println("registerService");
 		ByteBuffer buf = message.getBuffer();
@@ -154,13 +157,13 @@ public class ServerNetwork {
 		users.addService(serviceId, userId);
 	}
 
-	private static void processLogout(SocketChannel channel) throws IOException
+	private void processLogout(SocketChannel channel) throws IOException
 	{
 		System.out.println("logout");
 		users.remove(channel);
 	}
 
-	public static void processMakeOffer(ServerMessage message, SocketChannel channel) throws IOException
+	public void processMakeOffer(ServerMessage message, SocketChannel channel) throws IOException
 	{
 		System.out.println("makeOffer");
 		ByteBuffer buf = message.getBuffer();
@@ -171,7 +174,7 @@ public class ServerNetwork {
 		users.makeOffer(serviceId, buyerId, sellerId, price);
 	}
 
-	public static void processTransfer(ServerMessage message, SocketChannel channel) throws IOException{
+	public void processTransfer(ServerMessage message, SocketChannel channel) throws IOException{
 		System.out.println("processTransfer");
 
 		ByteBuffer buf = message.getBuffer();
@@ -187,7 +190,7 @@ public class ServerNetwork {
 		//state.execute();
 	}
 	
-	public static void processGotTransfer(ServerMessage message, SocketChannel channel) throws IOException{
+	public void processGotTransfer(ServerMessage message, SocketChannel channel) throws IOException{
 		System.out.println("processGotTransfer");
 		
 		ByteBuffer buf = message.getBuffer();
@@ -198,7 +201,7 @@ public class ServerNetwork {
 		users.processGotTransfer(serviceId, buyerId, sellerId);
 	}
 	
-	public static void processAcceptOffer(ServerMessage message, SocketChannel channel) throws IOException{
+	public void processAcceptOffer(ServerMessage message, SocketChannel channel) throws IOException{
 		System.out.println("acceptOffer");
 		
 		ByteBuffer buf = message.getBuffer();
@@ -209,7 +212,7 @@ public class ServerNetwork {
 		users.startTransfer(serviceId, buyerId, sellerId);
 	}
 
-	private static void processRefuseOffer(ServerMessage message, SocketChannel channel) throws IOException
+	private void processRefuseOffer(ServerMessage message, SocketChannel channel) throws IOException
 	{
 		ByteBuffer buf = message.getBuffer();
 		int serviceId = buf.getInt();
@@ -218,7 +221,7 @@ public class ServerNetwork {
 		users.refuseOffer(serviceId, buyerId, sellerId);
 	}
 
-	private static void processDropOfferRequest(ServerMessage message, SocketChannel channel) throws IOException
+	private void processDropOfferRequest(ServerMessage message, SocketChannel channel) throws IOException
 	{
 		ByteBuffer buf = message.getBuffer();
 		int serviceId = buf.getInt();
@@ -226,7 +229,7 @@ public class ServerNetwork {
 		users.dropOfferRequest(serviceId, userId);
 	}
 
-	private static void processRemoveOffer(ServerMessage message, SocketChannel channel) throws IOException
+	private void processRemoveOffer(ServerMessage message, SocketChannel channel) throws IOException
 	{
 		ByteBuffer buf = message.getBuffer();
 		int serviceId = buf.getInt();
@@ -235,7 +238,8 @@ public class ServerNetwork {
 		users.removeOffer(serviceId, buyerId, sellerId);
 	}
 
-	public static void init() throws IOException{
+	public void run(){
+		try{
 		// Create a new serversocketchannel;
 		channel = ServerSocketChannel.open();
 
@@ -271,6 +275,10 @@ public class ServerNetwork {
 				else if (key.isReadable())
 					read(key);
 			}
+		}
+		}
+		catch(Exception e)
+		{
 		}
 	}
 }
