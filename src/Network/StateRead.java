@@ -98,9 +98,13 @@ public class StateRead implements IStateClientNetwork {
 		{
 			processOfferMade();
 		}
-		if (message.getMethod() == NetworkMethods.UPDATE_TRANSFER.getInt())
+		else if (message.getMethod() == NetworkMethods.UPDATE_TRANSFER.getInt())
 		{
 			processUpdateTransfer();
+		}
+		else if (message.getMethod() == NetworkMethods.OFFER_EXCEEDED.getInt())
+		{
+			processOfferExceeded();
 		}
 	}
 
@@ -143,6 +147,20 @@ public class StateRead implements IStateClientNetwork {
 			@Override
 			public void run() {
 				network.userLeft(buffer.getInt(), buffer.getInt());
+			}
+		});
+	}
+
+	private void processOfferExceeded()
+	{
+
+		System.out.println("processOfferExceeded");
+
+		buffer =  message.getBuffer();
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				network.offerExceeded(buffer.getInt(), buffer.getInt(), buffer.getInt());
 			}
 		});
 	}

@@ -9,7 +9,8 @@ public enum NetworkMethods {
 	MAKE_OFFER(4),
 	LOGOUT(5),
 	USER_LEFT(6),
-	UPDATE_TRANSFER(7);
+	UPDATE_TRANSFER(7),
+	OFFER_EXCEEDED(8);
 
 	private int id;
 

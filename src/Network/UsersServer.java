@@ -3,6 +3,7 @@ package Network;
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import app.UserType;
 
@@ -17,6 +18,7 @@ public class UsersServer {
 	ArrayList<Integer> types;
 	ArrayList<ArrayList<Integer>> services;
 	ArrayList<SocketChannel> channels;
+	ArrayList<ArrayList<HashMap<Integer, Integer>>> offers;
 
 	/**
 	 * Constructor.
@@ -26,6 +28,7 @@ public class UsersServer {
 		types = new ArrayList<Integer>();
 		channels = new ArrayList<SocketChannel>();
 		services = new ArrayList<ArrayList<Integer>>();
+		offers = new ArrayList<ArrayList<HashMap<Integer, Integer>>>();
 	}
 
 	/**
@@ -40,6 +43,7 @@ public class UsersServer {
 		types.add(type);
 		channels.add(channel);
 		services.add(new ArrayList<Integer>());
+		offers.add(new ArrayList<HashMap<Integer, Integer>>());
 	}
 
 	/**
@@ -51,7 +55,7 @@ public class UsersServer {
 	public void remove(SocketChannel channel) throws IOException{
 		// Find the index with channel passed.
 		int idx = channels.indexOf(channel);
-		
+
 		if (idx < 0)
 		{
 			return;
@@ -92,6 +96,7 @@ public class UsersServer {
 		types.remove(idx);
 		channels.remove(idx);
 		services.remove(idx);
+		offers.remove(idx);
 	}
 
 	/**
@@ -110,6 +115,7 @@ public class UsersServer {
 
 			// Add service.
 			services.get(idx).add(serviceId);
+			offers.get(idx).add(new HashMap<Integer, Integer>());
 
 			int type;
 
@@ -143,12 +149,49 @@ public class UsersServer {
 			}
 		}
 	}
-	
+
+	/**
+	 * Seller makes an offer.
+	 *
+	 * @param serviceId
+	 * @param buyerId
+	 * @param sellerId
+	 * @param price
+	 *
+	 * @throws IOException
+	 */
 	public void makeOffer(int serviceId, int buyerId, int sellerId, int price) throws IOException{
 		int idxBuyer = ids.indexOf(buyerId);
-		
-		int[] message = {NetworkMethods.MAKE_OFFER.getInt(), serviceId, sellerId, price};
-		StateWrite stateSeller = new StateWrite(channels.get(idxBuyer), message);
-		stateSeller.execute();
+
+		// Save offer.
+		int idxSeller = ids.indexOf(sellerId);
+		int idxService = services.get(idxSeller).indexOf(serviceId);
+		offers.get(idxSeller).get(idxService).put(buyerId, price);
+
+		// Inform the buyer about the offer.
+		int[] messageBuyer = {NetworkMethods.MAKE_OFFER.getInt(), serviceId, sellerId, price};
+		StateWrite state = new StateWrite(channels.get(idxBuyer), messageBuyer);
+		state.execute();
+
+		// Go through the list of sellers and announce if offer exceeded.
+		for (int i = 0; i < ids.size(); i++)
+		{
+			// If user is seller.
+			if (types.get(i) == UserType.SELLER.getType())
+			{
+				// If offer was made to the same buyer.
+				if (offers.get(i).get(idxService).containsKey(buyerId))
+				{
+					// If offer was exceeded.
+					if (offers.get(i).get(idxService).get(buyerId) > price)
+					{
+						// Inform the seller about the offer.
+						int[] messageSeller = {NetworkMethods.OFFER_EXCEEDED.getInt(), serviceId, buyerId, price};
+						state = new StateWrite(channels.get(i), messageSeller);
+						state.execute();
+					}
+				}
+			}
+		}
 	}
 }
