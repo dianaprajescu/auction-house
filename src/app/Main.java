@@ -18,7 +18,7 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		
+
 		// Initiate.
 		Mediator med = new Mediator();
 		GUI gui = new GUI(med);

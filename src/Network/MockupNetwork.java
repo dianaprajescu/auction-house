@@ -7,15 +7,10 @@ import interfaces.INetwork;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
 import GUI.components.CellTableModel;
-import GUI.components.MainTableModel;
-import app.Database;
 import app.Mediator;
 import app.UserType;
 
@@ -25,9 +20,9 @@ import app.UserType;
  */
 public class MockupNetwork implements INetwork {
 	private Mediator med;
-	
+
 	HashMap<Integer, TransferTask> transfers;
-	
+
 	private ClientNetwork client;
 
 	/**
@@ -37,9 +32,9 @@ public class MockupNetwork implements INetwork {
 	{
 		this.med = med;
 		med.registerNetwork(this);
-		
-		this.client = new ClientNetwork(this);
-		
+
+		//this.client = new ClientNetwork(this);
+
 		transfers = new HashMap<Integer, TransferTask>();
 	}
 
@@ -47,7 +42,7 @@ public class MockupNetwork implements INetwork {
 	public void startTransfer(final int serviceId, final int buyerId, final int sellerId)
 	{
 		TransferTask tt = new TransferTask( 20 + (new Random()).nextInt(61));
-		
+
 		transfers.put(serviceId, tt);
 
 		tt.addPropertyChangeListener(new PropertyChangeListener(){
@@ -62,7 +57,8 @@ public class MockupNetwork implements INetwork {
 		});
 		tt.execute();
 	}
-	
+
+	@Override
 	public void stopTransfer(int serviceId, int userId)
 	{
 		TransferTask tt = transfers.get(serviceId);
@@ -72,14 +68,14 @@ public class MockupNetwork implements INetwork {
 			transfers.remove(serviceId);
 		}
 	}
-	
+
 	@Override
 	public void login(int userId, UserType type){
-		
+		client = new ClientNetwork(this);
 		client.start();
-		
+
 		int[] message = {NetworkMethods.LOGIN.getInt(), userId, type.getType()};
-		
+
 		client.sendMessage(message);
 	}
 
@@ -89,8 +85,22 @@ public class MockupNetwork implements INetwork {
 	}
 
 	@Override
+	public void logout(int userId){
+		int[] message = {NetworkMethods.LOGOUT.getInt(), userId};
+
+		client.sendMessage(message);
+
+		client.interrupt();
+	}
+
+	@Override
+	public void userLeft(int serviceId, int userId) {
+		this.med.userLeft(serviceId, userId);
+	}
+
+	@Override
 	public CellTableModel launchOfferRequest(int serviceId, int userId)
-	{	
+	{
 		// Create a new CellTableModel.
 		CellTableModel ct = new CellTableModel();
 
@@ -179,22 +189,17 @@ public class MockupNetwork implements INetwork {
 	}
 
 	@Override
-	public void dropUser(int userId) {
-		this.med.dropUser(userId);
-	}
-
-	@Override
 	public CellTableModel getUserList(int serviceId, UserType type) {
 		boolean add = (new Random()).nextBoolean();
-		
+
 		if (add)
 		{
 			// Populate model with a random number of sellers.
 			int noUsers = new Random().nextInt(6) + 1;
-		
+
 			// Create a new CellTableModel.
 			CellTableModel ct = new CellTableModel();
-		
+
 			/*
 			for (int i = 0; i < noUsers; i++)
 			{
@@ -203,7 +208,7 @@ public class MockupNetwork implements INetwork {
 				Object[] rowx = {"user_name" + userId, "No Offer", "-", 0};
 				ct.addRow(userId, rowx);
 			}*/
-		
+
 			return ct;
 		}
 		else
@@ -215,7 +220,7 @@ public class MockupNetwork implements INetwork {
 	@Override
 	public void registerService(int serviceId, int userId) {
 		int[] message = {NetworkMethods.REGISTER_SERVICE.getInt(), serviceId, userId};
-		
+
 		client.sendMessage(message);
 	}
 }

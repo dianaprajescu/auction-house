@@ -26,12 +26,12 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	public int login(String username, String password, UserType type)
 	{
 		int loggedId = this.client.login(username, password, type);
-		
+
 		if (loggedId > 0)
 		{
 			this.network.login(loggedId, type);
 		}
-		
+
 		return loggedId;
 	}
 
@@ -39,9 +39,12 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	public boolean logout(int userId)
 	{
 		boolean logout = this.client.logout(userId);
-		
-		//TODO make logout request to network.
-		
+
+		if (logout)
+		{
+			this.network.logout(userId);
+		}
+
 		return logout;
 	}
 
@@ -131,6 +134,11 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	}
 
 	@Override
+	public void userLeft(int serviceId, int userId) {
+		this.gui.userLeft(serviceId, userId);
+	}
+
+	@Override
 	public void registerGUI(IGUI gui) {
 		this.gui = gui;
 	}
@@ -141,11 +149,6 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	@Override
 	public void registerWSClient(IWSClient client) {
 		this.client = client;
-	}
-
-	@Override
-	public void dropUser(int userId) {
-		this.gui.dropUser(userId);
 	}
 
 	@Override
@@ -163,7 +166,7 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 				this.network.registerService(mtm.getIdAt(i), userId);
 			}
 		}
-		
+
 		return mtm;
 	}
 
