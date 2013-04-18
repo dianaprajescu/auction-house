@@ -1,7 +1,5 @@
 package interfaces;
 
-import java.io.IOException;
-
 import GUI.components.CellTableModel;
 import app.UserType;
 
@@ -58,6 +56,14 @@ public interface INetwork {
 	 * @return
 	 */
 	public boolean dropOfferRequest(int serviceId, int userId);
+
+	/**
+	 * The offer request was dropped by the buyer.
+	 *
+	 * @param serviceId
+	 * @param buyerId
+	 */
+	public void requestDropped(int serviceId, int buyerId);
 
 	/**
 	 * Accept offer.
@@ -175,7 +181,7 @@ public interface INetwork {
 	 *
 	 * @param serviceId
 	 * @param buyerId
-	 * @param sellerId 
+	 * @param sellerId
 	 */
 	public void transfer(int serviceId, int buyerId, int sellerId);
 

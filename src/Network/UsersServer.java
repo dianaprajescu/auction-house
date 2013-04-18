@@ -325,9 +325,20 @@ public class UsersServer {
 						StateWrite state = new StateWrite(channels.get(i), messageSeller);
 						state.execute();
 					}
+
+					// Remove the buyer from the list.
+					else
+					{
+						Object[] messageSeller = {NetworkMethods.REQUEST_DROPPED.getInt(), serviceId, userId};
+						StateWrite stateSeller = new StateWrite(channels.get(i), messageSeller);
+						stateSeller.execute();
+					}
 				}
 			}
 		}
+
+		// Remove service from the list.
+		services.get(idx).remove((Object) serviceId);
 	}
 
 	/**

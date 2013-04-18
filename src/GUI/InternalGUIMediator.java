@@ -705,6 +705,38 @@ public class InternalGUIMediator {
 		}
 	}
 
+	/**
+	 * Buyer has dropped request.
+	 *
+	 * @param serviceId
+	 * @param buyerId
+	 */
+	public void requestDropped(int serviceId, int buyerId)
+	{
+		MainTable table = this.gui.getTable();
+		MainTableModel mtm = (MainTableModel) table.getModel();
+
+		// Get the service id.
+		int serviceRow = mtm.findRowByServiceId(serviceId);
+
+		if (serviceRow >= 0)
+		{
+			// Get the cell table model for service.
+			CellTableModel ctm = (CellTableModel) mtm.getValueAt(serviceRow, 1);
+
+			// Get the buyer row.
+			int buyerRow = ctm.findRowByUserId(buyerId);
+
+			if (buyerRow >= 0)
+			{
+				// Remove user.
+				ctm.removeRow(buyerRow);
+
+				// Update.
+				((MainTableModel)this.gui.getTable().getModel()).fireTableCellUpdated(buyerRow, 1);
+			}
+		}
+	}
 
 	/**
 	 * Offer was refused by the buyer.

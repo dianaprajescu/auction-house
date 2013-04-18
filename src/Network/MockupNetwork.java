@@ -5,7 +5,6 @@ package Network;
 
 import interfaces.INetwork;
 
-import java.io.IOException;
 import java.util.Random;
 
 import GUI.components.CellTableModel;
@@ -44,7 +43,7 @@ public class MockupNetwork implements INetwork {
 
 		client.sendMessage(message);
 	}
-	
+
 	@Override
 	public void gotTransfer(int progress, int serviceId, int buyerId, int sellerId)
 	{
@@ -54,7 +53,7 @@ public class MockupNetwork implements INetwork {
 	@Override
 	public void stopTransfer(int serviceId, int userId)
 	{
-		
+
 	}
 
 	@Override
@@ -115,12 +114,17 @@ public class MockupNetwork implements INetwork {
 	}
 
 	@Override
+	public void requestDropped(int serviceId, int buyerId) {
+		this.med.requestDropped(serviceId, buyerId);
+	}
+
+	@Override
 	public boolean acceptOffer(int serviceId, int buyerId, int sellerId)
 	{
 		Object[] message = {NetworkMethods.ACCEPT_OFFER.getInt(), serviceId, buyerId, sellerId};
-		
+
 		client.sendMessage(message);
-		
+
 		return true;
 	}
 
