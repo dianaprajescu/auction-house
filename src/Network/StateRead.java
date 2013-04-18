@@ -8,6 +8,10 @@ import java.nio.channels.SocketChannel;
 
 import javax.swing.SwingUtilities;
 
+import org.apache.log4j.Logger;
+
+import app.Mediator;
+
 public class StateRead implements IStateClientNetwork {
 
 	SocketChannel channel;
@@ -20,6 +24,8 @@ public class StateRead implements IStateClientNetwork {
 	int buyerId;
 	int sellerId;
 	int progress;
+	
+	static Logger log = Logger.getLogger(StateRead.class);
 
 	public StateRead(SocketChannel channel, INetwork network, ClientNetwork clientNetwork) {
 		this.channel = channel;
@@ -90,6 +96,9 @@ public class StateRead implements IStateClientNetwork {
 
 	@Override
 	public void processMessage() {
+		
+		log.debug(message.getMethod());
+		
 		if (message.getMethod() == NetworkMethods.NEW_USER.getInt())
 		{
 			processNewUser();
@@ -145,6 +154,9 @@ public class StateRead implements IStateClientNetwork {
 	}
 
 	public void processNewUser(){
+		
+		log.debug("");
+		
 		buffer =  message.getBuffer();
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
@@ -155,6 +167,8 @@ public class StateRead implements IStateClientNetwork {
 	}
 
 	public void processOfferMade(){
+		log.debug("");
+		
 		buffer =  message.getBuffer();
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
@@ -166,7 +180,7 @@ public class StateRead implements IStateClientNetwork {
 
 	public void processUpdateTransfer(){
 
-		System.out.println("StateRead: processUpdateTransfer");
+		log.debug("");
 
 		buffer =  message.getBuffer();
 		SwingUtilities.invokeLater(new Runnable() {
@@ -178,6 +192,9 @@ public class StateRead implements IStateClientNetwork {
 	}
 
 	private void processUserLeft(){
+		
+		log.debug("");
+		
 		buffer =  message.getBuffer();
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
@@ -189,6 +206,8 @@ public class StateRead implements IStateClientNetwork {
 
 	private void processOfferExceeded()
 	{
+		log.debug("");
+		
 		buffer =  message.getBuffer();
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
@@ -200,7 +219,7 @@ public class StateRead implements IStateClientNetwork {
 
 	private void processStartTransfer() throws IOException
 	{
-		System.out.println("StateRead: processStartTransfer");
+		log.debug("");
 
 		buffer =  message.getBuffer();
 		serviceId = buffer.getInt();
@@ -219,7 +238,8 @@ public class StateRead implements IStateClientNetwork {
 
 	private void processNewTransfer()
 	{
-		System.out.println("New: processNewTransfer");
+		log.debug("");
+		
 		buffer =  message.getBuffer();
 		progress = buffer.getInt();
 		serviceId = buffer.getInt();
@@ -245,6 +265,9 @@ public class StateRead implements IStateClientNetwork {
 	}
 
 	private void processOfferRefused() {
+		
+		log.debug("");
+		
 		buffer =  message.getBuffer();
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
@@ -255,6 +278,9 @@ public class StateRead implements IStateClientNetwork {
 	}
 
 	private void processOfferRemoved() {
+		
+		log.debug("");
+		
 		buffer =  message.getBuffer();
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
@@ -265,6 +291,9 @@ public class StateRead implements IStateClientNetwork {
 	}
 
 	private void processRemoveExceeded() {
+		
+		log.debug("");
+		
 		buffer =  message.getBuffer();
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
@@ -275,6 +304,9 @@ public class StateRead implements IStateClientNetwork {
 	}
 
 	private void processRequestDropped() {
+		
+		log.debug("");
+		
 		buffer =  message.getBuffer();
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override

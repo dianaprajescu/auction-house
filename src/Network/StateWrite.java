@@ -4,12 +4,16 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
+import org.apache.log4j.Logger;
+
 public class StateWrite implements IStateClientNetwork {
 	
 	Object[] message;
 	ByteBuffer buffer;
 	SocketChannel channel;
 	ClientNetwork clientNetwork;
+	
+	static Logger log = Logger.getLogger(StateWrite.class);
 	
 	public StateWrite(SocketChannel channel, Object[] message, ClientNetwork clientNetwork) {
 		this.channel = channel;
@@ -24,6 +28,8 @@ public class StateWrite implements IStateClientNetwork {
 	
 	@Override
 	public void execute() throws IOException {
+		
+		log.debug(message[0]);
 		
 		if ((int)message[0] == NetworkMethods.NEW_TRANSFER.getInt() )
 		{
@@ -94,6 +100,8 @@ public class StateWrite implements IStateClientNetwork {
 		}
 		catch(Exception e)
 		{
+			log.error("Channel closed " + channel.getRemoteAddress());
+			
 			channel.close();
 		}
 	}

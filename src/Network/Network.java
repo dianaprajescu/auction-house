@@ -17,17 +17,17 @@ import app.UserType;
  * @author Stedy
  *
  */
-public class MockupNetwork implements INetwork {
+public class Network implements INetwork {
 	private Mediator med;
 
 	private ClientNetwork client;
 	
-	static Logger log = Logger.getLogger(MockupNetwork.class);
+	static Logger log = Logger.getLogger(Network.class);
 
 	/**
 	 * Constructor.
 	 */
-	public MockupNetwork(Mediator med)
+	public Network(Mediator med)
 	{
 		this.med = med;
 		med.registerNetwork(this);
@@ -237,9 +237,6 @@ public class MockupNetwork implements INetwork {
 
 		if (add)
 		{
-			// Populate model with a random number of sellers.
-			int noUsers = new Random().nextInt(6) + 1;
-
 			// Create a new CellTableModel.
 			CellTableModel ct = new CellTableModel();
 

@@ -12,6 +12,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
 
+import org.apache.log4j.Logger;
+
 public class ClientNetwork extends Thread {
 	// The associate network.
 	INetwork network;
@@ -33,6 +35,8 @@ public class ClientNetwork extends Thread {
 	
 	// Channel.
 	SocketChannel channel;
+	
+	static Logger log = Logger.getLogger(ClientNetwork.class);
 	
 	public ClientNetwork(){
 		// Init the message queue.
@@ -169,7 +173,7 @@ public class ClientNetwork extends Thread {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			log.error("Channel error " + e.getMessage());
 		}
 	}
 	
