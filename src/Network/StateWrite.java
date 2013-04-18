@@ -68,8 +68,6 @@ public class StateWrite implements IStateClientNetwork {
 		}
 		else if ((int)message[0] == NetworkMethods.TRANSFER.getInt())
 		{	
-			System.out.println("StateWrite: sendTransfer");
-			
 			// Set buffer.
 			buffer = clientNetwork.getBufferTransfer((int)message[1], (int)message[2]);
 			

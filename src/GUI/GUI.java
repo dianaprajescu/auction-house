@@ -263,7 +263,7 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	}
 
 	@Override
-	public void stopTransfer(int serviceId, int userId) {
-		this.mainMed.stopTransfer(serviceId, userId);
+	public void transferFailed(int serviceId, int buyerId, int sellerId) {
+		this.GUImed.transferFailed(serviceId, buyerId, sellerId);
 	}
 }

@@ -10,18 +10,35 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import org.apache.log4j.*;
 
+/**
+ * 
+ * Server Network component.
+ *
+ * @author Stedy
+ *
+ */
 public class ServerNetwork extends Thread{
+	
+	// Server port.
 	public static int port = 30000;
+	
+	// Server url.
 	public static String url = "127.0.0.1";
 
+	// Server channel.
 	private ServerSocketChannel channel;
+
+	// Server selector.
 	private Selector selector;
+	
+	// List of current users in network.
 	private UsersServer users;
 	
 	static Logger log = Logger.getLogger(ServerNetwork.class);
 	
 	public ServerNetwork()
 	{
+		// Init user list.
 		users = new UsersServer();
 	}
 
@@ -92,10 +109,12 @@ public class ServerNetwork extends Thread{
 				}
 			}
 
+			// EOF.
 			if (bytesRead == -1){
 				throw new IOException("EOF");
 			}
 
+			// Process message.
 			process(message, clientChannel);
 		}
 		catch(Exception e){
@@ -103,11 +122,19 @@ public class ServerNetwork extends Thread{
 			log.debug("Channel closed " + clientChannel.getRemoteAddress());
 			log.error("Channel closed " + clientChannel.getRemoteAddress());
 			
+			// Remove user from server.
 			users.remove(clientChannel);
 			clientChannel.close();
 		}
 	}
 
+	/**
+	 * Process a message received eighter from buyer or seller.
+	 * 
+	 * @param message
+	 * @param channel
+	 * @throws IOException
+	 */
 	public void process(ServerMessage message, SocketChannel channel) throws IOException
 	{
 		if (message.getMethod() == NetworkMethods.LOGIN.getInt()){
@@ -116,28 +143,22 @@ public class ServerNetwork extends Thread{
 		else if (message.getMethod() == NetworkMethods.REGISTER_SERVICE.getInt()){
 			processRegisterService(message, channel);
 		}
-
-		else if (message.getMethod() == NetworkMethods.LOGOUT.getInt())
-		{
+		else if (message.getMethod() == NetworkMethods.LOGOUT.getInt()){
 			processLogout(channel);
 		}
-
 		else if (message.getMethod() == NetworkMethods.MAKE_OFFER.getInt()){
 			processMakeOffer(message, channel);
 		}
 		else if (message.getMethod() == NetworkMethods.TRANSFER.getInt()){
 			processTransfer(message, channel);
 		}
-		else if (message.getMethod() == NetworkMethods.REFUSE_OFFER.getInt())
-		{
+		else if (message.getMethod() == NetworkMethods.REFUSE_OFFER.getInt()){
 			processRefuseOffer(message, channel);
 		}
-		else if (message.getMethod() == NetworkMethods.DROP_OFFER_REQUEST.getInt())
-		{
+		else if (message.getMethod() == NetworkMethods.DROP_OFFER_REQUEST.getInt()){
 			processDropOfferRequest(message, channel);
 		}
-		else if (message.getMethod() == NetworkMethods.REMOVE_OFFER.getInt())
-		{
+		else if (message.getMethod() == NetworkMethods.REMOVE_OFFER.getInt()){
 			processRemoveOffer(message, channel);
 		}
 		else if (message.getMethod() == NetworkMethods.GOT_TRANSFER.getInt()){
@@ -148,6 +169,12 @@ public class ServerNetwork extends Thread{
 		}
 	}
 
+	/**
+	 * Process new user login.
+	 * 
+	 * @param message
+	 * @param channel
+	 */
 	public void processLogin(ServerMessage message, SocketChannel channel)
 	{
 		ByteBuffer buf = message.getBuffer();
@@ -160,6 +187,13 @@ public class ServerNetwork extends Thread{
 		users.addUser(userId, type, channel);
 	}
 
+	/**
+	 * Process user registers new service.
+	 * 
+	 * @param message
+	 * @param channel
+	 * @throws IOException
+	 */
 	public void processRegisterService(ServerMessage message, SocketChannel channel) throws IOException
 	{
 		ByteBuffer buf = message.getBuffer();
@@ -171,12 +205,26 @@ public class ServerNetwork extends Thread{
 		users.addService(serviceId, userId);
 	}
 
+	/**
+	 * Process logout.
+	 * 
+	 * @param channel
+	 * @throws IOException
+	 */
 	private void processLogout(SocketChannel channel) throws IOException
 	{
 		log.debug("logout");
+		
 		users.remove(channel);
 	}
 
+	/**
+	 * Process seller has made and offer.
+	 * 
+	 * @param message
+	 * @param channel
+	 * @throws IOException
+	 */
 	public void processMakeOffer(ServerMessage message, SocketChannel channel) throws IOException
 	{
 		ByteBuffer buf = message.getBuffer();
@@ -190,6 +238,13 @@ public class ServerNetwork extends Thread{
 		users.makeOffer(serviceId, buyerId, sellerId, price);
 	}
 
+	/**
+	 * Process transfer from seller to buyer.
+	 * 
+	 * @param message
+	 * @param channel
+	 * @throws IOException
+	 */
 	public void processTransfer(ServerMessage message, SocketChannel channel) throws IOException{
 		ByteBuffer buf = message.getBuffer();
 		int progress = buf.getInt();
@@ -202,6 +257,13 @@ public class ServerNetwork extends Thread{
 		users.processTransfer(progress, serviceId, buyerId, sellerId, buf);
 	}
 	
+	/**
+	 * Process buyer has got transfer.
+	 * 
+	 * @param message
+	 * @param channel
+	 * @throws IOException
+	 */
 	public void processGotTransfer(ServerMessage message, SocketChannel channel) throws IOException{		
 		ByteBuffer buf = message.getBuffer();
 		int serviceId = buf.getInt();
@@ -213,6 +275,13 @@ public class ServerNetwork extends Thread{
 		users.processGotTransfer(serviceId, buyerId, sellerId);
 	}
 	
+	/**
+	 * Process buyer accepts offer.
+	 * 
+	 * @param message
+	 * @param channel
+	 * @throws IOException
+	 */
 	public void processAcceptOffer(ServerMessage message, SocketChannel channel) throws IOException{
 		ByteBuffer buf = message.getBuffer();
 		int serviceId = buf.getInt();
@@ -224,6 +293,13 @@ public class ServerNetwork extends Thread{
 		users.startTransfer(serviceId, buyerId, sellerId);
 	}
 
+	/**
+	 * Process buyer refuses offer.
+	 * 
+	 * @param message
+	 * @param channel
+	 * @throws IOException
+	 */
 	private void processRefuseOffer(ServerMessage message, SocketChannel channel) throws IOException
 	{
 		ByteBuffer buf = message.getBuffer();
@@ -236,6 +312,13 @@ public class ServerNetwork extends Thread{
 		users.refuseOffer(serviceId, buyerId, sellerId);
 	}
 
+	/**
+	 * Process buyer drops offer request.
+	 * 
+	 * @param message
+	 * @param channel
+	 * @throws IOException
+	 */
 	private void processDropOfferRequest(ServerMessage message, SocketChannel channel) throws IOException
 	{
 		ByteBuffer buf = message.getBuffer();
@@ -247,6 +330,13 @@ public class ServerNetwork extends Thread{
 		users.dropOfferRequest(serviceId, userId);
 	}
 
+	/**
+	 * Process seller removes offer.
+	 * 
+	 * @param message
+	 * @param channel
+	 * @throws IOException
+	 */
 	private void processRemoveOffer(ServerMessage message, SocketChannel channel) throws IOException
 	{
 		ByteBuffer buf = message.getBuffer();

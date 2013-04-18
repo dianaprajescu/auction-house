@@ -76,7 +76,7 @@ public class ClientNetwork extends Thread {
 	}
 	
 	public void startTransfer(int serviceId, int buyerId, int sellerId) throws IOException{
-		File file = new File(20 + (new Random()).nextInt(61), serviceId, buyerId, sellerId);
+		File file = new File(2000 + (new Random()).nextInt(6001), serviceId, buyerId, sellerId);
 		
 		HashMap<Integer, File> buyers;
 		
@@ -121,6 +121,16 @@ public class ClientNetwork extends Thread {
 		{
 			return null;
 		}
+	}
+	
+	public void failTransfer(int serviceId, int buyerId)
+	{
+		File file = this.getTransfer(serviceId, buyerId);
+		
+		if (file != null)
+		{
+			file.transferFailed();
+		}	
 	}
 	
 	public void saveTransfer(int serviceId, int buyerId, int sellerId, ByteBuffer buffer) throws IOException 

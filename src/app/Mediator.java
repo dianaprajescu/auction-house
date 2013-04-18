@@ -191,7 +191,7 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	}
 
 	@Override
-	public void stopTransfer(int serviceId, int userId) {
-		this.network.stopTransfer(serviceId, userId);
+	public void transferFailed(int serviceId, int buyerId, int sellerId) {
+		this.gui.transferFailed(serviceId, buyerId, sellerId);
 	}
 }

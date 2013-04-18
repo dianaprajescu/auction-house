@@ -62,6 +62,9 @@ public class File {
 	 */
 	public ByteBuffer getBuffer() throws IOException
 	{
+		if (progress == -1)
+			return null;
+		
 		// Init buffer size.
     	ByteBuffer buffer = ByteBuffer.allocate(MESSAGE_LENGTH + 6 * Integer.SIZE / 8);
     	
@@ -104,7 +107,12 @@ public class File {
 	 */
 	public int getProgress()
 	{
-		return this.progress * 100 / this.count;
+		return this.progress < 0 ? this.progress : this.progress * 100 / this.count;
+	}
+	
+	public void transferFailed()
+	{
+		this.progress = -1;
 	}
 	
 	/**

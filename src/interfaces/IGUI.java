@@ -178,12 +178,13 @@ public interface IGUI {
 	 * @param type
 	 */
 	public MainTableModel getServiceList(int userId, UserType type);
-
+	
 	/**
-	 * User initiates stop transfer.
-	 *
+	 * A trasfer failed.
+	 * 
 	 * @param serviceId
-	 * @param userId
+	 * @param buyerId
+	 * @param sellerId
 	 */
-	public void stopTransfer(int serviceId, int userId);
+	public void transferFailed(int serviceId, int buyerId, int sellerId);
 }

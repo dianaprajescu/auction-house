@@ -89,4 +89,13 @@ public interface INetworkMediator {
 	 * @param buyerId
 	 */
 	public void offerRemoved(int serviceId, int sellerId);
+	
+	/**
+	 * Transfer failed.
+	 * 
+	 * @param serviceId
+	 * @param buyerId
+	 * @param sellerId
+	 */
+	public void transferFailed(int serviceId, int buyerId, int sellerId);
 }

@@ -20,7 +20,8 @@ public enum NetworkMethods {
 	REMOVE_OFFER(16),
 	OFFER_REMOVED(17),
 	REMOVE_EXCEEDED(18),
-	REQUEST_DROPPED(19);
+	REQUEST_DROPPED(19),
+	STOP_TRANSFER(20);
 
 	private int id;
 

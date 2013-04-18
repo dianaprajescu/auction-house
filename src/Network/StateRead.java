@@ -12,6 +12,12 @@ import org.apache.log4j.Logger;
 
 import app.Mediator;
 
+/**
+ * State read for message.
+ * 
+ * @author Stedy
+ *
+ */
 public class StateRead implements IStateClientNetwork {
 
 	SocketChannel channel;
@@ -27,6 +33,13 @@ public class StateRead implements IStateClientNetwork {
 	
 	static Logger log = Logger.getLogger(StateRead.class);
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param channel
+	 * @param network
+	 * @param clientNetwork
+	 */
 	public StateRead(SocketChannel channel, INetwork network, ClientNetwork clientNetwork) {
 		this.channel = channel;
 		this.network = network;
@@ -74,15 +87,18 @@ public class StateRead implements IStateClientNetwork {
 				}
 			}
 
+			// EOF.
 			if (byteBuffer == -1){
 				throw new Exception ("EOF");
 			}
 		}
 		catch(Exception e)
 		{
+			log.error("Channel closes" + e.getMessage());
 			channel.close();
 		}
 
+		// No method passed.
 		if (message.getMethod() != -1)
 		{
 			this.processMessage();
@@ -115,12 +131,10 @@ public class StateRead implements IStateClientNetwork {
 		}
 		else if (message.getMethod() == NetworkMethods.START_TRANSFER.getInt())
 		{
-			System.out.println("Process ST TR");
 			try {
 				processStartTransfer();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.error("Transfer error " + e.getMessage());
 			}
 		}
 		else if (message.getMethod() == NetworkMethods.UPDATE_TRANSFER.getInt())
@@ -153,6 +167,9 @@ public class StateRead implements IStateClientNetwork {
 		}
 	}
 
+	/**
+	 * New user gets online.
+	 */
 	public void processNewUser(){
 		
 		log.debug("");
@@ -166,6 +183,9 @@ public class StateRead implements IStateClientNetwork {
 		});
 	}
 
+	/**
+	 * New offer has been made.
+	 */
 	public void processOfferMade(){
 		log.debug("");
 		
@@ -178,6 +198,9 @@ public class StateRead implements IStateClientNetwork {
 		});
 	}
 
+	/**
+	 * Update transfer.
+	 */
 	public void processUpdateTransfer(){
 
 		log.debug("");
@@ -191,6 +214,9 @@ public class StateRead implements IStateClientNetwork {
 		});
 	}
 
+	/**
+	 * User has went offline.
+	 */
 	private void processUserLeft(){
 		
 		log.debug("");
@@ -204,6 +230,9 @@ public class StateRead implements IStateClientNetwork {
 		});
 	}
 
+	/**
+	 * Offer was exceeeded.
+	 */
 	private void processOfferExceeded()
 	{
 		log.debug("");
@@ -217,6 +246,11 @@ public class StateRead implements IStateClientNetwork {
 		});
 	}
 
+	/**
+	 * Start transfer.
+	 * 
+	 * @throws IOException
+	 */
 	private void processStartTransfer() throws IOException
 	{
 		log.debug("");
@@ -236,6 +270,9 @@ public class StateRead implements IStateClientNetwork {
 		});
 	}
 
+	/**
+	 * Process new transfer request.
+	 */
 	private void processNewTransfer()
 	{
 		log.debug("");
@@ -246,13 +283,14 @@ public class StateRead implements IStateClientNetwork {
 		buyerId = buffer.getInt();
 		sellerId = buffer.getInt();
 
+		// Save transfer data.
 		try {
 			this.clientNetwork.saveTransfer(serviceId, buyerId, sellerId, buffer);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Error in saving transfer data " + e.getMessage());
 		}
 
+		// Notify that we GOT_TRANSFER.
 		Object[] message = {NetworkMethods.GOT_TRANSFER.getInt(), serviceId, buyerId, sellerId};
 		this.clientNetwork.sendMessage(message);
 
@@ -264,6 +302,9 @@ public class StateRead implements IStateClientNetwork {
 		});
 	}
 
+	/**
+	 * Offer was refused.
+	 */
 	private void processOfferRefused() {
 		
 		log.debug("");
@@ -277,6 +318,9 @@ public class StateRead implements IStateClientNetwork {
 		});
 	}
 
+	/**
+	 * Offer was removed.
+	 */
 	private void processOfferRemoved() {
 		
 		log.debug("");
@@ -290,6 +334,9 @@ public class StateRead implements IStateClientNetwork {
 		});
 	}
 
+	/**
+	 * Offer is no longer exceeed.
+	 */
 	private void processRemoveExceeded() {
 		
 		log.debug("");
@@ -303,6 +350,9 @@ public class StateRead implements IStateClientNetwork {
 		});
 	}
 
+	/**
+	 * Request was dropped.
+	 */
 	private void processRequestDropped() {
 		
 		log.debug("");

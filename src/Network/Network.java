@@ -56,11 +56,13 @@ public class Network implements INetwork {
 		
 		this.med.updateTransfer(serviceId, sellerId, progress);
 	}
-
+	
 	@Override
-	public void stopTransfer(int serviceId, int userId)
+	public void transferFailed(int serviceId, int buyerId, int sellerId)
 	{
+		log.debug(serviceId + " " + buyerId + " " + sellerId);
 		
+		this.med.transferFailed(serviceId, buyerId, sellerId);
 	}
 
 	@Override
@@ -183,6 +185,8 @@ public class Network implements INetwork {
 	public boolean removeOffer(int serviceId, int buyerId, int sellerId)
 	{
 		log.debug(serviceId + " " + buyerId + " " + sellerId);
+		
+		client.failTransfer(serviceId, buyerId);
 		
 		Object[] message = {NetworkMethods.REMOVE_OFFER.getInt(), serviceId, buyerId, sellerId};
 

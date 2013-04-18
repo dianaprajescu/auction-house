@@ -161,14 +161,6 @@ public interface INetwork {
 	public CellTableModel getUserList(int serviceId, UserType type);
 
 	/**
-	 * User initiates stop transfer.
-	 *
-	 * @param serviceId
-	 * @param userId
-	 */
-	public void stopTransfer(int serviceId, int userId);
-
-	/**
 	 * Register a new service.
 	 *
 	 * @param serviceId
@@ -185,5 +177,22 @@ public interface INetwork {
 	 */
 	public void transfer(int serviceId, int buyerId, int sellerId);
 
+	/**
+	 * New transfer received.
+	 * 
+	 * @param progress
+	 * @param serviceid
+	 * @param buyerId
+	 * @param sellerId
+	 */
 	void gotTransfer(int progress, int serviceid, int buyerId, int sellerId);
+	
+	/**
+	 * Transfer failed.
+	 * 
+	 * @param serviceId
+	 * @param buyerId
+	 * @param sellerId
+	 */
+	void transferFailed(int serviceId, int buyerId, int sellerId);
 }

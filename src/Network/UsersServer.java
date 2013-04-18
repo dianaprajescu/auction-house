@@ -237,6 +237,14 @@ public class UsersServer {
 		}
 	}
 
+	/**
+	 * Server announces seller to start the transfer.
+	 * 
+	 * @param serviceId
+	 * @param buyerId
+	 * @param sellerId
+	 * @throws IOException
+	 */
 	public void startTransfer(int serviceId, int buyerId, int sellerId) throws IOException{
 		int idxSeller = this.ids.indexOf(sellerId);
 
@@ -248,18 +256,35 @@ public class UsersServer {
 		}
 	}
 
+	/**
+	 * Server passes transfer forward to the buyer.
+	 * 
+	 * @param progress
+	 * @param serviceId
+	 * @param buyerId
+	 * @param sellerId
+	 * @param buf
+	 * @throws IOException
+	 */
 	public void processTransfer(int progress, int serviceId, int buyerId, int sellerId, ByteBuffer buf) throws IOException{
 		int idxBuyer = this.ids.indexOf(buyerId);
 
 		if (idxBuyer >= 0)
 		{
-			System.out.println("newTransfer");
 			Object[] message = {NetworkMethods.NEW_TRANSFER.getInt(), progress, serviceId, buyerId, sellerId, buf};
 			StateWrite state = new StateWrite(channels.get(idxBuyer), message);
 			state.execute();
 		}
 	}
 
+	/**
+	 * Buy notifies server that he got the transfer.
+	 * 
+	 * @param serviceId
+	 * @param buyerId
+	 * @param sellerId
+	 * @throws IOException
+	 */
 	public void processGotTransfer(int serviceId, int buyerId, int sellerId) throws IOException
 	{
 		int idxSeller = this.ids.indexOf(sellerId);
@@ -312,22 +337,9 @@ public class UsersServer {
 				{
 					int idxService = services.get(i).indexOf(serviceId);
 
-					// If the seller made an offer.
-					if (offers.get(i).get(idxService).containsKey(userId))
-					{
-						// Refuse offer.
-						Object[] messageSeller = {NetworkMethods.OFFER_REFUSED.getInt(), serviceId, userId};
-						StateWrite state = new StateWrite(channels.get(i), messageSeller);
-						state.execute();
-					}
-
-					// Remove the buyer from the list.
-					else
-					{
-						Object[] messageSeller = {NetworkMethods.REQUEST_DROPPED.getInt(), serviceId, userId};
-						StateWrite stateSeller = new StateWrite(channels.get(i), messageSeller);
-						stateSeller.execute();
-					}
+					Object[] messageSeller = {NetworkMethods.REQUEST_DROPPED.getInt(), serviceId, userId};
+					StateWrite stateSeller = new StateWrite(channels.get(i), messageSeller);
+					stateSeller.execute();
 				}
 			}
 		}
