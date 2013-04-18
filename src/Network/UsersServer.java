@@ -212,4 +212,39 @@ public class UsersServer {
 		StateWrite state = new StateWrite(channels.get(idxSeller), messageSeller);
 		state.execute();
 	}
+
+	/**
+	 * Buyer drops offer request.
+	 *
+	 * @param serviceId
+	 * @param userId
+	 * @throws IOException
+	 */
+	public void dropOfferRequest(int serviceId, int userId) throws IOException
+	{
+		int idx = ids.indexOf(userId);
+
+		// Go thrgough the list with sellers and refuse offers.
+		for (int i = 0; i < ids.size(); i++)
+		{
+			// If the user is seller.
+			if (types.get(i) == UserType.SELLER.getType())
+			{
+				// If the seller offers this service.
+				if (services.get(i).contains(serviceId))
+				{
+					int idxService = services.get(i).indexOf(serviceId);
+
+					// If the seller made an offer.
+					if (offers.get(i).get(idxService).containsKey(userId))
+					{
+						// Refuse offer.
+						int[] messageSeller = {NetworkMethods.OFFER_REFUSED.getInt(), serviceId, userId};
+						StateWrite state = new StateWrite(channels.get(i), messageSeller);
+						state.execute();
+					}
+				}
+			}
+		}
+	}
 }

@@ -167,6 +167,9 @@ public class StateRead implements IStateClientNetwork {
 	}
 
 	private void processOfferRefused() {
+
+		System.out.println("processOfferRefused");
+
 		buffer =  message.getBuffer();
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override

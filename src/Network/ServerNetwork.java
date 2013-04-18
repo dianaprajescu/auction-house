@@ -122,6 +122,10 @@ public class ServerNetwork {
 		{
 			processRefuseOffer(message, channel);
 		}
+		else if (message.getMethod() == NetworkMethods.DROP_OFFER_REQUEST.getInt())
+		{
+			processDropOfferRequest(message, channel);
+		}
 	}
 
 	public static void processLogin(ServerMessage message, SocketChannel channel)
@@ -177,6 +181,14 @@ public class ServerNetwork {
 		int buyerId = buf.getInt();
 		int sellerId = buf.getInt();
 		users.refuseOffer(serviceId, buyerId, sellerId);
+	}
+
+	private static void processDropOfferRequest(ServerMessage message, SocketChannel channel) throws IOException
+	{
+		ByteBuffer buf = message.getBuffer();
+		int serviceId = buf.getInt();
+		int userId = buf.getInt();
+		users.dropOfferRequest(serviceId, userId);
 	}
 
 	public static void init() throws IOException{

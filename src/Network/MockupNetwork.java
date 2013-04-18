@@ -109,9 +109,9 @@ public class MockupNetwork implements INetwork {
 	public boolean dropOfferRequest(int serviceId, int userId)
 	{
 		//TODO send refuse offer to all sellers.
-		//int[] message = {NetworkMethods.DROP_OFFER_REQUEST.getInt(), serviceId, userId};
+		int[] message = {NetworkMethods.DROP_OFFER_REQUEST.getInt(), serviceId, userId};
 
-		//client.sendMessage(message);
+		client.sendMessage(message);
 
 		return true;
 	}
