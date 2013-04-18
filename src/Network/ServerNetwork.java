@@ -87,7 +87,7 @@ public class ServerNetwork {
 			if (bytesRead == -1){
 				throw new IOException("EOF");
 			}
-			
+
 			process(message, clientChannel);
 		}
 		catch(Exception e){
@@ -117,6 +117,18 @@ public class ServerNetwork {
 		}
 		else if (message.getMethod() == NetworkMethods.TRANSFER.getInt()){
 			processTransfer(message, channel);
+		}
+		else if (message.getMethod() == NetworkMethods.REFUSE_OFFER.getInt())
+		{
+			processRefuseOffer(message, channel);
+		}
+		else if (message.getMethod() == NetworkMethods.DROP_OFFER_REQUEST.getInt())
+		{
+			processDropOfferRequest(message, channel);
+		}
+		else if (message.getMethod() == NetworkMethods.REMOVE_OFFER.getInt())
+		{
+			processRemoveOffer(message, channel);
 		}
 		else if (message.getMethod() == NetworkMethods.GOT_TRANSFER.getInt()){
 			processGotTransfer(message, channel);
@@ -158,10 +170,10 @@ public class ServerNetwork {
 		int price = buf.getInt();
 		users.makeOffer(serviceId, buyerId, sellerId, price);
 	}
-	
+
 	public static void processTransfer(ServerMessage message, SocketChannel channel) throws IOException{
 		System.out.println("processTransfer");
-		
+
 		ByteBuffer buf = message.getBuffer();
 		int progress = buf.getInt();
 		int serviceId = buf.getInt();
@@ -196,7 +208,33 @@ public class ServerNetwork {
 		
 		users.startTransfer(serviceId, buyerId, sellerId);
 	}
-	
+
+	private static void processRefuseOffer(ServerMessage message, SocketChannel channel) throws IOException
+	{
+		ByteBuffer buf = message.getBuffer();
+		int serviceId = buf.getInt();
+		int buyerId = buf.getInt();
+		int sellerId = buf.getInt();
+		users.refuseOffer(serviceId, buyerId, sellerId);
+	}
+
+	private static void processDropOfferRequest(ServerMessage message, SocketChannel channel) throws IOException
+	{
+		ByteBuffer buf = message.getBuffer();
+		int serviceId = buf.getInt();
+		int userId = buf.getInt();
+		users.dropOfferRequest(serviceId, userId);
+	}
+
+	private static void processRemoveOffer(ServerMessage message, SocketChannel channel) throws IOException
+	{
+		ByteBuffer buf = message.getBuffer();
+		int serviceId = buf.getInt();
+		int buyerId = buf.getInt();
+		int sellerId = buf.getInt();
+		users.removeOffer(serviceId, buyerId, sellerId);
+	}
+
 	public static void init() throws IOException{
 		// Create a new serversocketchannel;
 		channel = ServerSocketChannel.open();

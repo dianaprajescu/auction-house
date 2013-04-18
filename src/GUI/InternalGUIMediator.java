@@ -571,6 +571,9 @@ public class InternalGUIMediator {
 		{
 			// Update offer in GUI.
 			ctm.setValueAt("Offer Refused", cellRow, 1);
+
+			// Update.
+			((MainTableModel)this.gui.getTable().getModel()).fireTableCellUpdated(cellRow, 1);
 		}
 	}
 
@@ -599,7 +602,7 @@ public class InternalGUIMediator {
 	}
 
 	/**
-	 * Refuse offer.
+	 * Remove offer.
 	 *
 	 * @param mainRow
 	 * @param cellRow
@@ -728,6 +731,9 @@ public class InternalGUIMediator {
 			if (buyerRow >= 0)
 			{
 				ctm.setValueAt("Offer Refused", buyerRow, 1);
+
+				// Update.
+				((MainTableModel)this.gui.getTable().getModel()).fireTableCellUpdated(buyerRow, 1);
 			}
 		}
 	}

@@ -230,4 +230,75 @@ public class UsersServer {
 			state.execute();
 		}
 	}
+
+	/**
+	 * Buyer refuses an offer made by a seller.
+	 *
+	 * @param serviceId
+	 * @param buyerId
+	 * @param sellerId
+	 * @throws IOException
+	 */
+	public void refuseOffer(int serviceId, int buyerId, int sellerId) throws IOException
+	{
+		int idxSeller = ids.indexOf(sellerId);
+
+		// Inform the seller.
+		Object[] messageSeller = {NetworkMethods.OFFER_REFUSED.getInt(), serviceId, buyerId};
+		StateWrite state = new StateWrite(channels.get(idxSeller), messageSeller);
+		state.execute();
+	}
+
+	/**
+	 * Buyer drops offer request.
+	 *
+	 * @param serviceId
+	 * @param userId
+	 * @throws IOException
+	 */
+	public void dropOfferRequest(int serviceId, int userId) throws IOException
+	{
+		int idx = ids.indexOf(userId);
+
+		// Go thrgough the list with sellers and refuse offers.
+		for (int i = 0; i < ids.size(); i++)
+		{
+			// If the user is seller.
+			if (types.get(i) == UserType.SELLER.getType())
+			{
+				// If the seller offers this service.
+				if (services.get(i).contains(serviceId))
+				{
+					int idxService = services.get(i).indexOf(serviceId);
+
+					// If the seller made an offer.
+					if (offers.get(i).get(idxService).containsKey(userId))
+					{
+						// Refuse offer.
+						Object[] messageSeller = {NetworkMethods.OFFER_REFUSED.getInt(), serviceId, userId};
+						StateWrite state = new StateWrite(channels.get(i), messageSeller);
+						state.execute();
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Seller removes the offer he made.
+	 *
+	 * @param serviceId
+	 * @param buyerId
+	 * @param sellerId
+	 * @throws IOException
+	 */
+	public void removeOffer(int serviceId, int buyerId, int sellerId) throws IOException
+	{
+		int idxBuyer = ids.indexOf(buyerId);
+
+		// Inform the buyer.
+		Object[] message = {NetworkMethods.OFFER_REMOVED.getInt(), serviceId, sellerId};
+		StateWrite state = new StateWrite(channels.get(idxBuyer), message);
+		state.execute();
+	}
 }

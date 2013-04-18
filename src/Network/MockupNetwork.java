@@ -109,6 +109,9 @@ public class MockupNetwork implements INetwork {
 	public boolean dropOfferRequest(int serviceId, int userId)
 	{
 		//TODO send refuse offer to all sellers.
+		Object[] message = {NetworkMethods.DROP_OFFER_REQUEST.getInt(), serviceId, userId};
+
+		client.sendMessage(message);
 
 		return true;
 	}
@@ -127,6 +130,9 @@ public class MockupNetwork implements INetwork {
 	public boolean refuseOffer(int serviceId, int buyerId, int sellerId)
 	{
 		//TODO send refuse the selers offer.
+		Object[] message = {NetworkMethods.REFUSE_OFFER.getInt(), serviceId, buyerId, sellerId};
+
+		client.sendMessage(message);
 
 		return true;
 	}
@@ -144,7 +150,16 @@ public class MockupNetwork implements INetwork {
 	@Override
 	public boolean removeOffer(int serviceId, int buyerId, int sellerId)
 	{
+		Object[] message = {NetworkMethods.REMOVE_OFFER.getInt(), serviceId, buyerId, sellerId};
+
+		client.sendMessage(message);
+
 		return true;
+	}
+
+	@Override
+	public void offerRemoved(int serviceId, int sellerId) {
+		this.med.offerRemoved(serviceId, sellerId);
 	}
 
 	@Override
@@ -173,11 +188,6 @@ public class MockupNetwork implements INetwork {
 
 		this.med.offerMade(serviceId, sellerId, price);
 
-	}
-
-	@Override
-	public void offerRemoved(int serviceId, int sellerId) {
-		this.med.offerRemoved(serviceId, sellerId);
 	}
 
 	@Override
