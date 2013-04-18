@@ -810,7 +810,7 @@ public class InternalGUIMediator {
 	 * @param serviceId
 	 * @param buyerId
 	 */
-	public void removeExceeded(int serviceId, int buyerId)
+	public void removeExceeded(int serviceId, int buyerId, int price)
 	{
 		MainTable table = this.gui.getTable();
 		MainTableModel mtm = (MainTableModel) table.getModel();
@@ -830,6 +830,9 @@ public class InternalGUIMediator {
 			{
 				// Mark offer as accepted.
 				ctm.setValueAt("Offer Made", buyerRow, 1);
+				ctm.setValueAt(price, buyerRow, 2);
+
+				((MainTableModel)this.gui.getTable().getModel()).fireTableCellUpdated(serviceRow, 1);
 			}
 		}
 	}

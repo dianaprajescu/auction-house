@@ -136,6 +136,10 @@ public class StateRead implements IStateClientNetwork {
 		{
 			processOfferRemoved();
 		}
+		else if (message.getMethod() == NetworkMethods.REMOVE_EXCEEDED.getInt())
+		{
+			processRemoveExceeded();
+		}
 	}
 
 	public void processNewUser(){
@@ -254,6 +258,16 @@ public class StateRead implements IStateClientNetwork {
 			@Override
 			public void run() {
 				network.offerRemoved(buffer.getInt(), buffer.getInt());
+			}
+		});
+	}
+
+	private void processRemoveExceeded() {
+		buffer =  message.getBuffer();
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				network.removeExceeded(buffer.getInt(), buffer.getInt(), buffer.getInt());
 			}
 		});
 	}

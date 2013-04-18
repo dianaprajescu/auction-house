@@ -5,6 +5,8 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import app.UserType;
 
@@ -48,7 +50,7 @@ public class UsersServer {
 	}
 
 	/**
-	 * Remove user.
+	 * Remove user on logout.
 	 *
 	 * @param channel
 	 * @throws IOException
@@ -88,6 +90,50 @@ public class UsersServer {
 				}
 			}
 		}
+
+		// If the offers made by this user have exceeded other offers undo it.
+		if (types.get(idx) == UserType.SELLER.getType())
+		{
+			// Go through all this user's services.
+			for (int i = 0; i < services.get(idx).size(); i++)
+			{
+				int serviceId = services.get(idx).get(i);
+				int idxService = services.get(idx).indexOf(serviceId);
+
+				// Go through all offers made for this service.
+				Set<Entry<Integer, Integer>> userOffers = offers.get(idx).get(idxService).entrySet();
+
+				for (Entry<Integer, Integer> offer : userOffers)
+				{
+					// Go through the list of sellers and announce if their offer is not exceeded anymore.
+					for (int j = 0; j < ids.size(); j++)
+					{
+						// If user is seller.
+						if (types.get(j) == UserType.SELLER.getType())
+						{
+							// If offer was made to the same buyer.
+							if (offers.get(j).get(idxService).containsKey(offer.getKey()))
+							{
+								// If offer was exceeded.
+								int price = offers.get(idx).get(idxService).get(offer.getKey());
+								if (offers.get(j).get(idxService).get(offer.getKey()) > price)
+								{
+									// Inform the seller.
+									Object[] messageSeller = {NetworkMethods.REMOVE_EXCEEDED.getInt(), serviceId, offer.getKey(), offers.get(j).get(idxService).get(offer.getKey())};
+									StateWrite state = new StateWrite(channels.get(j), messageSeller);
+									state.execute();
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		else
+		{
+			//TODO If buyer goes offline he drops all offer requests.
+		}
+
 
 		// Close channel for the leaving user.
 		channels.get(idx).close();
@@ -195,10 +241,10 @@ public class UsersServer {
 			}
 		}
 	}
-	
+
 	public void startTransfer(int serviceId, int buyerId, int sellerId) throws IOException{
 		int idxSeller = this.ids.indexOf(sellerId);
-		
+
 		if (idxSeller >= 0)
 		{
 			Object[] message = {NetworkMethods.START_TRANSFER.getInt(), serviceId, buyerId, sellerId};
@@ -206,10 +252,10 @@ public class UsersServer {
 			state.execute();
 		}
 	}
-	
+
 	public void processTransfer(int progress, int serviceId, int buyerId, int sellerId, ByteBuffer buf) throws IOException{
 		int idxBuyer = this.ids.indexOf(buyerId);
-		
+
 		if (idxBuyer >= 0)
 		{
 			System.out.println("newTransfer");
@@ -218,11 +264,11 @@ public class UsersServer {
 			state.execute();
 		}
 	}
-	
+
 	public void processGotTransfer(int serviceId, int buyerId, int sellerId) throws IOException
 	{
 		int idxSeller = this.ids.indexOf(sellerId);
-		
+
 		if (idxSeller >= 0)
 		{
 			Object[] msg = {NetworkMethods.UPDATE_TRANSFER.getInt(), serviceId, buyerId, sellerId};

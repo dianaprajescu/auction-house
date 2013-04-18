@@ -221,8 +221,8 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	}
 
 	@Override
-	public void removeExceeded(int serviceId, int buyerId) {
-		this.GUImed.removeExceeded(serviceId, buyerId);
+	public void removeExceeded(int serviceId, int buyerId, int price) {
+		this.GUImed.removeExceeded(serviceId, buyerId, price);
 	}
 
 	@Override

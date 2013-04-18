@@ -127,7 +127,7 @@ public interface INetwork {
 	 * @param buyerId
 	 * @param price
 	 */
-	public void removeExceeded(int serviceId, int buyerId);
+	public void removeExceeded(int serviceId, int buyerId, int price);
 
 	/**
 	 * Announce a buyer that there was made an offer for a service.
