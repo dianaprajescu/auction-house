@@ -7,6 +7,7 @@
     <path id="proiect-idp.classpath">
         <pathelement location="bin"/>
         <pathelement location="resources/mysql-connector-java-5.1.24-bin.jar"/>
+    	<pathelement location="resources/log4j-1.2.17.jar"/>
     </path>
     <target name="init">
         <mkdir dir="bin"/>
@@ -15,6 +16,20 @@
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
+    	<parallel>
+    		<java classname="Network.Server" failonerror="true" fork="yes">
+	            <classpath refid="proiect-idp.classpath"/>
+	        </java>
+	    	<java classname="app.Main" failonerror="true" fork="yes">
+		        <classpath refid="proiect-idp.classpath"/>
+		    </java>
+	    	<java classname="app.Main" failonerror="true" fork="yes">
+		        <classpath refid="proiect-idp.classpath"/>
+		    </java>
+	    	<java classname="app.Main" failonerror="true" fork="yes">
+		        <classpath refid="proiect-idp.classpath"/>
+		    </java>
+    	</parallel>
     </target>
     <target name="clean">
         <delete dir="bin"/>
@@ -31,6 +46,11 @@
         </javac>
     </target>
     <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+	<target name="server">
+        <java classname="Network.Server" failonerror="true" fork="yes">
+            <classpath refid="proiect-idp.classpath"/>
+        </java>
+    </target>
     <target name="run">
         <java classname="app.Main" failonerror="true" fork="yes">
             <classpath refid="proiect-idp.classpath"/>
