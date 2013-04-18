@@ -172,6 +172,12 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	}
 
 	@Override
+	public void requestDropped(int serviceId, int buyerId)
+	{
+		this.GUImed.requestDropped(serviceId, buyerId);
+	}
+
+	@Override
 	public boolean acceptOffer(int serviceId, int buyerId, int sellerId)
 	{
 		return this.mainMed.acceptOffer(serviceId, buyerId, sellerId);

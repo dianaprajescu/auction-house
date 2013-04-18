@@ -41,6 +41,14 @@ public interface INetworkMediator {
 	public void offerRefused(int serviceId, int buyerId);
 
 	/**
+	 * The offer request was dropped by the buyer.
+	 *
+	 * @param serviceId
+	 * @param buyerId
+	 */
+	public void requestDropped(int serviceId, int buyerId);
+
+	/**
 	 * Announce a seller that his offer was accepted.
 	 * @param serviceId
 	 * @param buyerId

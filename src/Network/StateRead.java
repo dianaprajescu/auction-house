@@ -8,8 +8,6 @@ import java.nio.channels.SocketChannel;
 
 import javax.swing.SwingUtilities;
 
-import sun.nio.cs.ext.TIS_620;
-
 public class StateRead implements IStateClientNetwork {
 
 	SocketChannel channel;
@@ -140,6 +138,10 @@ public class StateRead implements IStateClientNetwork {
 		{
 			processRemoveExceeded();
 		}
+		else if (message.getMethod() == NetworkMethods.REQUEST_DROPPED.getInt())
+		{
+			processRequestDropped();
+		}
 	}
 
 	public void processNewUser(){
@@ -195,18 +197,18 @@ public class StateRead implements IStateClientNetwork {
 			}
 		});
 	}
-	
+
 	private void processStartTransfer() throws IOException
 	{
 		System.out.println("StateRead: processStartTransfer");
-		
+
 		buffer =  message.getBuffer();
 		serviceId = buffer.getInt();
 		buyerId = buffer.getInt();
 		sellerId = buffer.getInt();
-		
+
 		this.clientNetwork.startTransfer(serviceId, buyerId, sellerId);
-		
+
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
@@ -214,7 +216,7 @@ public class StateRead implements IStateClientNetwork {
 			}
 		});
 	}
-	
+
 	private void processNewTransfer()
 	{
 		System.out.println("New: processNewTransfer");
@@ -223,17 +225,17 @@ public class StateRead implements IStateClientNetwork {
 		serviceId = buffer.getInt();
 		buyerId = buffer.getInt();
 		sellerId = buffer.getInt();
-		
+
 		try {
 			this.clientNetwork.saveTransfer(serviceId, buyerId, sellerId, buffer);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		Object[] message = {NetworkMethods.GOT_TRANSFER.getInt(), serviceId, buyerId, sellerId};
 		this.clientNetwork.sendMessage(message);
-		
+
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
@@ -268,6 +270,16 @@ public class StateRead implements IStateClientNetwork {
 			@Override
 			public void run() {
 				network.removeExceeded(buffer.getInt(), buffer.getInt(), buffer.getInt());
+			}
+		});
+	}
+
+	private void processRequestDropped() {
+		buffer =  message.getBuffer();
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				network.requestDropped(buffer.getInt(), buffer.getInt());
 			}
 		});
 	}

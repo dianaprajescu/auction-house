@@ -63,6 +63,11 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	}
 
 	@Override
+	public void requestDropped(int serviceId, int buyerId) {
+		this.gui.requestDropped(serviceId, buyerId);
+	}
+
+	@Override
 	public boolean acceptOffer(int serviceId, int buyerId, int sellerId)
 	{
 		return this.network.acceptOffer(serviceId, buyerId, sellerId);

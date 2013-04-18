@@ -50,6 +50,14 @@ public interface IGUI {
 	public boolean dropOfferRequest(int serviceId, int userId);
 
 	/**
+	 * The offer request was dropped by the buyer.
+	 *
+	 * @param serviceId
+	 * @param buyerId
+	 */
+	public void requestDropped(int serviceId, int buyerId);
+
+	/**
 	 * Accept offer.
 	 * @param serviceId
 	 * @param buyerId
