@@ -8,96 +8,66 @@ URL Github: https://github.com/dianaprajescu/proiect-idp.git (branch tema1)
 
 Tehnologie folosita:
 	- Eclipse cu EGit
-	- Windows 7
+	- Windows 7 (Diana) / Ubuntu 12.04 (Stefan)
 	- JDK 1.7
+	
+=========
+Detalii TEMA 2:
+=========
 
 Configurare:
 - Pentru a configura userii si serviciile folosite am folosit o baza de date de tip mysql.
 - Pentru conexiunea cu baza de date am folosit "mysql-connector-java-5.1.24-bin.jar" ce se
 regaseste in folderul cu resurse.
 - Pentru a configura baza de date pentru proiect se vor realiza modificarile necesare in
-clasa DatabaseConfig si apoi se va compila proiectul (rulare comanda "ant").
+clasa DatabaseConfig si apoi se va rula proiectul (rulare comanda "ant").
 - In directorul "resources" se gaseste un dump al bazei de date pe care am folosit-o pe
 durata testatrii si care este utilizata de asemenea in modulul de simulare. Aceasta
 trebuie importata in MySQL si recomandam folosirea ei in structura actuala. Pentru
-autentificare se poate folosi utilizatorul "diana" cu parola "test" atat pentru logarea
-ca seller cat si pentru logarea ca buyer.
-
+autentificare se poate folosi utilizatorul "diana", "stefan" si "sorin" cu parola "test" 
+atat pentru logarea ca seller cat si pentru logarea ca buyer.
 
 Reguli ANT:
-	- build:    "ant"
-	- rulare:   "ant run"
-	- simulare: "ant simulate"
+	- default:  "ant" -  va rula serverul de network + 3 instante client
+	- client:   "ant run" - va rula o instant client
+	- server:   "ant server" - va rula o instanta server
 	
+Log-uri:
+	- Log-urile sunt pastrate in folderul logs.
+	- Log-urile pentru server se vor regasi in fisierul server.log, iar cele pentru fiecare
+	utilizator se vor regasi in fisierele utilizator.log
+	- Pentru configurare am folosit 2 fisiere distincte pentru server si client 
+	log4j-client.properties respectiv log4j-server.properties.
+	- Intrucat logurile pentru utilizatori sunt generate dinamic, Appender-ul pentru client
+	este setat abia in momentul in care se realizeaza login.
 	
-Observatii:
-	- Am implementat pe langa cerintele din enunt si bonus 1, astfel incat utilizatorii
-pot retrage cererea de oferta/oferta in orice etapa a licitatiei
-	- In momentul in care se ruleaza simularea se pot in acelasi timp realiza si interctiuni
-directe
-	- Pentru partea de GUI exista un mediator intern ce realizeaza medierea intre elementele 
-din interiorul interfetei grafice: InternalGUIMediator.
+Structura network:
+	- Networkul este construit din 2 componente, ServerNetwork si ClientNetwork. ServerNetwork
+	are rol de dispatcher si ruteaza corespunzator mesajele primite. ClientNetwork realizeaza
+	conexiunea dintre aplicatia Client si Server.
 
+Rulare server:
+	- Serverul este rulat separat de aplicatia client folosint Network.Server. In momentul
+	rularii va porni un JFrame care are in spate un Thread ce realizeaza rutarea mesajelor
+	intre clienti. In momentul in care fereastra cu serverul este inchisa va fi inchis si 
+	serverul, iar clientii conectati vor fi deconectati.
+	
+Protocol mesaje:
+	- Mesajele trimise de la client catre server vor respecta urmatoarea structura:
+	lungime_mesaj tip_mesaj mesaj_propriu_zis
+	- Este important de mentionat faptul ca lungime_mesaj include atat tip_mesaj cat si
+	mesa_propriu_zis, iar lungime_mesaj este reprezentat pe 4 bytes.
 
-Logica de efectuare a unei actiuni din mediatorul intern catre network:
-	InternalGUIMediator -> GUI (IGUI) -> Mediator (IGUIMediator) -> INetwork
+States:
+	- Pentru transmiterea, repectiv receptia mesajelor am folosit 2 state pattern. Astfel,
+	StateRead va implementa functiile necesare transmiterei de mesaje iar StateWrite pe 
+	cele necesare receptiei de mesaje. Prelucrarea mesajelor se realizeaza seperat de
+	transmiterea lor in functii specializate, iar in mometul trimiterii se foloseste 
+	buffer-ul de scriere respectiv de citire.
 	
-	
-Logica de efectuare a unei actiuni din network catre GUI:
-	INetwork -> Mediator (INetworkMediator) -> GUI (IGUI) -> InternalGUIMediator
-	
-	
-Logica de efectuare a unei actiuni din GUI catre WebService:
-	InternalGUIMediator -> GUI (IGUI) -> Mediator (IGUIMediator) -> IWSClient
-	
-	
-Logica de efecutare a unei actiuni din WebServiceClient catre GUI:
-	IWSClient -> Mediator (IWWSClientMediator) -> GUI (IGUI) -> InternalGUIMediator
-	
-
-Implementare GUI:
-	- Pentru implementarea modulului de GUI am folosit design patternurile MVC, Mediator si 
-Command. 
-	- Design patternul Command l-am folosit pentru a realiza decuplajul dintre butoane
-si Mediatorul intern pentru GUI.
-	- Design patternul Mediator l-am folosit pentru a simplifica modul in care clasele interne
-GUI interactioneaza intre ele. Folosind acest pattern am putut sa reducem din numarul de 
-conexiuni pe care ar fi trebuit sa le realizam in caz contrar.
-	- MainTableModel reprezinta modelul folosit pentru reprezentarea datelor in interiorul
-interfetei grafice principale. Acesta extinde AbstractTableModel si implementeaza metode
-specifice necesare in logica aplicatiei ulterior. Similar, CellTableModel extinde 
-AbstractTableModel, in aplicatie acesta reprezentand o celula din interiorul lui 
-MainTableModel. Separarea datelor de structura aplicatiei, ne-a ajutat sa accesam cu usurinta
-datele in Controller atunci cand am avut nevoie si le-am putut mentine organizat.
-	- In interfata principala, datele apar sub forma unui JTable (cu modelul MainTableModel),
-iar informatiile despre utilizatorii unei licitatii reprezinta tot un JTable (cu modelul
-CellTableModel) ce este o celula din tabelul principla. Am ales acest mod de implementare pentru
-usurinta de a reprezenta datele.
-
-
-INetwork:
-	- MockupNetwork reprezinta un Mockup realizat peste INetwork ce contine metode ce simuleaza
-un eventual comportament al modulului de Network.
-	- In logica curenta a aplicatiei, modulul de Network va realiza conexiunea intre utilizatori
-si va gestiona modul in care acestia comunica.
-	- Din modulul Network se pot initializa actiuni efectuate de un seller ce influenteaza un
-buyer sau invers.
-
-
-IWSClient:
-	- MockupWSClient reprezinta un Mockup realizat peste IWSClient ce contine metode pentru
-simularea comportamentului modulului de WSClient.
-	- WSClient se va ocupa de medierea intre client si WebService, realizand autentificarea
-utilizatorilor
-
-
-IGUIMediator:
-	- implementeaza actiunile ce sunt efectuate din GUI catre Mediator
-	
-
-INetworkMediator:
-	- implementeaza actiunile ce sunt efectuate din Network catre Mediator
-	
-	
-IWSClientMediator:
-	- implementeaza actiunile ce sunt efectuate din WSClient catre Mediator
+IMPORTANT:
+	- Intrucat in momentul de fata, nu este implementat WSClient nu avem cum sa limitam
+	logarea din mai multe instante cu acelasi utilizator, iar logarea cu acelasi utilizator
+	conduce la un comportament anormal. Acest lucru va fi tratat in tema urmatoare adaugand
+	constrangeri in WSClient.
+	 
