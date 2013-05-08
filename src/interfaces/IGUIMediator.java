@@ -40,15 +40,6 @@ public interface IGUIMediator {
 	public boolean logout(int userId);
 	
 	/**
-	 * Start transfer.
-	 * 
-	 * @param serviceId
-	 * @param buyerId
-	 * @param sellerId
-	 */
-	public void startTransfer(int serviceId, int buyerId, int sellerId);
-	
-	/**
 	 * A buyer has launched an offer request.
 	 *
 	 * @param   int  userType  1 for buyer and 2 for seller.
@@ -119,12 +110,4 @@ public interface IGUIMediator {
 	 * @param type
 	 */
 	public MainTableModel getServiceList(int userId, UserType type);
-	
-	/**
-	 * User initiates stop transfer.
-	 * 
-	 * @param serviceId
-	 * @param userId
-	 */
-	public void stopTransfer(int serviceId, int userId);
 }

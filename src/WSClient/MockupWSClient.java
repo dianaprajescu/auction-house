@@ -1,29 +1,29 @@
 package WSClient;
 
+import interfaces.IWSClient;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Random;
 
-import javax.swing.JOptionPane;
-
 import GUI.GUI;
 import GUI.components.CellTableModel;
+import GUI.components.MainTableModel;
 import app.Database;
 import app.Mediator;
 import app.UserType;
-import interfaces.IWSClient;
 
 public class MockupWSClient implements IWSClient {
-	
+
 	private Mediator med;
-	
+
 	private GUI gui;
-	
+
 	public MockupWSClient(Mediator med, GUI gui)
 	{
 		this.med = med;
 		med.registerWSClient(this);
-		
+
 		// Only used in simulation.
 		this.gui = gui;
 	}
@@ -37,7 +37,7 @@ public class MockupWSClient implements IWSClient {
 		ResultSet rs = db.query("SELECT * FROM user WHERE username = '" + username + "'");
 
 		int loggedId = -1;
-		
+
 		try {
 			// Username does not exist.
 			if (!rs.next())
@@ -76,20 +76,74 @@ public class MockupWSClient implements IWSClient {
 			// Invalid User Type.
 			return -1;
 		}
-		
+
 		return loggedId;
 	}
-	
+
 	/**
 	 * Logout user.
-	 * 
+	 *
 	 * @param userId
 	 * @return
 	 */
+	@Override
 	public boolean logout(int userId)
 	{
 		//TODO verify in GUI if we can do logout.
-		
+
 		return true;
+	}
+
+	@Override
+	public MainTableModel getServiceList(int userId, UserType type) {
+		// Populate model.
+		MainTableModel model = new MainTableModel();
+
+		// Get services from DB.
+		Database db = new Database();
+		ResultSet rs = db.query("SELECT * FROM service");
+
+		try {
+			while (rs.next())
+			{
+				boolean add = (new Random()).nextBoolean();
+
+				if (true)
+				{
+					Object[] row = {rs.getString("name"), new CellTableModel(), "Inactive", "-"};
+					model.addRow(rs.getInt("id"), row);
+				}
+			}
+		} catch (SQLException e1) {
+			return null;
+		}
+
+		return model;
+	}
+
+	@Override
+	public String getUsername(int userId)
+	{
+		// Connect db.
+		Database db = new Database();
+
+		// Get username from db.
+		ResultSet rs = db.query("SELECT username FROM user WHERE id = '" + userId + "'");
+
+		String username;
+
+		try {
+			if (!rs.next())
+			{
+				return null;
+			}
+
+			username = rs.getString("username");
+
+		} catch (SQLException e) {
+			return null;
+		}
+
+		return username;
 	}
 }

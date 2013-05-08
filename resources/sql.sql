@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 3.3.9
+-- version 3.5.1
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 30, 2013 at 01:09 AM
--- Server version: 5.1.53
--- PHP Version: 5.3.4
+-- Generation Time: Apr 19, 2013 at 12:03 AM
+-- Server version: 5.5.24-log
+-- PHP Version: 5.4.3
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -63,11 +64,17 @@ CREATE TABLE IF NOT EXISTS `user` (
   `logged` tinyint(4) NOT NULL COMMENT '1 if user is not logged and 2 if it''s logged',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `user`
 --
 
 INSERT INTO `user` (`id`, `username`, `password`, `type`, `logged`) VALUES
-(1, 'diana', 'test', 1, 1);
+(1, 'diana', 'test', 1, 1),
+(2, 'stefan', 'test', 0, 0),
+(3, 'sorin', 'test', 0, 0);
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

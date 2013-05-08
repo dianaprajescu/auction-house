@@ -5,9 +5,8 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.awt.Dialog;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -22,7 +21,6 @@ import GUI.components.MainTable;
 import GUI.components.MainTableModel;
 import GUI.components.MainTableMouseListener;
 import app.Command;
-import app.Database;
 import app.Mediator;
 import app.UserType;
 
@@ -59,10 +57,19 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	    int fWidth = this.getWidth()/2;
 
 	    this.setLocation(width-fWidth, height-fHeight);
-	    
+
 		// First display login window.
         setVisible(false);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        //this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        this.addWindowListener(new WindowAdapter()
+		{
+		    @Override
+			public void windowClosing(WindowEvent e)
+		    {
+		    	GUImed.logout();
+		    }
+		});
 
         GUImed.registerGUI(this);
 
@@ -146,12 +153,6 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	}
 
 	@Override
-	public void startTransfer(int serviceId, int buyerId, int sellerId)
-	{
-		this.mainMed.startTransfer(serviceId, buyerId, sellerId);
-	}
-
-	@Override
 	public void updateTransfer(int serviceId, int userId, int progress)
 	{
 		this.GUImed.updateTransfer(serviceId, userId, progress);
@@ -179,6 +180,12 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	public boolean dropOfferRequest(int serviceId, int userId)
 	{
 		return this.mainMed.dropOfferRequest(serviceId, userId);
+	}
+
+	@Override
+	public void requestDropped(int serviceId, int buyerId)
+	{
+		this.GUImed.requestDropped(serviceId, buyerId);
 	}
 
 	@Override
@@ -211,8 +218,8 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	}
 
 	@Override
-	public void dropUser(int userId) {
-		this.GUImed.dropUser(userId);
+	public void userLeft(int serviceId, int userId) {
+		this.GUImed.userLeft(serviceId, userId);
 	}
 
 	@Override
@@ -231,8 +238,8 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	}
 
 	@Override
-	public void removeExceeded(int serviceId, int buyerId) {
-		this.GUImed.removeExceeded(serviceId, buyerId);
+	public void removeExceeded(int serviceId, int buyerId, int price) {
+		this.GUImed.removeExceeded(serviceId, buyerId, price);
 	}
 
 	@Override
@@ -244,7 +251,7 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	public void offerRemoved(int serviceId, int sellerId) {
 		this.GUImed.offerRemoved(serviceId, sellerId);
 	}
-	
+
 	@Override
 	public CellTableModel getUserList(int serviceId, UserType type) {
 		return this.mainMed.getUserList(serviceId, type);
@@ -256,7 +263,7 @@ public class GUI extends JFrame implements IGUI, ActionListener {
 	}
 
 	@Override
-	public void stopTransfer(int serviceId, int userId) {
-		this.mainMed.stopTransfer(serviceId, userId);
+	public void transferFailed(int serviceId, int buyerId, int sellerId) {
+		this.GUImed.transferFailed(serviceId, buyerId, sellerId);
 	}
 }
