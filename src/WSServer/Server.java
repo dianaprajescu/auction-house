@@ -2,7 +2,10 @@ package WSServer;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Random;
 
+import GUI.components.CellTableModel;
 import WSServer.Database;
 
 /**
@@ -91,5 +94,31 @@ public class Server {
 		}
 
 		return username;
+	}
+	
+	/**
+	 * Get list of services.
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	public HashMap<Integer, String> getServiceList()
+	{
+		HashMap<Integer, String> sList = new HashMap<Integer, String>();
+		
+		// Get services from DB.
+		Database db = new Database();
+		ResultSet rs = db.query("SELECT * FROM service");
+
+		try {
+			while (rs.next())
+			{
+				sList.put(rs.getInt("id"), rs.getString("name"));
+			}
+		} catch (Exception e) {
+			return null;
+		}
+		
+		return sList;
 	}
 }
