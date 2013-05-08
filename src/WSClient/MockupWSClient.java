@@ -9,7 +9,7 @@ import java.util.Random;
 import GUI.GUI;
 import GUI.components.CellTableModel;
 import GUI.components.MainTableModel;
-import app.Database;
+import WSServer.Database;
 import app.Mediator;
 import app.UserType;
 
