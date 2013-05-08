@@ -25,13 +25,13 @@ public class Server {
 	 * @return
 	 */
 	@SuppressWarnings("resource")
-	public int login(String username, String password, int type) {
+	public int login(String username, String password) {
 		
 		// Connect db.
 		Database db = new Database();
 		
 		// Search if user exists in the DB.
-		ResultSet rs = db.query("SELECT * FROM user WHERE username = '" + username + "'");
+		ResultSet rs = db.query("SELECT * FROM user WHERE username = '" + username + "' AND password = sha1('" + password + "')");
 		
 		int loggedId = -1;
 		
@@ -43,24 +43,13 @@ public class Server {
 			}
 			else
 			{
-				// Password is invalid.
-				if (rs.getString("password").compareTo(password) != 0)
-				{
-					return -1;
-				}
-				else
-				{
-					// Return username id from db.
-					loggedId = rs.getInt("id");
-				}
+				// Return username id from db.
+				loggedId = rs.getInt("id");
 			}
 		} catch (Exception e) {
 			// Bad connection.
 			return -1;
 		}
-
-		// Login user and save type.
-		rs = db.query("UPDATE user SET type = '" + type + "' WHERE username = '" + username + "'");
 
 		return loggedId;
 	}
