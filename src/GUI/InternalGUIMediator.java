@@ -126,6 +126,8 @@ public class InternalGUIMediator {
 		// Login user with the ID got.
 		else
 		{
+			username.setId(logged);
+			username.setType(type);
 			MainTableModel userServices = this.gui.getServiceList(username.getId(), username.getType());
 
 			if (userServices != null)
@@ -134,12 +136,6 @@ public class InternalGUIMediator {
 
 				// Close login frame.
 				login.setVisible(false);
-
-				// Set the logged in userID;
-				username.setId(logged);
-
-				// Set the logged userType.
-				username.setType(type);
 
 				// Add username label in main frame.
 				JLabel welcome = gui.getWelcomeLabel();
@@ -150,6 +146,8 @@ public class InternalGUIMediator {
 
 				MainTable table = this.gui.getTable();
 				MainTableModel mtm = (MainTableModel) table.getModel();
+
+				/*
 				CellTableModel ctm;
 
 				// Add some services.
@@ -172,7 +170,7 @@ public class InternalGUIMediator {
 							this.gui.getTable().rebuildTable();
 						}
 					}
-				}
+				}*/
 			}
 			else
 			{
@@ -194,9 +192,6 @@ public class InternalGUIMediator {
 
 			for (int row=0; row < mtm.getRowCount(); row++)
 			{
-				// Cancel transfer.
-				gui.stopTransfer(mtm.getIdAt(row), username.getId());
-
 				// Cancel timer.
 				mtm.setTimerAt("-", row);
 
@@ -226,9 +221,6 @@ public class InternalGUIMediator {
 	 */
 	public void showServicePopup(MainTable table, int x, int y)
 	{
-		System.out.println(this.gui.getTable().getSelectedStatus());
-		System.out.println(this.gui.getTable().getSelectedId());
-
 		// Get service status.
 		String status = this.gui.getTable().getSelectedStatus();
 
@@ -302,7 +294,7 @@ public class InternalGUIMediator {
 		}
 		else
 		{
-			if (intStatus == 1)
+			if (intStatus == 1 || intStatus == 3 || intStatus == 4)
 			{
 				popup.add(new PopupMenuItem("Make Offer", this, this.gui, gui.getTable().getSelectedRow(), table.getSelectedRow()));
 			}
@@ -372,9 +364,9 @@ public class InternalGUIMediator {
 				break;
 
 			case "drop auction":
-				// Drop auction.
-				ctm = (CellTableModel) gui.getTable().getValueAt(mainRow, 1);
-				ctm.setValueAt("No Offer", cellRow, 1);
+
+				this.dropAuction(mainRow, cellRow);
+
 				break;
 		}
 
@@ -448,8 +440,8 @@ public class InternalGUIMediator {
 			// Activate service.
 			mtm.setStatusAt("Active", mainRow);
 
-			table.setValueAt(ctm, mainRow, 1);
-			this.gui.getTable().rebuildTable();
+			//table.setValueAt(ctm, mainRow, 1);
+			//this.gui.getTable().rebuildTable();
 
 			mtm.setTimerObjectAt(new AuctionTimer(this, mtm, mainRow), mainRow);
 		}
@@ -467,9 +459,6 @@ public class InternalGUIMediator {
 
 		// Get the service id.
 		int serviceId = mtm.getIdAt(mainRow);
-
-		// Stop transfer.
-		gui.stopTransfer(serviceId, username.getId());
 
 		// Drop offer request.
 		boolean dropRequest = gui.dropOfferRequest(serviceId, this.username.getId());
@@ -529,7 +518,7 @@ public class InternalGUIMediator {
 
 					if (intStatus == 2)
 					{
-						ctm.setValueAt("Offer Refused", i, 1);
+						refuseOffer(mainRow, i);
 					}
 				}
 				else
@@ -539,8 +528,8 @@ public class InternalGUIMediator {
 					mtm.fireTableCellUpdated(mainRow, 3);
 					mtm.getTimerObjectAt(mainRow).cancel();
 
-					ctm.setValueAt("Transfer Started", cellRow, 1);
-					gui.startTransfer(serviceId, this.username.getId(), sellerId);
+					ctm.setValueAt("Offer Accepted", cellRow, 1);
+					//gui.startTransfer(serviceId, this.username.getId(), sellerId);
 				}
 			}
 		}
@@ -575,6 +564,9 @@ public class InternalGUIMediator {
 		{
 			// Update offer in GUI.
 			ctm.setValueAt("Offer Refused", cellRow, 1);
+
+			// Update.
+			((MainTableModel)this.gui.getTable().getModel()).fireTableCellUpdated(cellRow, 1);
 		}
 	}
 
@@ -603,7 +595,7 @@ public class InternalGUIMediator {
 	}
 
 	/**
-	 * Refuse offer.
+	 * Remove offer.
 	 *
 	 * @param mainRow
 	 * @param cellRow
@@ -629,13 +621,35 @@ public class InternalGUIMediator {
 		}
 		else
 		{
-			// Stop transfer.
-			gui.stopTransfer(serviceId, username.getId());
+			if (getIntStatus(ctm.getStatusAt(cellRow)) >= 6 && getIntStatus(ctm.getStatusAt(cellRow)) <= 8)
+			{
+				// Update values.
+				ctm.setValueAt("Transfer failed", cellRow, 1);
+				ctm.setValueAt("-", cellRow, 2);
+			}
+			else
+			{
+				// Update offer in GUI.
+				ctm.setValueAt("No Offer", cellRow, 1);
+				ctm.setValueAt("-", cellRow, 2);
+			}
 
-			// Update offer in GUI.
-			ctm.setValueAt("No Offer", cellRow, 1);
-			ctm.setValueAt("-", cellRow, 2);
+			// Update.
+			((MainTableModel)this.gui.getTable().getModel()).fireTableCellUpdated(cellRow, 1);
+			((MainTableModel)this.gui.getTable().getModel()).fireTableCellUpdated(cellRow, 2);
 		}
+	}
+
+	/**
+	 * Drop the auction.
+	 *
+	 * @param mainRow
+	 * @param cellRow
+	 */
+	private void dropAuction (int mainRow, int cellRow)
+	{
+		// Same thing as remove offer except it's on "offer exceeded".
+		removeOffer(mainRow, cellRow);
 	}
 
 	/**
@@ -659,11 +673,11 @@ public class InternalGUIMediator {
 			CellTableModel ctm = (CellTableModel) mtm.getValueAt(serviceRow, 1);
 
 			// Add new user.
-			Object[] newUser = {username, "No Offer", 0};
+			Object[] newUser = {username, "No Offer", 0, 0};
 			ctm.addRow(userId, newUser);
 
 			// Update.
-			ctm.fireTableDataChanged();
+			ctm.fireTableCellUpdated(serviceRow, 1);
 
 			table.rebuildTable();
 		}
@@ -673,26 +687,71 @@ public class InternalGUIMediator {
 	 * User goes offline.
 	 *
 	 * @param userId
+	 * @param serviceId
 	 */
-	public void dropUser(int userId)
+	public void userLeft(int serviceId, int userId)
 	{
 		MainTable table = this.gui.getTable();
 		MainTableModel mtm = (MainTableModel) table.getModel();
 
 		for (int i=0; i<mtm.getRowCount(); i++)
 		{
-			// Get the cell table model for service.
-			CellTableModel ctm = (CellTableModel) mtm.getValueAt(i, 1);
+			if (mtm.getIdAt(i) == serviceId)
+			{
+				// Get the cell table model for service.
+				CellTableModel ctm = (CellTableModel) mtm.getValueAt(i, 1);
 
-			// Remove user.
-			ctm.removeRow(userId);
+				// Find the user.
+				for (int j = 0; j < ctm.getRowCount(); j++)
+				{
+					if (ctm.getIdAt(j) == userId)
+					{
+						// Remove user.
+						ctm.removeRow(j);
 
-			// Update.
-			ctm.fireTableDataChanged();
-			table.rebuildTable();
+						break;
+					}
+				}
+
+				// Update.
+				ctm.fireTableDataChanged();
+				table.rebuildTable();
+			}
 		}
 	}
 
+	/**
+	 * Buyer has dropped request.
+	 *
+	 * @param serviceId
+	 * @param buyerId
+	 */
+	public void requestDropped(int serviceId, int buyerId)
+	{
+		MainTable table = this.gui.getTable();
+		MainTableModel mtm = (MainTableModel) table.getModel();
+
+		// Get the service id.
+		int serviceRow = mtm.findRowByServiceId(serviceId);
+
+		if (serviceRow >= 0)
+		{
+			// Get the cell table model for service.
+			CellTableModel ctm = (CellTableModel) mtm.getValueAt(serviceRow, 1);
+
+			// Get the buyer row.
+			int buyerRow = ctm.findRowByUserId(buyerId);
+
+			if (buyerRow >= 0)
+			{
+				// Remove user.
+				ctm.removeRow(buyerRow);
+
+				// Update.
+				((MainTableModel)this.gui.getTable().getModel()).fireTableCellUpdated(buyerRow, 1);
+			}
+		}
+	}
 
 	/**
 	 * Offer was refused by the buyer.
@@ -719,6 +778,9 @@ public class InternalGUIMediator {
 			if (buyerRow >= 0)
 			{
 				ctm.setValueAt("Offer Refused", buyerRow, 1);
+
+				// Update.
+				((MainTableModel)this.gui.getTable().getModel()).fireTableCellUpdated(buyerRow, 1);
 			}
 		}
 	}
@@ -751,7 +813,7 @@ public class InternalGUIMediator {
 				ctm.setValueAt("Offer Accepted", buyerRow, 1);
 
 				//TODO Start transfer. Review should be set in network probably.
-				this.gui.startTransfer(serviceId, buyerId, username.getId());
+				//this.gui.startTransfer(serviceId, buyerId, username.getId());
 			}
 		}
 	}
@@ -795,7 +857,7 @@ public class InternalGUIMediator {
 	 * @param serviceId
 	 * @param buyerId
 	 */
-	public void removeExceeded(int serviceId, int buyerId)
+	public void removeExceeded(int serviceId, int buyerId, int price)
 	{
 		MainTable table = this.gui.getTable();
 		MainTableModel mtm = (MainTableModel) table.getModel();
@@ -815,6 +877,9 @@ public class InternalGUIMediator {
 			{
 				// Mark offer as accepted.
 				ctm.setValueAt("Offer Made", buyerRow, 1);
+				ctm.setValueAt(price, buyerRow, 2);
+
+				((MainTableModel)this.gui.getTable().getModel()).fireTableCellUpdated(serviceRow, 1);
 			}
 		}
 	}
@@ -874,12 +939,21 @@ public class InternalGUIMediator {
 
 			if (sellerRow >= 0)
 			{
-				// Stop transfer.
-				gui.stopTransfer(serviceId, username.getId());
-
-				// Update values.
-				ctm.setValueAt("No Offer", sellerRow, 1);
-				ctm.setValueAt("-", sellerRow, 2);
+				if (getIntStatus(ctm.getStatusAt(sellerRow)) >= 6 && getIntStatus(ctm.getStatusAt(sellerRow)) <= 8)
+				{
+					// Update values.
+					ctm.setValueAt("Transfer failed", sellerRow, 1);
+					ctm.setValueAt("-", sellerRow, 2);
+				}
+				else
+				{
+					// Update values.
+					ctm.setValueAt("No Offer", sellerRow, 1);
+					ctm.setValueAt("-", sellerRow, 2);
+				}
+				
+				// Update.
+				((MainTableModel)this.gui.getTable().getModel()).fireTableCellUpdated(sellerRow, 1);
 			}
 		}
 	}
@@ -906,18 +980,20 @@ public class InternalGUIMediator {
 
 				if (userRow >= 0)
 				{
-					if (progress != 100)
-					{
-						ctm.setValueAt("Transfer in Progress", userRow, 1);
-					}
-					else
-					{
-						ctm.setValueAt("Transfer Completed", userRow, 1);
-					}
-					ctm.setValueAt(progress, userRow, 3);
+					if (getIntStatus(ctm.getStatusAt(userRow)) != 8){
+						if (progress != 100 )
+						{
+							ctm.setValueAt("Transfer in Progress", userRow, 1);
+						}
+						else
+						{
+							ctm.setValueAt("Transfer Completed", userRow, 1);
+						}
+						ctm.setValueAt(progress, userRow, 3);
 	
-					ctm.fireTableCellUpdated(userRow, 3);
-					table.rebuildTable();
+						ctm.fireTableDataChanged();
+						table.rebuildTable();
+					}
 				}
 			}
 		}
@@ -1024,5 +1100,16 @@ public class InternalGUIMediator {
 
 		}
 
+	}
+	
+	/**
+	 * Transfer failed.
+	 * 
+	 * @param serviceId
+	 * @param buyerId
+	 * @param sellerId
+	 */
+	public void transferFailed(int serviceId, int buyerId, int sellerId){
+		
 	}
 }

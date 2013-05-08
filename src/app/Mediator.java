@@ -3,6 +3,12 @@
  */
 package app;
 
+import java.io.IOException;
+
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+
 import interfaces.IGUI;
 import interfaces.IGUIMediator;
 import interfaces.INetwork;
@@ -11,6 +17,7 @@ import interfaces.IWSClient;
 import interfaces.IWSClientMediator;
 import GUI.components.CellTableModel;
 import GUI.components.MainTableModel;
+import Network.ServerNetwork;
 
 /**
  * @author Stedy
@@ -21,17 +28,45 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	private INetwork network;
 	private IWSClient client;
 
+	static Logger log = Logger.getLogger(Mediator.class);
 
 	@Override
 	public int login(String username, String password, UserType type)
 	{
-		return this.client.login(username, password, type);
+		// Set file appender.
+		Logger root = (Logger) Logger.getRootLogger();
+		PatternLayout pl = new PatternLayout();
+		pl.setConversionPattern("[ %d{ISO8601} ] %-5p %l : %m%n");
+		FileAppender appender;
+		try {
+			appender = new FileAppender(pl, "logs/" + username + ".log", false);
+			root.addAppender(appender);
+		} catch (IOException e) {
+		}
+			
+		int loggedId = this.client.login(username, password, type);
+		
+		log.debug(loggedId);
+
+		if (loggedId > 0)
+		{
+			this.network.login(loggedId, type);
+		}
+
+		return loggedId;
 	}
 
 	@Override
 	public boolean logout(int userId)
 	{
-		return this.client.logout(userId);
+		boolean logout = this.client.logout(userId);
+
+		if (logout)
+		{
+			this.network.logout(userId);
+		}
+
+		return logout;
 	}
 
 
@@ -46,6 +81,11 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	public boolean dropOfferRequest(int serviceId, int userId)
 	{
 		return this.network.dropOfferRequest(serviceId, userId);
+	}
+
+	@Override
+	public void requestDropped(int serviceId, int buyerId) {
+		this.gui.requestDropped(serviceId, buyerId);
 	}
 
 	@Override
@@ -79,12 +119,6 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	}
 
 	@Override
-	public void startTransfer(int serviceId, int buyerId, int sellerId)
-	{
-		this.network.startTransfer(serviceId, buyerId, sellerId);
-	}
-
-	@Override
 	public void offerRefused(int serviceId, int buyerId) {
 		this.gui.offerRefused(serviceId, buyerId);
 	}
@@ -100,8 +134,8 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	}
 
 	@Override
-	public void removeExceeded(int serviceId, int buyerId) {
-		this.gui.removeExceeded(serviceId, buyerId);
+	public void removeExceeded(int serviceId, int buyerId, int price) {
+		this.gui.removeExceeded(serviceId, buyerId, price);
 	}
 
 	@Override
@@ -115,8 +149,13 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	}
 
 	@Override
-	public void newUser(int serviceId, int userId, String username) {
-		this.gui.newUser(serviceId, userId, username);
+	public void newUser(int serviceId, int userId) {
+		this.gui.newUser(serviceId, userId, client.getUsername(userId));
+	}
+
+	@Override
+	public void userLeft(int serviceId, int userId) {
+		this.gui.userLeft(serviceId, userId);
 	}
 
 	@Override
@@ -133,22 +172,26 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	}
 
 	@Override
-	public void dropUser(int userId) {
-		this.gui.dropUser(userId);
-	}
-
-	@Override
 	public CellTableModel getUserList(int serviceId, UserType type) {
 		return this.network.getUserList(serviceId, type);
 	}
 
 	@Override
 	public MainTableModel getServiceList(int userId, UserType type) {
-		return this.network.getServiceList(userId, type);
+		MainTableModel mtm = this.client.getServiceList(userId, type);
+
+		if (type == UserType.SELLER)
+		{
+			for (int i=0; i < mtm.getRowCount(); i++){
+				this.network.registerService(mtm.getIdAt(i), userId);
+			}
+		}
+
+		return mtm;
 	}
 
 	@Override
-	public void stopTransfer(int serviceId, int userId) {
-		this.network.stopTransfer(serviceId, userId);
+	public void transferFailed(int serviceId, int buyerId, int sellerId) {
+		this.gui.transferFailed(serviceId, buyerId, sellerId);
 	}
 }

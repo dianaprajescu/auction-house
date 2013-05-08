@@ -62,6 +62,11 @@ public class CellTableModel extends AbstractTableModel{
 
 	public Object getValueAt(int row, int col)
 	{
+		if (row >= this.getRowCount())
+			return null;
+		if (col >= this.getColumnCount())
+			return null;
+		
 		return data.get(row)[col];
 	}
 

@@ -3,9 +3,11 @@
  */
 package app;
 
+import org.apache.log4j.*;
+
 import GUI.GUI;
 import GUI.Simulator;
-import Network.MockupNetwork;
+import Network.Network;
 import WSClient.MockupWSClient;
 
 /**
@@ -19,10 +21,13 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		
+		// Load logger config.
+		PropertyConfigurator.configure("log4j-client.properties");
+		
 		// Initiate.
 		Mediator med = new Mediator();
 		GUI gui = new GUI(med);
-		MockupNetwork network = new MockupNetwork(med);
+		Network network = new Network(med);
 		MockupWSClient wsClient = new MockupWSClient(med, gui);
 
 		// Check if simulation should be started.

@@ -14,7 +14,7 @@ import javax.swing.SwingWorker;
 
 import GUI.components.CellTableModel;
 import GUI.components.MainTableModel;
-import Network.MockupNetwork;
+import Network.Network;
 import app.Mediator;
 import app.UserType;
 
@@ -25,10 +25,10 @@ import app.UserType;
 public class Simulator extends SwingWorker<Integer, Integer> {
 	private static final int DELAY = 1000;
 	private GUI gui;
-	private MockupNetwork network;
+	private Network network;
 	private Mediator med;
 
-	public Simulator (Mediator med, GUI gui, MockupNetwork network)
+	public Simulator (Mediator med, GUI gui, Network network)
 	{
 		this.med = med;
 		this.gui = gui;
