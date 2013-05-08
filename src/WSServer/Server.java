@@ -1,6 +1,8 @@
 package WSServer;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import WSServer.Database;
 
 /**
@@ -58,5 +60,36 @@ public class Server {
 		rs = db.query("UPDATE user SET type = '" + type + "' WHERE username = '" + username + "'");
 
 		return loggedId;
+	}
+	
+	/**
+	 * Get username for an user.
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	public String getUsername(int userId)
+	{
+		// Connect db.
+		Database db = new Database();
+
+		// Get username from db.
+		ResultSet rs = db.query("SELECT username FROM user WHERE id = '" + userId + "'");
+
+		String username;
+
+		try {
+			if (!rs.next())
+			{
+				return null;
+			}
+
+			username = rs.getString("username");
+
+		} catch (SQLException e) {
+			return null;
+		}
+
+		return username;
 	}
 }
