@@ -44,7 +44,7 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 		} catch (IOException e) {
 		}
 			
-		int loggedId = this.client.login(username, password, type);
+		int loggedId = this.client.login(username, password);
 		
 		log.debug(loggedId);
 
@@ -59,14 +59,9 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 	@Override
 	public boolean logout(int userId)
 	{
-		boolean logout = this.client.logout(userId);
-
-		if (logout)
-		{
-			this.network.logout(userId);
-		}
-
-		return logout;
+		this.network.logout(userId);
+			
+		return true;
 	}
 
 
@@ -178,7 +173,8 @@ public class Mediator implements IGUIMediator, INetworkMediator, IWSClientMediat
 
 	@Override
 	public MainTableModel getServiceList(int userId, UserType type) {
-		MainTableModel mtm = this.client.getServiceList(userId, type);
+		
+		MainTableModel mtm = this.client.getServiceList();
 
 		if (type == UserType.SELLER)
 		{
