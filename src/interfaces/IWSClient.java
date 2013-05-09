@@ -9,17 +9,20 @@ import app.UserType;
  */
 public interface IWSClient {
 
-	public int login(String username, String password, UserType type);
-
-	public boolean logout(int userId);
+	/**
+	 * Login current user.
+	 * 
+	 * @param username
+	 * @param password
+	 * 
+	 * @return The id of the user or -1 if fail.
+	 */
+	public int login(String username, String password);
 
 	/**
-	 * Get a list of users for the logged in user.
-	 *
-	 * @param userId
-	 * @param type
+	 * Get a list of services
 	 */
-	public MainTableModel getServiceList(int userId, UserType type);
+	public MainTableModel getServiceList();
 
 	/**
 	 * Method used to get the username of a user specified by id.

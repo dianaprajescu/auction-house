@@ -1,14 +1,9 @@
-package app;
+package WSServer;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.sql.Statement;
-
-import javax.swing.JOptionPane;
 
 /**
  * Class used to connect to the DB and execute queries.
@@ -27,8 +22,8 @@ public class Database {
 	public Database ()
 	{
 		try
-		{
-			// This will load the MySQL driver, each DB has its own driver
+		{	
+			// Load jdbc driver.
 			Class.forName("com.mysql.jdbc.Driver");
 			
 			// Setup the connection with the DB
@@ -36,7 +31,7 @@ public class Database {
 					"user=" + DatabaseConfig.username + "&password=" + DatabaseConfig.password);
 			
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Error connecting to DB!", "DB error", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
 		}
 	}
 	
@@ -58,9 +53,8 @@ public class Database {
 			
 			resultSet = statement.getResultSet();
 			
-		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(null, "Error while making a query: " + e.getMessage() + "! Please try again",
-					"DB error", JOptionPane.WARNING_MESSAGE);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 		return resultSet;

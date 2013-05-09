@@ -8,7 +8,7 @@ import org.apache.log4j.*;
 import GUI.GUI;
 import GUI.Simulator;
 import Network.Network;
-import WSClient.MockupWSClient;
+import WSClient.WSClient;
 
 /**
  * @author Stedy
@@ -28,7 +28,12 @@ public class Main {
 		Mediator med = new Mediator();
 		GUI gui = new GUI(med);
 		Network network = new Network(med);
-		MockupWSClient wsClient = new MockupWSClient(med, gui);
+		
+		try {
+			WSClient wsClient = new WSClient(med);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		// Check if simulation should be started.
 		if (args.length > 0 && args[0].compareTo("simulate") == 0)
