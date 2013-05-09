@@ -8,6 +8,10 @@
         <pathelement location="bin"/>
         <pathelement location="resources/mysql-connector-java-5.1.24-bin.jar"/>
     	<pathelement location="resources/log4j-1.2.17.jar"/>
+    	<pathelement location="resources/axis.jar"/>
+    	<pathelement location="resources/commons-discovery-0.2.jar"/>
+    	<pathelement location="resources/commons-logging-1.0.4.jar"/>
+    	<pathelement location="resources/jaxrpc.jar"/>
     </path>
     <target name="init">
         <mkdir dir="bin"/>

@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Apr 19, 2013 at 12:03 AM
+-- Generation Time: May 08, 2013 at 08:17 PM
 -- Server version: 5.5.24-log
--- PHP Version: 5.4.3
+-- PHP Version: 5.3.13
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -60,8 +60,6 @@ CREATE TABLE IF NOT EXISTS `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(50) NOT NULL,
   `password` varchar(50) NOT NULL,
-  `type` tinyint(4) NOT NULL COMMENT 'Type is 1 for buyer and 2 for seller.',
-  `logged` tinyint(4) NOT NULL COMMENT '1 if user is not logged and 2 if it''s logged',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
@@ -70,10 +68,10 @@ CREATE TABLE IF NOT EXISTS `user` (
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `username`, `password`, `type`, `logged`) VALUES
-(1, 'diana', 'test', 1, 1),
-(2, 'stefan', 'test', 0, 0),
-(3, 'sorin', 'test', 0, 0);
+INSERT INTO `user` (`id`, `username`, `password`) VALUES
+(1, 'diana', 'a94a8fe5ccb19ba61c4c0873d391e987982fbbd3'),
+(2, 'stefan', 'a94a8fe5ccb19ba61c4c0873d391e987982fbbd3'),
+(3, 'sorin', 'a94a8fe5ccb19ba61c4c0873d391e987982fbbd3');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
